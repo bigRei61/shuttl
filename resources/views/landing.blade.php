@@ -95,6 +95,9 @@
     </style>
 </head>
 <body>
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
 
     <header class="header-section">
         <div class="container">
@@ -237,7 +240,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{ asset('landing/img/1.jpg') }}">
+                    <div class="feature-item set-bg" data-setbg="{{ asset('page-top-bg/3.png') }}">
                         <div class="fi-content text-white">
                             <h5>@guest<a href="{{ route('login') }}">Events</a>@else<a href="{{ route('events.index') }}">Events</a>@endguest</h5>
                             <p>Discover casual games, ranked matches, and local badminton events happening near you.</p>
@@ -245,7 +248,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{ asset('landing/img/2.jpg') }}">
+                    <div class="feature-item set-bg" data-setbg="{{ asset('page-top-bg/4.png') }}">
                         <div class="fi-content text-white">
                             <h5>@guest<a href="{{ route('login') }}">Calendar</a>@else<a href="{{ route('calendar') }}">Calendar</a>@endguest</h5>
                             <p>Stay on top of your schedule with upcoming matches, tournaments, and training sessions.</p>
@@ -253,7 +256,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{ asset('landing/img/3.jpg') }}">
+                    <div class="feature-item set-bg" data-setbg="{{ asset('page-top-bg/5.png') }}">
                         <div class="fi-content text-white">
                             <h5>@guest<a href="{{ route('login') }}">Statistics</a>@else<a href="{{ route('history') }}">Statistics</a>@endguest</h5>
                             <p>Monitor your rating, win rate, match history, and performance as you climb the rankings.</p>
@@ -261,7 +264,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="{{ asset('landing/img/4.jpg') }}">
+                    <div class="feature-item set-bg" data-setbg="{{ asset('page-top-bg/1.png') }}">
                         <div class="fi-content text-white">
                             <h5>@guest<a href="{{ route('login') }}">Tournaments</a>@else<a href="{{ route('events.index') }}">Tournaments</a>@endguest</h5>
                             <p>Join competitive tournaments, track your progress, and compete for the top spot.</p>

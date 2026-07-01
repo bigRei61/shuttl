@@ -13,9 +13,7 @@
     <link rel="stylesheet" href="{{ asset('landing/css/animate.css') }}"/>
     <style>
         .event-slide {
-            min-width: calc(33.333% - 14px);
-            width: calc(33.333% - 14px);
-            margin-right: 20px;
+            width: calc((100% - 40px) / 3);
             flex-shrink: 0;
             display: flex;
             height: 520px;
@@ -88,11 +86,14 @@
     </style>
 </head>
 <body>
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
 
     @include('partials.header')
 
     <!-- Page info -->
-    <section class="page-info-section set-bg" data-setbg="{{ asset('landing/img/slider-1.png') }}">
+    <section class="page-info-section set-bg" data-setbg="{{ asset('page-top-bg/1.png') }}">
         <div class="pi-content">
             <div class="container">
                 <div class="row">
@@ -138,9 +139,9 @@
                 @endphp
 
                 <div id="events-slider" style="overflow:hidden; position:relative;">
-                    <div id="events-track" style="display:flex; transition: transform 0.4s cubic-bezier(.4,0,.2,1);">
+                    <div id="events-track" style="display:flex; gap:20px; transition: transform 0.4s cubic-bezier(.4,0,.2,1);">
                         @foreach($allEvents as $event)
-                            <div class="event-slide" style="min-width: calc(33.333% - 14px); margin-right: 20px; flex-shrink:0; width: calc(33.333% - 14px);">
+                            <div class="event-slide">
                                 <div class="review-item" style="margin-bottom:0; width:100%;">
                                     <div class="review-cover set-bg" data-setbg="{{ asset('landing/img/slider-1.png') }}" style="height:200px; background-size:cover; background-position:center; position:relative;">
                                         @if($event->is_featured)
@@ -206,6 +207,7 @@
 
     <script>
     (function () {
+        const slider = document.getElementById('events-slider');
         const track = document.getElementById('events-track');
         const pageNumbers = document.getElementById('page-numbers');
         const btnPrev = document.getElementById('btn-prev');
@@ -216,13 +218,18 @@
         const slides = Array.from(track.querySelectorAll('.event-slide'));
         const perPage = 3;
         const totalPages = Math.ceil(slides.length / perPage);
+        const gap = 20;
         let currentPage = 0;
-
-        const slideWidth = () => track.parentElement.offsetWidth / perPage;
 
         function goTo(page) {
             currentPage = Math.max(0, Math.min(page, totalPages - 1));
-            const offset = currentPage * perPage * (slideWidth() + 20);
+
+            const slideWidth = slides[0]?.getBoundingClientRect().width || 0;
+            let offset = currentPage * perPage * (slideWidth + gap);
+
+            const maxOffset = Math.max(0, track.scrollWidth - slider.offsetWidth);
+            offset = Math.min(offset, maxOffset);
+
             track.style.transform = `translateX(-${offset}px)`;
             renderDots();
         }
@@ -260,6 +267,8 @@
             btn.addEventListener('mouseenter', () => { if (btn.style.opacity !== '0.4') btn.style.background = '#4EDFCE'; });
             btn.addEventListener('mouseleave', () => { btn.style.background = '#e5e5e5'; });
         });
+
+        window.addEventListener('resize', () => goTo(currentPage));
 
         goTo(0);
     })();
