@@ -94,6 +94,180 @@
             position: relative;
             z-index: 1;
         }
+
+        .featured-shell {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #e4ebf0;
+            border-radius: 20px;
+            box-shadow: 0 18px 45px rgba(19, 19, 19, 0.08);
+            padding: 24px;
+        }
+
+        .featured-slide {
+            display: none;
+            width: 100%;
+            animation: featuredFadeSlide 0.45s ease;
+        }
+
+        .featured-slide-card {
+            padding: 4px 2px;
+        }
+
+        @keyframes featuredFadeSlide {
+            from {
+                opacity: 0;
+                transform: translateX(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .featured-media {
+            position: relative;
+            height: 280px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(78, 223, 206, 0.22), rgba(255, 255, 255, 0.9));
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+        }
+
+        .featured-media::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+            pointer-events: none;
+        }
+
+        .featured-content {
+            background: #ffffff;
+            border: 1px solid #e9f0f4;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 24px rgba(19, 19, 19, 0.04);
+            height: 100%;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: #4EDFCE;
+            color: #131313;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+
+        .featured-title {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #131313;
+        }
+
+        .featured-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 14px;
+        }
+
+        .featured-list li {
+            margin-bottom: 7px;
+            font-size: 14px;
+            color: #5a6472;
+        }
+
+        .featured-list strong {
+            color: #131313;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .featured-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .featured-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #fff;
+            color: #131313;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all .2s ease;
+            z-index: 10;
+            box-shadow: 0 8px 20px rgba(19, 19, 19, 0.12);
+            border: 1px solid #e4ebf0;
+        }
+
+        .featured-nav:hover {
+            background: #4EDFCE;
+            color: #131313;
+            transform: translateY(-50%) scale(1.03);
+        }
+
+        .featured-nav.prev { left: -16px; }
+        .featured-nav.next { right: -16px; }
+
+        .featured-dots {
+            text-align: center;
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .featured-dot {
+            display: inline-block;
+            height: 10px;
+            border-radius: 999px;
+            background: #d6dee7;
+            transition: all .3s ease;
+            cursor: pointer;
+        }
+
+        .featured-dot.active {
+            width: 28px;
+            background: #4EDFCE;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .featured-shell {
+                padding: 16px;
+            }
+
+            .featured-media {
+                height: 220px;
+                margin-bottom: 16px;
+            }
+
+            .featured-content {
+                padding: 18px;
+            }
+
+            .featured-nav {
+                width: 38px;
+                height: 38px;
+            }
+
+            .featured-nav.prev { left: 8px; }
+            .featured-nav.next { right: 8px; }
+        }
     </style>
 </head>
 <body>
@@ -292,66 +466,49 @@
                 <p style="color:#878787; text-align:center; padding:40px 0;">No featured tournaments available right now.</p>
             <?php else: ?>
                 <div style="position:relative; width:100%; overflow:hidden;">
-                    <div id="featured-track" style="display:flex; width:100%; transition: transform 0.45s cubic-bezier(.4,0,.2,1); will-change:transform; overflow:hidden;">
+                    <div id="featured-track" style="width:100%;">
                         <?php $__currentLoopData = $featured; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                            <div class="featured-slide" style="flex:0 0 100%; width:100%; max-width:100%;">
-                                <div class="row">
-                                    <div class="col-md-5">
-                                        <div style="height:260px; background: url('<?php echo e(asset('landing/img/slider-1.png')); ?>') center/cover no-repeat; border-radius:6px;"></div>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <div class="ti-text" style="padding: 10px 0 0 20px;">
-                                            <div style="display:inline-block; background:#4EDFCE; color:#131313; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:4px 14px; border-radius:999px; margin-bottom:14px;">
-                                                <?php echo e($event->status === 'ongoing' ? '🔴 Live Now' : '⭐ Featured Tournament'); ?>
+                            <div class="featured-slide" style="display:none; width:100%;">
+                                <div class="featured-shell">
+                                    <div class="row g-4 align-items-stretch">
+                                        <div class="col-lg-5">
+                                            <div class="featured-media" style="background: url('<?php echo e(asset('landing/img/slider-1.png')); ?>') center/cover no-repeat;"></div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="featured-content">
+                                                <div class="featured-badge">
+                                                    <?php echo e($event->status === 'ongoing' ? '🔴 Live Now' : '⭐ Featured Tournament'); ?>
 
-                                            </div>
-                                            <h4 style="font-size:22px; margin-bottom:14px;"><?php echo e($event->name); ?></h4>
-                                            <ul style="list-style:none; padding:0; margin:0 0 14px;">
-                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
-                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Begins:</span>
-                                                    <?php echo e($event->start_date->format('F d, Y')); ?>
-
-                                                </li>
-                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
-                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Ends:</span>
-                                                    <?php echo e($event->end_date->format('F d, Y')); ?>
-
-                                                </li>
-                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
-                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Location:</span>
-                                                    <?php echo e($event->location); ?>
-
-                                                </li>
-                                                <?php if($event->max_participants): ?>
-                                                    <li style="margin-bottom:6px; font-size:14px; color:#555;">
-                                                        <span style="color:#131313; font-weight:600; margin-right:6px;">Participants:</span>
-                                                        <?php echo e($event->max_participants); ?> players
-                                                    </li>
-                                                <?php endif; ?>
-                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
-                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Organizer:</span>
-                                                    <?php echo e($event->organizer->name ?? 'Shuttl'); ?>
-
-                                                </li>
-                                            </ul>
-                                            <?php if($event->description): ?>
-                                                <p style="font-size:13px; color:#878787; margin-bottom:18px;"><?php echo e(Str::limit($event->description, 120)); ?></p>
-                                            <?php endif; ?>
-                                            <div style="display:flex; gap:10px; align-items:center;">
-                                                <?php if(auth()->guard()->check()): ?>
-                                                    <a href="<?php echo e(route('events.show', $event)); ?>" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">View Details</a>
-                                                    <?php if($event->status === 'open'): ?>
-                                                        <form method="POST" action="<?php echo e(route('events.join', $event)); ?>" style="margin:0;">
-                                                            <?php echo csrf_field(); ?>
-                                                            <button type="submit" style="background:transparent; border:2px solid #4EDFCE; color:#131313; font-size:13px; font-weight:600; padding:7px 22px; border-radius:999px; cursor:pointer; transition:all .2s;"
-                                                                    onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='transparent'">
-                                                                Join Now
-                                                            </button>
-                                                        </form>
+                                                </div>
+                                                <h4 class="featured-title"><?php echo e($event->name); ?></h4>
+                                                <ul class="featured-list">
+                                                    <li><strong>Begins:</strong><?php echo e($event->start_date->format('F d, Y')); ?></li>
+                                                    <li><strong>Ends:</strong><?php echo e($event->end_date->format('F d, Y')); ?></li>
+                                                    <li><strong>Location:</strong><?php echo e($event->location); ?></li>
+                                                    <?php if($event->max_participants): ?>
+                                                        <li><strong>Participants:</strong><?php echo e($event->max_participants); ?> players</li>
                                                     <?php endif; ?>
-                                                <?php else: ?>
-                                                    <a href="<?php echo e(route('login')); ?>" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">Login to Join</a>
+                                                    <li><strong>Organizer:</strong><?php echo e($event->organizer->name ?? 'Shuttl'); ?></li>
+                                                </ul>
+                                                <?php if($event->description): ?>
+                                                    <p style="font-size:13px; color:#878787; margin-bottom:16px;"><?php echo e(Str::limit($event->description, 120)); ?></p>
                                                 <?php endif; ?>
+                                                <div class="featured-actions">
+                                                    <?php if(auth()->guard()->check()): ?>
+                                                        <a href="<?php echo e(route('events.show', $event)); ?>" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">View Details</a>
+                                                        <?php if($event->status === 'open'): ?>
+                                                            <form method="POST" action="<?php echo e(route('events.join', $event)); ?>" style="margin:0;">
+                                                                <?php echo csrf_field(); ?>
+                                                                <button type="submit" style="background:transparent; border:2px solid #4EDFCE; color:#131313; font-size:13px; font-weight:600; padding:7px 22px; border-radius:999px; cursor:pointer; transition:all .2s;"
+                                                                        onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='transparent'">
+                                                                    Join Now
+                                                                </button>
+                                                            </form>
+                                                        <?php endif; ?>
+                                                    <?php else: ?>
+                                                        <a href="<?php echo e(route('login')); ?>" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">Login to Join</a>
+                                                    <?php endif; ?>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -361,16 +518,14 @@
                     </div>
 
                     <?php if($featured->count() > 1): ?>
-                        <a id="feat-prev" href="#" style="position:absolute; top:50%; left:-20px; transform:translateY(-50%); display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:#e5e5e5; color:#131313; font-size:13px; text-decoration:none; transition:all .2s; z-index:10;"
-                           onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='#e5e5e5'">
+                        <a id="feat-prev" href="#" class="featured-nav prev">
                             <i class="fa fa-angle-left"></i>
                         </a>
-                        <a id="feat-next" href="#" style="position:absolute; top:50%; right:-20px; transform:translateY(-50%); display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:#e5e5e5; color:#131313; font-size:13px; text-decoration:none; transition:all .2s; z-index:10;"
-                           onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='#e5e5e5'">
+                        <a id="feat-next" href="#" class="featured-nav next">
                             <i class="fa fa-angle-right"></i>
                         </a>
 
-                        <div id="feat-dots" style="text-align:center; margin-top:24px; display:flex; justify-content:center; gap:8px;"></div>
+                        <div id="feat-dots" class="featured-dots"></div>
                     <?php endif; ?>
                 </div>
             <?php endif; ?>
@@ -393,10 +548,15 @@
         let current = 0;
         let autoplay = setInterval(() => goTo(current + 1), 5000);
 
+        function renderSlides() {
+            slides.forEach((slide, index) => {
+                slide.style.display = index === current ? 'block' : 'none';
+            });
+        }
+
         function goTo(index) {
             current = (index + total) % total;
-            const slideWidth = track.parentElement.getBoundingClientRect().width;
-            track.style.transform = `translateX(-${current * slideWidth}px)`;
+            renderSlides();
             renderDots();
         }
 
@@ -404,11 +564,8 @@
             dotsContainer.innerHTML = '';
             for (let i = 0; i < total; i++) {
                 const dot = document.createElement('span');
-                dot.style.cssText = `
-                    display:inline-block; width:${i === current ? '28px' : '10px'}; height:10px;
-                    border-radius:999px; background:${i === current ? '#4EDFCE' : '#d6dee7'};
-                    transition:all .3s; cursor:pointer;
-                `;
+                dot.className = 'featured-dot' + (i === current ? ' active' : '');
+                dot.style.width = i === current ? '28px' : '10px';
                 dot.addEventListener('click', () => { clearInterval(autoplay); goTo(i); });
                 dotsContainer.appendChild(dot);
             }
