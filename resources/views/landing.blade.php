@@ -17,8 +17,9 @@
     <link rel="stylesheet" href="{{ asset('landing/css/animate.css') }}"/>
     <style>
         .header-section {
-            position: relative;
-            z-index: 1;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .header-logo {
@@ -52,8 +53,9 @@
             display: none;
         }
         .header-section {
-            position: relative;
-            z-index: 1000; /* raised so header's stacking context wins over hero */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 /* NEW SECTION */
         .header-logo {
@@ -277,47 +279,142 @@
 
     <section class="tournaments-section spad">
         <div class="container">
-            <div class="tournament-title">Sponsored Tournaments</div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="tournament-item mb-4 mb-lg-0">
-                        <div class="ti-notic">Premium Tournament</div>
-                        <div class="ti-content">
-                            <div class="ti-thumb set-bg" data-setbg="{{ asset('landing/img/tournament/1.jpg') }}"></div>
-                            <div class="ti-text">
-                                <h4>MTDY 2026 Championships</h4>
-                                <ul>
-                                    <li><span>Tournament Begins:</span> June 20, 2026</li>
-                                    <li><span>Tournament Ends:</span> July 01, 2026</li>
-                                    <li><span>Participants:</span> 10 teams</li>
-                                    <li><span>Tournament Author:</span> Joshua Mangubat Sr.</li>
-                                </ul>
-                                <p><span>Prizes:</span> 1st place $2000, 2nd place: $1000, 3rd place: $500</p>
+            <div class="tournament-title">Featured Tournaments</div>
+
+            @php
+                $featured = \App\Models\Event::where('is_featured', true)
+                    ->whereIn('status', ['open', 'ongoing'])
+                    ->orderByDesc('start_date')
+                    ->get();
+            @endphp
+
+            @if($featured->isEmpty())
+                <p style="color:#878787; text-align:center; padding:40px 0;">No featured tournaments available right now.</p>
+            @else
+                <div style="position:relative; width:100%; overflow:hidden;">
+                    <div id="featured-track" style="display:flex; width:100%; transition: transform 0.45s cubic-bezier(.4,0,.2,1); will-change:transform; overflow:hidden;">
+                        @foreach($featured as $event)
+                            <div class="featured-slide" style="flex:0 0 100%; width:100%; max-width:100%;">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div style="height:260px; background: url('{{ asset('landing/img/slider-1.png') }}') center/cover no-repeat; border-radius:6px;"></div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <div class="ti-text" style="padding: 10px 0 0 20px;">
+                                            <div style="display:inline-block; background:#4EDFCE; color:#131313; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; padding:4px 14px; border-radius:999px; margin-bottom:14px;">
+                                                {{ $event->status === 'ongoing' ? '🔴 Live Now' : '⭐ Featured Tournament' }}
+                                            </div>
+                                            <h4 style="font-size:22px; margin-bottom:14px;">{{ $event->name }}</h4>
+                                            <ul style="list-style:none; padding:0; margin:0 0 14px;">
+                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
+                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Begins:</span>
+                                                    {{ $event->start_date->format('F d, Y') }}
+                                                </li>
+                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
+                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Ends:</span>
+                                                    {{ $event->end_date->format('F d, Y') }}
+                                                </li>
+                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
+                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Location:</span>
+                                                    {{ $event->location }}
+                                                </li>
+                                                @if($event->max_participants)
+                                                    <li style="margin-bottom:6px; font-size:14px; color:#555;">
+                                                        <span style="color:#131313; font-weight:600; margin-right:6px;">Participants:</span>
+                                                        {{ $event->max_participants }} players
+                                                    </li>
+                                                @endif
+                                                <li style="margin-bottom:6px; font-size:14px; color:#555;">
+                                                    <span style="color:#131313; font-weight:600; margin-right:6px;">Organizer:</span>
+                                                    {{ $event->organizer->name ?? 'Shuttl' }}
+                                                </li>
+                                            </ul>
+                                            @if($event->description)
+                                                <p style="font-size:13px; color:#878787; margin-bottom:18px;">{{ Str::limit($event->description, 120) }}</p>
+                                            @endif
+                                            <div style="display:flex; gap:10px; align-items:center;">
+                                                @auth
+                                                    <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">View Details</a>
+                                                    @if($event->status === 'open')
+                                                        <form method="POST" action="{{ route('events.join', $event) }}" style="margin:0;">
+                                                            @csrf
+                                                            <button type="submit" style="background:transparent; border:2px solid #4EDFCE; color:#131313; font-size:13px; font-weight:600; padding:7px 22px; border-radius:999px; cursor:pointer; transition:all .2s;"
+                                                                    onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='transparent'">
+                                                                Join Now
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                @else
+                                                    <a href="{{ route('login') }}" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">Login to Join</a>
+                                                @endauth
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        @endforeach
                     </div>
+
+                    @if($featured->count() > 1)
+                        <a id="feat-prev" href="#" style="position:absolute; top:50%; left:-20px; transform:translateY(-50%); display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:#e5e5e5; color:#131313; font-size:13px; text-decoration:none; transition:all .2s; z-index:10;"
+                           onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='#e5e5e5'">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a id="feat-next" href="#" style="position:absolute; top:50%; right:-20px; transform:translateY(-50%); display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:#e5e5e5; color:#131313; font-size:13px; text-decoration:none; transition:all .2s; z-index:10;"
+                           onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='#e5e5e5'">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+
+                        <div id="feat-dots" style="text-align:center; margin-top:24px; display:flex; justify-content:center; gap:8px;"></div>
+                    @endif
                 </div>
-                <div class="col-md-6">
-                    <div class="tournament-item">
-                        <div class="ti-notic">Premium Tournament</div>
-                        <div class="ti-content">
-                            <div class="ti-thumb set-bg" data-setbg="{{ asset('landing/img/review-bg-2.jpg') }}"></div>
-                            <div class="ti-text">
-                                <h4>Hoops and Rackets Winter Cup</h4>
-                                <ul>
-                                    <li><span>Tournament Begins:</span> December 14, 2026</li>
-                                    <li><span>Tournament Ends:</span> December 16, 2026</li>
-                                    <li><span>Participants:</span> 10 teams</li>
-                                    <li><span>Tournament Author:</span> Stephen Reilly Gudmalin</li>
-                                </ul>
-                                <p><span>Prizes:</span> 1st place $2000, 2nd place: $1000, 3rd place: $500</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
         </div>
     </section>
+
+    <script>
+    (function () {
+        const track = document.getElementById('featured-track');
+        const dotsContainer = document.getElementById('feat-dots');
+        const btnPrev = document.getElementById('feat-prev');
+        const btnNext = document.getElementById('feat-next');
+
+        if (!track) return;
+
+        const slides = track.querySelectorAll('.featured-slide');
+        const total = slides.length;
+        if (total <= 1) return;
+
+        let current = 0;
+        let autoplay = setInterval(() => goTo(current + 1), 5000);
+
+        function goTo(index) {
+            current = (index + total) % total;
+            const slideWidth = track.parentElement.getBoundingClientRect().width;
+            track.style.transform = `translateX(-${current * slideWidth}px)`;
+            renderDots();
+        }
+
+        function renderDots() {
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('span');
+                dot.style.cssText = `
+                    display:inline-block; width:${i === current ? '28px' : '10px'}; height:10px;
+                    border-radius:999px; background:${i === current ? '#4EDFCE' : '#d6dee7'};
+                    transition:all .3s; cursor:pointer;
+                `;
+                dot.addEventListener('click', () => { clearInterval(autoplay); goTo(i); });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        btnPrev.addEventListener('click', (e) => { e.preventDefault(); clearInterval(autoplay); goTo(current - 1); });
+        btnNext.addEventListener('click', (e) => { e.preventDefault(); clearInterval(autoplay); goTo(current + 1); });
+
+        goTo(0);
+    })();
+    </script>
 
     <footer class="footer-section">
         <div class="container">

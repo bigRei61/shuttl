@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="{{ asset('landing/css/style.css') }}"/>
     <link rel="stylesheet" href="{{ asset('landing/css/animate.css') }}"/>
     <style>
+        .header-section {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
         .event-slide {
             width: calc((100% - 40px) / 3);
             flex-shrink: 0;

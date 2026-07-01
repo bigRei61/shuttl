@@ -12,7 +12,7 @@
     /* Use landing header styles; don't override header layout here */
     /* Embedded calendar styles adapted from provided template */
     .calendar-page-section { background-color: #eef2f6; border-top: 1px solid #d6dee7; border-bottom: 1px solid #d6dee7; }
-    .header-section { padding: 18px 0; margin-bottom: 0; border-bottom: 1px solid #4EDFCE; }
+    .header-section { padding: 18px 0; margin-bottom: 0; border-bottom: 1px solid #4EDFCE; position: sticky; top: 0; z-index: 1000; }
     .calendar-page-section.spad, .calendar-page-section { padding-top: 20px !important; padding-bottom: 0 !important; }
     .calendar-wrap { display:flex; gap:30px; align-items:flex-start; }
     .calendar-main { flex:0 0 64%; max-width:64%; background:#fff; border:1px solid #d6dee7; padding:38px 38px 28px; }

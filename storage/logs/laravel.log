@@ -2874,3 +2874,180 @@
 #51 /Users/paulseno/Documents/shuttl/vendor/laravel/framework/src/Illuminate/Foundation/resources/server.php(23): require_once('/Users/paulseno...')
 #52 {main}
 "} 
+[2026-07-01 05:15:22] local.ERROR: PHP Parse error: Syntax error, unexpected ')' on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected ')' on line 1 at C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(657): Psy/Exception/ParseErrorException::fromParseError(Object(PhpParser/Error))
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(273): Psy/CodeCleaner->parse('<?php echo 'tot...', false)
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1364): Psy/CodeCleaner->clean(Array, false)
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1471): Psy/Shell->appendCode('echo 'total=' ....', true, false)
+#4 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(2180): Psy/Shell->setCode('echo 'total=' ....', true)
+#5 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/tinker/src/Console/TinkerCommand.php(77): Psy/Shell->execute('echo 'total=' ....')
+#6 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel/Tinker/Console/TinkerCommand->handle()
+#7 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#8 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#9 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#10 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#11 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#12 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#13 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#14 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#15 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Laravel/Tinker/Console/TinkerCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#16 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#17 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#18 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#19 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#20 {main}
+"} 
+[2026-07-01 05:15:44] local.ERROR: PHP Parse error: Syntax error, unexpected ')' on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected ')' on line 1 at C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(657): Psy/Exception/ParseErrorException::fromParseError(Object(PhpParser/Error))
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(273): Psy/CodeCleaner->parse('<?php foreach (...', false)
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1364): Psy/CodeCleaner->clean(Array, false)
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1471): Psy/Shell->appendCode('foreach (App//Mo...', true, false)
+#4 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(2180): Psy/Shell->setCode('foreach (App//Mo...', true)
+#5 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/tinker/src/Console/TinkerCommand.php(77): Psy/Shell->execute('foreach (App//Mo...')
+#6 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel/Tinker/Console/TinkerCommand->handle()
+#7 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#8 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#9 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#10 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#11 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#12 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#13 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#14 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#15 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Laravel/Tinker/Console/TinkerCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#16 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#17 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#18 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#19 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#20 {main}
+"} 
+[2026-07-01 05:16:00] local.ERROR: Unexpected end of input {"exception":"[object] (InvalidArgumentException(code: 0): Unexpected end of input at C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php:1481)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(2180): Psy/Shell->setCode('foreach (App//Mo...', true)
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/tinker/src/Console/TinkerCommand.php(77): Psy/Shell->execute('foreach (App//Mo...')
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel/Tinker/Console/TinkerCommand->handle()
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#4 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#5 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#6 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#7 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#8 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#9 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#10 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#11 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Laravel/Tinker/Console/TinkerCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#12 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#13 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#14 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#15 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#16 {main}
+"} 
+[2026-07-01 05:16:13] local.ERROR: PHP Parse error: Syntax error, unexpected T_ECHO on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_ECHO on line 1 at C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(657): Psy/Exception/ParseErrorException::fromParseError(Object(PhpParser/Error))
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(273): Psy/CodeCleaner->parse('<?php App//Model...', false)
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1364): Psy/CodeCleaner->clean(Array, false)
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1471): Psy/Shell->appendCode('App//Models//Even...', true, false)
+#4 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(2180): Psy/Shell->setCode('App//Models//Even...', true)
+#5 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/tinker/src/Console/TinkerCommand.php(77): Psy/Shell->execute('App//Models//Even...')
+#6 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel/Tinker/Console/TinkerCommand->handle()
+#7 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#8 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#9 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#10 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#11 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#12 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#13 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#14 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#15 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Laravel/Tinker/Console/TinkerCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#16 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#17 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#18 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#19 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#20 {main}
+"} 
+[2026-07-01 05:16:47] local.ERROR: Unexpected end of input {"exception":"[object] (InvalidArgumentException(code: 0): Unexpected end of input at C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php:1481)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(2180): Psy/Shell->setCode('echo App//Models...', true)
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/tinker/src/Console/TinkerCommand.php(77): Psy/Shell->execute('echo App//Models...')
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel/Tinker/Console/TinkerCommand->handle()
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#4 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#5 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#6 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#7 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#8 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#9 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#10 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#11 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Laravel/Tinker/Console/TinkerCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#12 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#13 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#14 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#15 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#16 {main}
+"} 
+[2026-07-01 05:18:04] local.ERROR: PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting ';' on line 1 {"exception":"[object] (Psy\\Exception\\ParseErrorException(code: 0): PHP Parse error: Syntax error, unexpected T_NS_SEPARATOR, expecting ';' on line 1 at C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Exception/ParseErrorException.php:44)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(657): Psy/Exception/ParseErrorException::fromParseError(Object(PhpParser/Error))
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/CodeCleaner.php(273): Psy/CodeCleaner->parse('<?php echo App//...', false)
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1364): Psy/CodeCleaner->clean(Array, false)
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(1471): Psy/Shell->appendCode('echo App////Model...', true, false)
+#4 C:/Users/Raymundo Gudmalin/Shuttl/vendor/psy/psysh/src/Shell.php(2180): Psy/Shell->setCode('echo App////Model...', true)
+#5 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/tinker/src/Console/TinkerCommand.php(77): Psy/Shell->execute('echo App////Model...')
+#6 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(36): Laravel/Tinker/Console/TinkerCommand->handle()
+#7 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Util.php(43): Illuminate/Container/BoundMethod::Illuminate/Container/{closure}()
+#8 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(96): Illuminate/Container/Util::unwrapIfClosure(Object(Closure))
+#9 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/BoundMethod.php(35): Illuminate/Container/BoundMethod::callBoundMethod(Object(Illuminate/Foundation/Application), Array, Object(Closure))
+#10 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Container/Container.php(799): Illuminate/Container/BoundMethod::call(Object(Illuminate/Foundation/Application), Array, Array, NULL)
+#11 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(211): Illuminate/Container/Container->call(Array)
+#12 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Command/Command.php(341): Illuminate/Console/Command->execute(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#13 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#14 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#15 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Laravel/Tinker/Console/TinkerCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#16 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#17 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#18 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#19 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#20 {main}
+"} 
+[2026-07-01 05:18:16] local.ERROR: Command "db:query" is not defined.
+
+Did you mean one of these?
+    db
+    db:monitor
+    db:seed
+    db:show
+    db:table
+    db:wipe {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"db:query\" is not defined.
+
+Did you mean one of these?
+    db
+    db:monitor
+    db:seed
+    db:show
+    db:table
+    db:wipe at C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php:759)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(298): Symfony/Component/Console/Application->find('db:query')
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#4 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#5 {main}
+"} 
+[2026-07-01 05:18:23] local.ERROR: The "--columns" option does not exist. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\RuntimeException(code: 0): The \"--columns\" option does not exist. at C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Input/ArgvInput.php:226)
+[stacktrace]
+#0 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Input/ArgvInput.php(153): Symfony/Component/Console/Input/ArgvInput->addLongOption('columns', 'id,name,status,...')
+#1 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Input/ArgvInput.php(88): Symfony/Component/Console/Input/ArgvInput->parseLongOption('--columns=id,na...')
+#2 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Input/ArgvInput.php(77): Symfony/Component/Console/Input/ArgvInput->parseToken('--columns=id,na...', true)
+#3 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Input/Input.php(53): Symfony/Component/Console/Input/ArgvInput->parse()
+#4 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Command/Command.php(295): Symfony/Component/Console/Input/Input->bind(Object(Symfony/Component/Console/Input/InputDefinition))
+#5 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Console/Command.php(180): Symfony/Component/Console/Command/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Illuminate/Console/OutputStyle))
+#6 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(1117): Illuminate/Console/Command->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#7 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(356): Symfony/Component/Console/Application->doRunCommand(Object(Illuminate/Database/Console/TableCommand), Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#8 C:/Users/Raymundo Gudmalin/Shuttl/vendor/symfony/console/Application.php(195): Symfony/Component/Console/Application->doRun(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#9 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(198): Symfony/Component/Console/Application->run(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#10 C:/Users/Raymundo Gudmalin/Shuttl/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1235): Illuminate/Foundation/Console/Kernel->handle(Object(Symfony/Component/Console/Input/ArgvInput), Object(Symfony/Component/Console/Output/ConsoleOutput))
+#11 C:/Users/Raymundo Gudmalin/Shuttl/artisan(16): Illuminate/Foundation/Application->handleCommand(Object(Symfony/Component/Console/Input/ArgvInput))
+#12 {main}
+"} 

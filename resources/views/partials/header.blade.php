@@ -1,5 +1,5 @@
 <style>
-    .header-section { position: relative; z-index: 1; }
+    .header-section { position: sticky; top: 0; z-index: 1000; }
     .header-logo { position: absolute; top: 0; left: 0; width: 120px; padding-top: 0; padding-bottom: 0; z-index: 2; }
     .header-logo img { width: 100%; height: auto; display: block; }
     #header-profile { position: relative; display: inline-block; }
