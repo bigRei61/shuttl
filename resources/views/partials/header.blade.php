@@ -88,7 +88,7 @@
                 <li><a href="{{ route('landing') }}">Home</a></li>
                 <li><a href="{{ route('events.index') }}">Events</a></li>
                 <li><a href="{{ route('calendar') }}">Calendar</a></li>
-                <li><a href="{{ route('login') }}">Statistics</a></li>
+                <li><a href="{{ route('history') }}">Statistics</a></li>
                 <li><a href="{{ route('events.index') }}">Tournament</a></li>
             </ul>
         </nav>

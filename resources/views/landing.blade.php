@@ -362,13 +362,7 @@
                             <a href="{{ route('calendar') }}">Calendar</a>
                         @endguest
                     </li>
-                    <li>
-                        @guest
-                            <a href="{{ route('login') }}">Statistics</a>
-                        @else
-                            <a href="{{ route('history') }}">Statistics</a>
-                        @endguest
-                    </li>
+                    <li><a href="{{ route('history') }}">Statistics</a></li>
                     <li>
                         @guest
                             <a href="{{ route('login') }}">Tournament</a>
@@ -583,7 +577,7 @@
                 <li><a href="{{ route('landing') }}">Home</a></li>
                 <li>@guest<a href="{{ route('login') }}">Events</a>@else<a href="{{ route('events.index') }}">Events</a>@endguest</li>
                 <li>@guest<a href="{{ route('login') }}">Calendar</a>@else<a href="{{ route('calendar') }}">Calendar</a>@endguest</li>
-                <li>@guest<a href="{{ route('login') }}">Statistics</a>@else<a href="{{ route('history') }}">Statistics</a>@endguest</li>
+                <li><a href="{{ route('history') }}">Statistics</a></li>
                 <li>@guest<a href="{{ route('login') }}">Tournament</a>@else<a href="{{ route('events.index') }}">Tournament</a>@endguest</li>
             </ul>
             <p class="copyright">Copyright &copy;{{ date('Y') }} Shuttl. All rights reserved</p>

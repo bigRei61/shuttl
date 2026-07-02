@@ -88,7 +88,7 @@
                 <li><a href="<?php echo e(route('landing')); ?>">Home</a></li>
                 <li><a href="<?php echo e(route('events.index')); ?>">Events</a></li>
                 <li><a href="<?php echo e(route('calendar')); ?>">Calendar</a></li>
-                <li><a href="<?php echo e(route('login')); ?>">Statistics</a></li>
+                <li><a href="<?php echo e(route('history')); ?>">Statistics</a></li>
                 <li><a href="<?php echo e(route('events.index')); ?>">Tournament</a></li>
             </ul>
         </nav>
