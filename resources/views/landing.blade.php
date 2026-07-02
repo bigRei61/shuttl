@@ -194,7 +194,7 @@
                         @guest
                             <a href="{{ route('login') }}">Tournament</a>
                         @else
-                            <a href="{{ route('events.index') }}">Tournament</a>
+                            <a href="{{ route('tournaments') }}">Tournament</a>
                         @endguest
                     </li>
                 </ul>
@@ -263,7 +263,7 @@
                 <div class="col-lg-3 col-md-6 p-0">
                     <div class="feature-item set-bg" data-setbg="{{ asset('landing/img/4.jpg') }}">
                         <div class="fi-content text-white">
-                            <h5>@guest<a href="{{ route('login') }}">Tournaments</a>@else<a href="{{ route('events.index') }}">Tournaments</a>@endguest</h5>
+                            <h5>@guest<a href="{{ route('login') }}">Tournaments</a>@else<a href="{{ route('tournaments') }}">Tournaments</a>@endguest</h5>
                             <p>Join competitive tournaments, track your progress, and compete for the top spot.</p>
                         </div>
                     </div>
@@ -323,7 +323,7 @@
                 <li>@guest<a href="{{ route('login') }}">Events</a>@else<a href="{{ route('events.index') }}">Events</a>@endguest</li>
                 <li>@guest<a href="{{ route('login') }}">Calendar</a>@else<a href="{{ route('calendar') }}">Calendar</a>@endguest</li>
                 <li>@guest<a href="{{ route('login') }}">Statistics</a>@else<a href="{{ route('history') }}">Statistics</a>@endguest</li>
-                <li>@guest<a href="{{ route('login') }}">Tournament</a>@else<a href="{{ route('events.index') }}">Tournament</a>@endguest</li>
+                <li>@guest<a href="{{ route('login') }}">Tournament</a>@else<a href="{{ route('tournaments') }}">Tournament</a>@endguest</li>
             </ul>
             <p class="copyright">Copyright &copy;{{ date('Y') }} Shuttl. All rights reserved</p>
         </div>

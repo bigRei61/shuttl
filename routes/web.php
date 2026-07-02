@@ -17,6 +17,10 @@ use App\Http\Middleware\AdminMiddleware;
 // Public landing page (accessible whether logged in or not)
 Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing');
 
+Route::get('/tournaments', function () {
+    return view('tournament');
+})->name('tournaments');
+
 // Guest-only routes
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'show'])->name('login');
