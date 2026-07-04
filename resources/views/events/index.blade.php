@@ -88,6 +88,111 @@
             font-size: 22px; font-weight: 700; margin: 0 auto 10px;
         }
         .versus { color: #4EDFCE; font-size: 20px; font-weight: 700; margin: 10px 0; }
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.72);
+            padding: 24px;
+        }
+        .modal-overlay.is-open { display: flex; }
+        .event-modal {
+            width: min(720px, 100%);
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            background: #fff;
+            color: #131313;
+            border: 1px solid rgba(78, 223, 206, 0.5);
+            border-radius: 8px;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+        }
+        .event-modal-header {
+            padding: 24px 28px 14px;
+            border-bottom: 1px solid #edf2f5;
+        }
+        .event-modal-header h3 {
+            color: #131313;
+            font-size: 26px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .event-modal-body { padding: 24px 28px 28px; }
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .modal-field { margin-bottom: 16px; }
+        .modal-field label {
+            display: block;
+            color: #131313;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+        .modal-field input,
+        .modal-field select,
+        .modal-field textarea {
+            width: 100%;
+            border: 1px solid #d6dee7;
+            border-radius: 8px;
+            color: #131313;
+            background: #fff;
+            font-size: 14px;
+            padding: 12px 14px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+        .modal-field textarea { min-height: 112px; resize: vertical; }
+        .modal-field input:focus,
+        .modal-field select:focus,
+        .modal-field textarea:focus {
+            border-color: #4EDFCE;
+            box-shadow: 0 0 0 3px rgba(78, 223, 206, 0.18);
+        }
+        .modal-error {
+            color: #ff205f;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .modal-cancel,
+        .modal-submit {
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 24px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .modal-cancel {
+            background: #fff;
+            border: 1px solid #d6dee7;
+            color: #131313;
+        }
+        .modal-cancel:hover { border-color: #4EDFCE; }
+        .modal-submit {
+            background: #4EDFCE;
+            border: 1px solid #4EDFCE;
+            color: #131313;
+        }
+        .modal-submit:hover { filter: brightness(0.96); }
+        @media (max-width: 640px) {
+            .modal-grid { grid-template-columns: 1fr; gap: 0; }
+            .event-modal-header,
+            .event-modal-body { padding-left: 20px; padding-right: 20px; }
+            .modal-actions { flex-direction: column-reverse; }
+            .modal-cancel,
+            .modal-submit { width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -127,28 +232,21 @@
             @endif
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-                <div class="tournament-title" style="margin:0;">All Events</div>
+                <div class="tournament-title" style="margin:0;">{{ auth()->check() && auth()->user()->isAdmin() ? 'All Events' : 'My Tournaments' }}</div>
                 @auth
-                    <a href="{{ route('events.create') }}" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">+ Create Event</a>
+                    <button type="button" id="open-event-modal" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px; border:0;">+ Create Event</button>
                 @endauth
             </div>
 
             @if($events->isEmpty())
-                <p style="color:#878787; text-align:center; padding:60px 0;">No events available right now. Check back soon.</p>
+                <p style="color:#878787; text-align:center; padding:60px 0;">{{ auth()->check() && auth()->user()->isAdmin() ? 'No events available right now.' : 'No joined tournaments yet. Join an event from the landing page to see it here after host approval.' }}</p>
             @else
-                @php
-                    $allEvents = \App\Models\Event::with('organizer')
-                        ->orderByDesc('is_featured')
-                        ->orderByDesc('start_date')
-                        ->get();
-                @endphp
-
                 <div id="events-slider" style="overflow:hidden; position:relative;">
                     <div id="events-track" style="display:flex; gap:20px; transition: transform 0.4s cubic-bezier(.4,0,.2,1);">
-                        @foreach($allEvents as $event)
+                        @foreach($events as $event)
                             <div class="event-slide">
                                 <div class="review-item" style="margin-bottom:0; width:100%;">
-                                    <div class="review-cover set-bg" data-setbg="{{ asset('landing/img/slider-1.png') }}" style="height:200px; background-size:cover; background-position:center; position:relative;">
+                                    <div class="review-cover set-bg" data-setbg="{{ $event->photoUrl() }}" style="height:200px; background-size:cover; background-position:center; position:relative;">
                                         @if($event->is_featured)
                                             <div class="featured-badge">⭐ Featured</div>
                                         @endif
@@ -164,7 +262,7 @@
                                                 <li><span>Starts:</span> {{ $event->start_date->format('M d, Y') }}</li>
                                                 <li><span>Ends:</span> {{ $event->end_date->format('M d, Y') }}</li>
                                                 <li><span>Location:</span> {{ $event->location }}</li>
-                                                <li><span>Organizer:</span> {{ $event->organizer->name ?? 'Shuttl' }}</li>
+                                                <li><span>Host:</span> {{ $event->organizer->name ?? 'Shuttl' }}</li>
                                                 @if($event->max_participants)
                                                     <li><span>Slots:</span> {{ $event->max_participants }} participants</li>
                                                 @endif
@@ -175,14 +273,9 @@
                                         </div>
                                         <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
                                             <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:7px 18px;">View Details</a>
-                                            @auth
-                                                @if($event->status === 'open')
-                                                    <form method="POST" action="{{ route('events.join', $event) }}" style="margin:0;">
-                                                        @csrf
-                                                        <button type="submit" class="btn-join">Join</button>
-                                                    </form>
-                                                @endif
-                                            @endauth
+                                            @if((int) $event->organizer_id === (int) auth()->id())
+                                                <span class="btn-join" style="cursor:default;">Host</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -210,7 +303,134 @@
         </div>
     </section>
 
+    @auth
+        <div id="event-modal-overlay" class="modal-overlay" aria-hidden="true">
+            <div class="event-modal" role="dialog" aria-modal="true" aria-labelledby="event-modal-title">
+                <div class="event-modal-header">
+                    <h3 id="event-modal-title">Create Event</h3>
+                </div>
+                <div class="event-modal-body">
+                    <form method="POST" action="{{ route('events.store') }}" enctype="multipart/form-data">
+                        @csrf
+
+                        @if(auth()->user()->isAdmin())
+                            <div class="modal-field">
+                                <label for="host_id">Event Host</label>
+                                <select id="host_id" name="host_id">
+                                    <option value="">Select host</option>
+                                    @foreach($hosts ?? collect() as $host)
+                                        <option value="{{ $host->id }}" {{ old('host_id') == $host->id ? 'selected' : '' }}>
+                                            {{ $host->name }} ({{ $host->email }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('host_id') <p class="modal-error">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
+
+                        <div class="modal-field">
+                            <label for="event_name">Event Name</label>
+                            <input id="event_name" type="text" name="name" value="{{ old('name') }}" placeholder="e.g. Sunday Doubles Cup">
+                            @error('name') <p class="modal-error">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="{{ auth()->user()->isAdmin() ? 'modal-grid' : '' }}">
+                            <div class="modal-field">
+                                <label for="event_type">Event Type</label>
+                                <select id="event_type" name="type">
+                                    <option value="">Select type</option>
+                                    <option value="tournament" {{ old('type') == 'tournament' ? 'selected' : '' }}>Tournament</option>
+                                    <option value="quick_play" {{ old('type') == 'quick_play' ? 'selected' : '' }}>Quick Play</option>
+                                </select>
+                                @error('type') <p class="modal-error">{{ $message }}</p> @enderror
+                            </div>
+
+                            @if(auth()->user()->isAdmin())
+                                <div class="modal-field">
+                                    <label for="max_participants">Number of Participants</label>
+                                    <input id="max_participants" type="number" name="max_participants" min="2" value="{{ old('max_participants') }}" placeholder="e.g. 16">
+                                    @error('max_participants') <p class="modal-error">{{ $message }}</p> @enderror
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="modal-field">
+                            <label for="event_location">Location</label>
+                            <input id="event_location" type="text" name="location" value="{{ old('location') }}" placeholder="e.g. MTDY Badminton Court">
+                            @error('location') <p class="modal-error">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="modal-grid">
+                            <div class="modal-field">
+                                <label for="start_date">Start Date</label>
+                                <input id="start_date" type="date" name="start_date" value="{{ old('start_date') }}">
+                                @error('start_date') <p class="modal-error">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="modal-field">
+                                <label for="end_date">End Date</label>
+                                <input id="end_date" type="date" name="end_date" value="{{ old('end_date') }}">
+                                @error('end_date') <p class="modal-error">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+
+                        @if(auth()->user()->isAdmin())
+                            <div class="modal-field">
+                                <label for="event_description">Description</label>
+                                <textarea id="event_description" name="description" placeholder="Describe the tournament, prizes, rules, etc.">{{ old('description') }}</textarea>
+                                @error('description') <p class="modal-error">{{ $message }}</p> @enderror
+                            </div>
+                        @endif
+
+                        <div class="modal-field">
+                            <label for="event_photo">Event Photo</label>
+                            <input id="event_photo" type="file" name="photo" accept="image/*">
+                            @error('photo') <p class="modal-error">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div class="modal-actions">
+                            <button type="button" id="cancel-event-modal" class="modal-cancel">Cancel</button>
+                            <button type="submit" class="modal-submit">Create Event</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endauth
+
     <script>
+    (function () {
+        const overlay = document.getElementById('event-modal-overlay');
+        const openButton = document.getElementById('open-event-modal');
+        const cancelButton = document.getElementById('cancel-event-modal');
+
+        if (!overlay || !openButton || !cancelButton) return;
+
+        function openModal() {
+            overlay.classList.add('is-open');
+            overlay.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            overlay.classList.remove('is-open');
+            overlay.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        }
+
+        openButton.addEventListener('click', openModal);
+        cancelButton.addEventListener('click', closeModal);
+        overlay.addEventListener('click', (event) => {
+            if (event.target === overlay) {
+                closeModal();
+            }
+        });
+
+        @if(isset($errors) && $errors->any())
+            openModal();
+        @endif
+    })();
+
     (function () {
         const slider = document.getElementById('events-slider');
         const track = document.getElementById('events-track');

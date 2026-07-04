@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rules\File;
 
 class AdminController extends Controller
 {
@@ -13,8 +14,8 @@ class AdminController extends Controller
     {
         $stats = [
             'total_players' => User::where('role', 'player')->count(),
-            'total_events'  => Event::count(),
-            'featured_count'=> Event::featured()->count(),
+            'total_events' => Event::count(),
+            'featured_count' => Event::featured()->count(),
             'active_events' => Event::whereIn('status', ['open', 'ongoing'])->count(),
         ];
 
@@ -31,7 +32,7 @@ class AdminController extends Controller
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
-                      ->orWhere('email', 'like', "%{$search}%");
+                        ->orWhere('email', 'like', "%{$search}%");
                 });
             })
             ->orderBy('name')
@@ -44,6 +45,7 @@ class AdminController extends Controller
     public function deletePlayer(User $user)
     {
         $user->delete();
+
         return back()->with('success', 'Player removed successfully.');
     }
 
@@ -57,7 +59,7 @@ class AdminController extends Controller
         $events = Event::with('organizer')
             ->when($search, function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")
-                      ->orWhere('location', 'like', "%{$search}%");
+                    ->orWhere('location', 'like', "%{$search}%");
             })
             ->when($type, function ($query) use ($type) {
                 $query->where('type', $type);
@@ -72,6 +74,7 @@ class AdminController extends Controller
     public function deleteEvent(Event $event)
     {
         $event->delete();
+
         return back()->with('success', 'Event deleted successfully.');
     }
 
@@ -90,33 +93,42 @@ class AdminController extends Controller
 
     public function createFeatured()
     {
-        return view('admin.featured-create');
+        $hosts = User::where('role', 'player')->orderBy('name')->get();
+
+        return view('admin.featured-create', compact('hosts'));
     }
 
     public function storeFeatured(Request $request)
     {
         $request->validate([
-            'name'             => 'required|string|max:255',
-            'location'         => 'required|string|max:255',
-            'start_date'       => 'required|date',
-            'end_date'         => 'required|date|after_or_equal:start_date',
+            'name' => 'required|string|max:255',
+            'location' => 'required|string|max:255',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'max_participants' => 'required|integer|min:2',
-            'description'      => 'required|string',
+            'description' => 'required|string',
+            'host_id' => 'required|exists:users,id',
+            'photo' => ['nullable', File::image()->max('4mb')],
         ], [
             'end_date.after_or_equal' => 'End date must be on or after the start date.',
         ]);
 
-        Event::create([
-            'organizer_id'     => auth()->id(),
-            'name'             => $request->name,
-            'type'             => 'tournament',
-            'location'         => $request->location,
-            'start_date'       => $request->start_date,
-            'end_date'         => $request->end_date,
+        $event = Event::create([
+            'organizer_id' => $request->host_id,
+            'name' => $request->name,
+            'type' => 'tournament',
+            'location' => $request->location,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
             'max_participants' => $request->max_participants,
-            'description'      => $request->description,
-            'status'           => 'open',
-            'is_featured'      => true,
+            'description' => $request->description,
+            'status' => 'open',
+            'is_featured' => true,
+            'photo_path' => $request->file('photo')?->store('event-photos', 'public'),
+        ]);
+
+        $event->players()->syncWithoutDetaching([
+            $request->host_id => ['status' => 'approved', 'responded_at' => now()],
         ]);
 
         return redirect()->route('admin.events')

@@ -466,7 +466,7 @@
                                 <div class="featured-shell">
                                     <div class="row g-4 align-items-stretch">
                                         <div class="col-lg-5">
-                                            <div class="featured-media" style="background: url('{{ asset('landing/img/slider-1.png') }}') center/cover no-repeat;"></div>
+                                            <div class="featured-media" style="background: url('{{ $event->photoUrl() }}') center/cover no-repeat;"></div>
                                         </div>
                                         <div class="col-lg-7">
                                             <div class="featured-content">
@@ -481,7 +481,7 @@
                                                     @if($event->max_participants)
                                                         <li><strong>Participants:</strong>{{ $event->max_participants }} players</li>
                                                     @endif
-                                                    <li><strong>Organizer:</strong>{{ $event->organizer->name ?? 'Shuttl' }}</li>
+                                                    <li><strong>Host:</strong>{{ $event->organizer->name ?? 'Shuttl' }}</li>
                                                 </ul>
                                                 @if($event->description)
                                                     <p style="font-size:13px; color:#878787; margin-bottom:16px;">{{ Str::limit($event->description, 120) }}</p>
