@@ -34,7 +34,7 @@
                 <th class="px-6 py-3">Location</th>
                 <th class="px-6 py-3">Dates</th>
                 <th class="px-6 py-3">Status</th>
-                <th class="px-6 py-3">Organizer</th>
+                <th class="px-6 py-3">Host</th>
                 <th class="px-6 py-3"></th>
             </tr>
         </thead>

@@ -1,21 +1,21 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BracketController;
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CasualMatchController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GameController;
-use App\Http\Controllers\BracketController;
-use App\Http\Controllers\CasualMatchController;
-use App\Http\Controllers\RatingController;
+use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PlayHistoryController;
-use App\Http\Controllers\CalendarController;
-use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Support\Facades\Route;
 
 // Public landing page (accessible whether logged in or not)
-Route::get('/', [\App\Http\Controllers\LandingController::class, 'index'])->name('landing');
+Route::get('/', [LandingController::class, 'index'])->name('landing');
 
 Route::get('/tournaments', function () {
     return view('tournament');
@@ -66,6 +66,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/events/{event}', [EventController::class, 'show'])->name('events.show');
     Route::post('/events/{event}/join', [EventController::class, 'join'])->name('events.join');
+    Route::put('/events/{event}/join-requests/{user}/approve', [EventController::class, 'approveJoinRequest'])->name('events.join-requests.approve');
+    Route::put('/events/{event}/join-requests/{user}/reject', [EventController::class, 'rejectJoinRequest'])->name('events.join-requests.reject');
 
     // Calendar
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
@@ -87,4 +89,3 @@ Route::middleware('auth')->group(function () {
     // Play history
     Route::get('/history', [PlayHistoryController::class, 'index'])->name('history');
 });
-

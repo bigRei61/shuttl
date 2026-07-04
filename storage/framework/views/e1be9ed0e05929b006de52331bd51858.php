@@ -1,5 +1,5 @@
 <style>
-    .header-section { position: relative; z-index: 1; }
+    .header-section { position: sticky; top: 0; z-index: 1000; }
     .header-logo { position: absolute; top: 0; left: 0; width: 120px; padding-top: 0; padding-bottom: 0; z-index: 2; }
     .header-logo img { width: 100%; height: auto; display: block; }
     #header-profile { position: relative; display: inline-block; }
@@ -88,7 +88,7 @@
                 <li><a href="<?php echo e(route('landing')); ?>">Home</a></li>
                 <li><a href="<?php echo e(route('events.index')); ?>">Events</a></li>
                 <li><a href="<?php echo e(route('calendar')); ?>">Calendar</a></li>
-                <li><a href="<?php echo e(route('login')); ?>">Statistics</a></li>
+                <li><a href="<?php echo e(route('history')); ?>">Statistics</a></li>
                 <li><a href="<?php echo e(route('events.index')); ?>">Tournament</a></li>
             </ul>
         </nav>

@@ -8,8 +8,25 @@
 </div>
 
 <div class="bg-gray-900 border border-gray-800 rounded-xl p-8 max-w-2xl">
-    <form method="POST" action="{{ route('admin.featured.store') }}" class="space-y-5">
+    <form method="POST" action="{{ route('admin.featured.store') }}" enctype="multipart/form-data" class="space-y-5">
         @csrf
+
+        <div>
+            <label class="block text-sm text-gray-400 mb-1">Tournament Host</label>
+            <select name="host_id"
+                    class="w-full bg-gray-800 border {{ $errors->has('host_id') ? 'border-red-500' : 'border-gray-700' }}
+                           text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500">
+                <option value="">Select host</option>
+                @foreach($hosts as $host)
+                    <option value="{{ $host->id }}" {{ old('host_id') == $host->id ? 'selected' : '' }}>
+                        {{ $host->name }} ({{ $host->email }})
+                    </option>
+                @endforeach
+            </select>
+            @error('host_id')
+                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
 
         <div>
             <label class="block text-sm text-gray-400 mb-1">Tournament Name</label>
@@ -72,6 +89,16 @@
                              text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500"
                       placeholder="Describe the tournament, prizes, rules, etc.">{{ old('description') }}</textarea>
             @error('description')
+                <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div>
+            <label class="block text-sm text-gray-400 mb-1">Tournament Photo</label>
+            <input type="file" name="photo" accept="image/*"
+                   class="w-full bg-gray-800 border {{ $errors->has('photo') ? 'border-red-500' : 'border-gray-700' }}
+                          text-white rounded-lg px-4 py-3 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-teal-600 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white focus:outline-none focus:border-teal-500">
+            @error('photo')
                 <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
             @enderror
         </div>

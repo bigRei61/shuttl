@@ -442,10 +442,13 @@
 	</style>
 </head>
 <body>
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
 	@include('partials.header')
 
 	<!-- Page info section -->
-	<section class="page-info-section set-bg" data-setbg="{{ asset('landing/img/slider-1.png') }}">
+	<section class="page-info-section set-bg" data-setbg="{{ asset('page-top-bg/5.png') }}">
 		<div class="pi-content">
 			<div class="container">
 				<div class="row">
@@ -596,7 +599,7 @@
 
 	<script src="{{ asset('landing/js/jquery-3.2.1.min.js') }}"></script>
 	<script src="{{ asset('landing/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('landing/js/main.js') }}"></script>
+	<script src="{{ asset('landing/js/main.js') }}"></script>
 
 	<!-- Tournament page data + interactions -->
 	<script>

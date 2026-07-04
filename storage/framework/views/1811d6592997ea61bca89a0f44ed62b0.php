@@ -17,8 +17,9 @@
     <link rel="stylesheet" href="<?php echo e(asset('landing/css/animate.css')); ?>"/>
     <style>
         .header-section {
-            position: relative;
-            z-index: 1;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         .header-logo {
@@ -52,8 +53,9 @@
             display: none;
         }
         .header-section {
-            position: relative;
-            z-index: 1000; /* raised so header's stacking context wins over hero */
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 /* NEW SECTION */
         .header-logo {
@@ -92,9 +94,186 @@
             position: relative;
             z-index: 1;
         }
+
+        .featured-shell {
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid #e4ebf0;
+            border-radius: 20px;
+            box-shadow: 0 18px 45px rgba(19, 19, 19, 0.08);
+            padding: 24px;
+        }
+
+        .featured-slide {
+            display: none;
+            width: 100%;
+            animation: featuredFadeSlide 0.45s ease;
+        }
+
+        .featured-slide-card {
+            padding: 4px 2px;
+        }
+
+        @keyframes featuredFadeSlide {
+            from {
+                opacity: 0;
+                transform: translateX(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .featured-media {
+            position: relative;
+            height: 280px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(78, 223, 206, 0.22), rgba(255, 255, 255, 0.9));
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+        }
+
+        .featured-media::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.25) 100%);
+            pointer-events: none;
+        }
+
+        .featured-content {
+            background: #ffffff;
+            border: 1px solid #e9f0f4;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 24px rgba(19, 19, 19, 0.04);
+            height: 100%;
+        }
+
+        .featured-badge {
+            display: inline-block;
+            background: #4EDFCE;
+            color: #131313;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+
+        .featured-title {
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #131313;
+        }
+
+        .featured-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 14px;
+        }
+
+        .featured-list li {
+            margin-bottom: 7px;
+            font-size: 14px;
+            color: #5a6472;
+        }
+
+        .featured-list strong {
+            color: #131313;
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .featured-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .featured-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #fff;
+            color: #131313;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all .2s ease;
+            z-index: 10;
+            box-shadow: 0 8px 20px rgba(19, 19, 19, 0.12);
+            border: 1px solid #e4ebf0;
+        }
+
+        .featured-nav:hover {
+            background: #4EDFCE;
+            color: #131313;
+            transform: translateY(-50%) scale(1.03);
+        }
+
+        .featured-nav.prev { left: -16px; }
+        .featured-nav.next { right: -16px; }
+
+        .featured-dots {
+            text-align: center;
+            margin-top: 18px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .featured-dot {
+            display: inline-block;
+            height: 10px;
+            border-radius: 999px;
+            background: #d6dee7;
+            transition: all .3s ease;
+            cursor: pointer;
+        }
+
+        .featured-dot.active {
+            width: 28px;
+            background: #4EDFCE;
+        }
+
+        @media only screen and (max-width: 767px) {
+            .featured-shell {
+                padding: 16px;
+            }
+
+            .featured-media {
+                height: 220px;
+                margin-bottom: 16px;
+            }
+
+            .featured-content {
+                padding: 18px;
+            }
+
+            .featured-nav {
+                width: 38px;
+                height: 38px;
+            }
+
+            .featured-nav.prev { left: 8px; }
+            .featured-nav.next { right: 8px; }
+        }
     </style>
 </head>
 <body>
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
 
     <header class="header-section">
         <div class="container">
@@ -237,7 +416,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('landing/img/1.jpg')); ?>">
+                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('page-top-bg/3.png')); ?>">
                         <div class="fi-content text-white">
                             <h5><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Events</a><?php else: ?><a href="<?php echo e(route('events.index')); ?>">Events</a><?php endif; ?></h5>
                             <p>Discover casual games, ranked matches, and local badminton events happening near you.</p>
@@ -245,7 +424,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('landing/img/2.jpg')); ?>">
+                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('page-top-bg/4.png')); ?>">
                         <div class="fi-content text-white">
                             <h5><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Calendar</a><?php else: ?><a href="<?php echo e(route('calendar')); ?>">Calendar</a><?php endif; ?></h5>
                             <p>Stay on top of your schedule with upcoming matches, tournaments, and training sessions.</p>
@@ -253,7 +432,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('landing/img/3.jpg')); ?>">
+                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('page-top-bg/5.png')); ?>">
                         <div class="fi-content text-white">
                             <h5><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Statistics</a><?php else: ?><a href="<?php echo e(route('history')); ?>">Statistics</a><?php endif; ?></h5>
                             <p>Monitor your rating, win rate, match history, and performance as you climb the rankings.</p>
@@ -261,7 +440,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 p-0">
-                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('landing/img/4.jpg')); ?>">
+                    <div class="feature-item set-bg" data-setbg="<?php echo e(asset('page-top-bg/1.png')); ?>">
                         <div class="fi-content text-white">
                             <h5><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Tournaments</a><?php else: ?><a href="<?php echo e(route('events.index')); ?>">Tournaments</a><?php endif; ?></h5>
                             <p>Join competitive tournaments, track your progress, and compete for the top spot.</p>
@@ -274,47 +453,130 @@
 
     <section class="tournaments-section spad">
         <div class="container">
-            <div class="tournament-title">Sponsored Tournaments</div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="tournament-item mb-4 mb-lg-0">
-                        <div class="ti-notic">Premium Tournament</div>
-                        <div class="ti-content">
-                            <div class="ti-thumb set-bg" data-setbg="<?php echo e(asset('landing/img/tournament/1.jpg')); ?>"></div>
-                            <div class="ti-text">
-                                <h4>MTDY 2026 Championships</h4>
-                                <ul>
-                                    <li><span>Tournament Begins:</span> June 20, 2026</li>
-                                    <li><span>Tournament Ends:</span> July 01, 2026</li>
-                                    <li><span>Participants:</span> 10 teams</li>
-                                    <li><span>Tournament Author:</span> Joshua Mangubat Sr.</li>
-                                </ul>
-                                <p><span>Prizes:</span> 1st place $2000, 2nd place: $1000, 3rd place: $500</p>
+            <div class="tournament-title">Featured Tournaments</div>
+
+            <?php
+                $featured = \App\Models\Event::where('is_featured', true)
+                    ->whereIn('status', ['open', 'ongoing'])
+                    ->orderByDesc('start_date')
+                    ->get();
+            ?>
+
+            <?php if($featured->isEmpty()): ?>
+                <p style="color:#878787; text-align:center; padding:40px 0;">No featured tournaments available right now.</p>
+            <?php else: ?>
+                <div style="position:relative; width:100%; overflow:hidden;">
+                    <div id="featured-track" style="width:100%;">
+                        <?php $__currentLoopData = $featured; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $event): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <div class="featured-slide" style="display:none; width:100%;">
+                                <div class="featured-shell">
+                                    <div class="row g-4 align-items-stretch">
+                                        <div class="col-lg-5">
+                                            <div class="featured-media" style="background: url('<?php echo e(asset('landing/img/slider-1.png')); ?>') center/cover no-repeat;"></div>
+                                        </div>
+                                        <div class="col-lg-7">
+                                            <div class="featured-content">
+                                                <div class="featured-badge">
+                                                    <?php echo e($event->status === 'ongoing' ? '🔴 Live Now' : '⭐ Featured Tournament'); ?>
+
+                                                </div>
+                                                <h4 class="featured-title"><?php echo e($event->name); ?></h4>
+                                                <ul class="featured-list">
+                                                    <li><strong>Begins:</strong><?php echo e($event->start_date->format('F d, Y')); ?></li>
+                                                    <li><strong>Ends:</strong><?php echo e($event->end_date->format('F d, Y')); ?></li>
+                                                    <li><strong>Location:</strong><?php echo e($event->location); ?></li>
+                                                    <?php if($event->max_participants): ?>
+                                                        <li><strong>Participants:</strong><?php echo e($event->max_participants); ?> players</li>
+                                                    <?php endif; ?>
+                                                    <li><strong>Organizer:</strong><?php echo e($event->organizer->name ?? 'Shuttl'); ?></li>
+                                                </ul>
+                                                <?php if($event->description): ?>
+                                                    <p style="font-size:13px; color:#878787; margin-bottom:16px;"><?php echo e(Str::limit($event->description, 120)); ?></p>
+                                                <?php endif; ?>
+                                                <div class="featured-actions">
+                                                    <?php if(auth()->guard()->check()): ?>
+                                                        <a href="<?php echo e(route('events.show', $event)); ?>" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">View Details</a>
+                                                        <?php if($event->status === 'open'): ?>
+                                                            <form method="POST" action="<?php echo e(route('events.join', $event)); ?>" style="margin:0;">
+                                                                <?php echo csrf_field(); ?>
+                                                                <button type="submit" style="background:transparent; border:2px solid #4EDFCE; color:#131313; font-size:13px; font-weight:600; padding:7px 22px; border-radius:999px; cursor:pointer; transition:all .2s;"
+                                                                        onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='transparent'">
+                                                                    Join Now
+                                                                </button>
+                                                            </form>
+                                                        <?php endif; ?>
+                                                    <?php else: ?>
+                                                        <a href="<?php echo e(route('login')); ?>" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">Login to Join</a>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
+
+                    <?php if($featured->count() > 1): ?>
+                        <a id="feat-prev" href="#" class="featured-nav prev">
+                            <i class="fa fa-angle-left"></i>
+                        </a>
+                        <a id="feat-next" href="#" class="featured-nav next">
+                            <i class="fa fa-angle-right"></i>
+                        </a>
+
+                        <div id="feat-dots" class="featured-dots"></div>
+                    <?php endif; ?>
                 </div>
-                <div class="col-md-6">
-                    <div class="tournament-item">
-                        <div class="ti-notic">Premium Tournament</div>
-                        <div class="ti-content">
-                            <div class="ti-thumb set-bg" data-setbg="<?php echo e(asset('landing/img/review-bg-2.jpg')); ?>"></div>
-                            <div class="ti-text">
-                                <h4>Hoops and Rackets Winter Cup</h4>
-                                <ul>
-                                    <li><span>Tournament Begins:</span> December 14, 2026</li>
-                                    <li><span>Tournament Ends:</span> December 16, 2026</li>
-                                    <li><span>Participants:</span> 10 teams</li>
-                                    <li><span>Tournament Author:</span> Stephen Reilly Gudmalin</li>
-                                </ul>
-                                <p><span>Prizes:</span> 1st place $2000, 2nd place: $1000, 3rd place: $500</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php endif; ?>
         </div>
     </section>
+
+    <script>
+    (function () {
+        const track = document.getElementById('featured-track');
+        const dotsContainer = document.getElementById('feat-dots');
+        const btnPrev = document.getElementById('feat-prev');
+        const btnNext = document.getElementById('feat-next');
+
+        if (!track) return;
+
+        const slides = track.querySelectorAll('.featured-slide');
+        const total = slides.length;
+        if (total <= 1) return;
+
+        let current = 0;
+        let autoplay = setInterval(() => goTo(current + 1), 5000);
+
+        function renderSlides() {
+            slides.forEach((slide, index) => {
+                slide.style.display = index === current ? 'block' : 'none';
+            });
+        }
+
+        function goTo(index) {
+            current = (index + total) % total;
+            renderSlides();
+            renderDots();
+        }
+
+        function renderDots() {
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < total; i++) {
+                const dot = document.createElement('span');
+                dot.className = 'featured-dot' + (i === current ? ' active' : '');
+                dot.style.width = i === current ? '28px' : '10px';
+                dot.addEventListener('click', () => { clearInterval(autoplay); goTo(i); });
+                dotsContainer.appendChild(dot);
+            }
+        }
+
+        btnPrev.addEventListener('click', (e) => { e.preventDefault(); clearInterval(autoplay); goTo(current - 1); });
+        btnNext.addEventListener('click', (e) => { e.preventDefault(); clearInterval(autoplay); goTo(current + 1); });
+
+        goTo(0);
+    })();
+    </script>
 
     <footer class="footer-section">
         <div class="container">
