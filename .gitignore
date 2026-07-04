@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/storage/framework/views/*.php
+/storage/framework/cache
+/bootstrap/cache/*.php
+/.claude
