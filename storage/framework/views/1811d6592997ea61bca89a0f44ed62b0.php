@@ -362,18 +362,12 @@
                             <a href="<?php echo e(route('calendar')); ?>">Calendar</a>
                         <?php endif; ?>
                     </li>
-                    <li>
-                        <?php if(auth()->guard()->guest()): ?>
-                            <a href="<?php echo e(route('login')); ?>">Statistics</a>
-                        <?php else: ?>
-                            <a href="<?php echo e(route('history')); ?>">Statistics</a>
-                        <?php endif; ?>
-                    </li>
+                    <li><a href="<?php echo e(route('history')); ?>">Statistics</a></li>
                     <li>
                         <?php if(auth()->guard()->guest()): ?>
                             <a href="<?php echo e(route('login')); ?>">Tournament</a>
                         <?php else: ?>
-                            <a href="<?php echo e(route('events.index')); ?>">Tournament</a>
+                            <a href="<?php echo e(route('tournaments')); ?>">Tournament</a>
                         <?php endif; ?>
                     </li>
                 </ul>
@@ -442,7 +436,7 @@
                 <div class="col-lg-3 col-md-6 p-0">
                     <div class="feature-item set-bg" data-setbg="<?php echo e(asset('page-top-bg/1.png')); ?>">
                         <div class="fi-content text-white">
-                            <h5><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Tournaments</a><?php else: ?><a href="<?php echo e(route('events.index')); ?>">Tournaments</a><?php endif; ?></h5>
+                            <h5><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Tournaments</a><?php else: ?><a href="<?php echo e(route('tournaments')); ?>">Tournaments</a><?php endif; ?></h5>
                             <p>Join competitive tournaments, track your progress, and compete for the top spot.</p>
                         </div>
                     </div>
@@ -455,13 +449,6 @@
         <div class="container">
             <div class="tournament-title">Featured Tournaments</div>
 
-            <?php
-                $featured = \App\Models\Event::where('is_featured', true)
-                    ->whereIn('status', ['open', 'ongoing'])
-                    ->orderByDesc('start_date')
-                    ->get();
-            ?>
-
             <?php if($featured->isEmpty()): ?>
                 <p style="color:#878787; text-align:center; padding:40px 0;">No featured tournaments available right now.</p>
             <?php else: ?>
@@ -472,7 +459,7 @@
                                 <div class="featured-shell">
                                     <div class="row g-4 align-items-stretch">
                                         <div class="col-lg-5">
-                                            <div class="featured-media" style="background: url('<?php echo e(asset('landing/img/slider-1.png')); ?>') center/cover no-repeat;"></div>
+                                            <div class="featured-media" style="background: url('<?php echo e($event->photoUrl()); ?>') center/cover no-repeat;"></div>
                                         </div>
                                         <div class="col-lg-7">
                                             <div class="featured-content">
@@ -488,7 +475,7 @@
                                                     <?php if($event->max_participants): ?>
                                                         <li><strong>Participants:</strong><?php echo e($event->max_participants); ?> players</li>
                                                     <?php endif; ?>
-                                                    <li><strong>Organizer:</strong><?php echo e($event->organizer->name ?? 'Shuttl'); ?></li>
+                                                    <li><strong>Host:</strong><?php echo e($event->organizer->name ?? 'Shuttl'); ?></li>
                                                 </ul>
                                                 <?php if($event->description): ?>
                                                     <p style="font-size:13px; color:#878787; margin-bottom:16px;"><?php echo e(Str::limit($event->description, 120)); ?></p>
@@ -585,7 +572,7 @@
                 <li><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Events</a><?php else: ?><a href="<?php echo e(route('events.index')); ?>">Events</a><?php endif; ?></li>
                 <li><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Calendar</a><?php else: ?><a href="<?php echo e(route('calendar')); ?>">Calendar</a><?php endif; ?></li>
                 <li><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Statistics</a><?php else: ?><a href="<?php echo e(route('history')); ?>">Statistics</a><?php endif; ?></li>
-                <li><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Tournament</a><?php else: ?><a href="<?php echo e(route('events.index')); ?>">Tournament</a><?php endif; ?></li>
+                <li><?php if(auth()->guard()->guest()): ?><a href="<?php echo e(route('login')); ?>">Tournament</a><?php else: ?><a href="<?php echo e(route('tournaments')); ?>">Tournament</a><?php endif; ?></li>
             </ul>
             <p class="copyright">Copyright &copy;<?php echo e(date('Y')); ?> Shuttl. All rights reserved</p>
         </div>
@@ -597,4 +584,5 @@
     <script src="<?php echo e(asset('landing/js/jquery.marquee.min.js')); ?>"></script>
     <script src="<?php echo e(asset('landing/js/main.js')); ?>"></script>
 </body>
-</html><?php /**PATH C:\Users\Raymundo Gudmalin\Shuttl\resources\views/landing.blade.php ENDPATH**/ ?>
+</html>
+<?php /**PATH C:\Users\Raymundo Gudmalin\Shuttl\resources\views/landing.blade.php ENDPATH**/ ?>

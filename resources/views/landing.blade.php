@@ -449,13 +449,6 @@
         <div class="container">
             <div class="tournament-title">Featured Tournaments</div>
 
-            @php
-                $featured = \App\Models\Event::where('is_featured', true)
-                    ->whereIn('status', ['open', 'ongoing'])
-                    ->orderByDesc('start_date')
-                    ->get();
-            @endphp
-
             @if($featured->isEmpty())
                 <p style="color:#878787; text-align:center; padding:40px 0;">No featured tournaments available right now.</p>
             @else

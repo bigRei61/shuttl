@@ -17,8 +17,13 @@ class EventController extends Controller
     {
         $hosts = User::where('role', 'player')->orderBy('name')->get();
 
-        $events = Event::with('organizer')
+        $events = Event::with([
+            'organizer',
+            'players' => fn ($query) => $query->whereKey(auth()->id()),
+        ])
             ->withCount('approvedPlayers')
+            ->whereIn('status', ['open', 'ongoing'])
+            ->whereDate('end_date', '>=', today())
             ->orderByDesc('start_date')
             ->get();
 

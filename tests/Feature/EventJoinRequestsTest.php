@@ -12,7 +12,10 @@ it('stores a player created event with a photo and approves the creator as host'
     Storage::fake('public');
 
     $player = User::factory()->create();
-    $photo = UploadedFile::fake()->image('event.jpg');
+    $photo = UploadedFile::fake()->createWithContent(
+        'event.png',
+        base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=')
+    );
 
     $this->actingAs($player)
         ->post(route('events.store'), [
@@ -31,6 +34,7 @@ it('stores a player created event with a photo and approves the creator as host'
 
     expect($event->organizer_id)->toBe($player->id)
         ->and($event->photo_path)->not->toBeNull()
+        ->and($event->photoUrl())->toContain('/storage/event-photos/')
         ->and($event->description)->toBeNull()
         ->and($event->max_participants)->toBeNull()
         ->and($event->players()->whereKey($player->id)->first()->pivot->status)->toBe('approved');
@@ -83,63 +87,50 @@ it('requires host approval before a player joins an event', function () {
     expect($event->fresh()->players()->whereKey($player->id)->first()->pivot->status)->toBe('approved');
 });
 
-it('shows all events on the events page for players', function () {
+it('shows only active events on the events page for players', function () {
     $player = User::factory()->create();
-    $hostedEvent = Event::create([
+    $activeOpenEvent = Event::create([
         'organizer_id' => $player->id,
-        'name' => 'Hosted Cup',
+        'name' => 'Active Open Cup',
         'type' => 'tournament',
         'location' => 'Court 3',
-        'start_date' => '2026-07-12',
-        'end_date' => '2026-07-12',
+        'start_date' => now()->addDay()->toDateString(),
+        'end_date' => now()->addDays(2)->toDateString(),
         'status' => 'open',
     ]);
-    $approvedEvent = Event::create([
+    $activeOngoingEvent = Event::create([
         'organizer_id' => User::factory()->create()->id,
-        'name' => 'Approved Cup',
+        'name' => 'Active Ongoing Cup',
         'type' => 'tournament',
         'location' => 'Court 1',
-        'start_date' => '2026-07-10',
-        'end_date' => '2026-07-10',
-        'status' => 'open',
+        'start_date' => now()->subDay()->toDateString(),
+        'end_date' => now()->toDateString(),
+        'status' => 'ongoing',
     ]);
-    $pendingEvent = Event::create([
+    $oldEvent = Event::create([
         'organizer_id' => User::factory()->create()->id,
-        'name' => 'Pending Cup',
+        'name' => 'Old Cup',
         'type' => 'tournament',
         'location' => 'Court 2',
-        'start_date' => '2026-07-11',
-        'end_date' => '2026-07-11',
+        'start_date' => now()->subDays(3)->toDateString(),
+        'end_date' => now()->subDay()->toDateString(),
         'status' => 'open',
     ]);
-    $unjoinedEvent = Event::create([
+    $completedEvent = Event::create([
         'organizer_id' => User::factory()->create()->id,
-        'name' => 'Open Community Cup',
-        'type' => 'tournament',
-        'location' => 'Court 4',
-        'start_date' => '2026-07-13',
-        'end_date' => '2026-07-13',
-        'status' => 'open',
-    ]);
-    $quickPlayEvent = Event::create([
-        'organizer_id' => User::factory()->create()->id,
-        'name' => 'Friday Quick Play',
+        'name' => 'Archived Cup',
         'type' => 'quick_play',
         'location' => 'Court 5',
-        'start_date' => '2026-07-14',
-        'end_date' => '2026-07-14',
-        'status' => 'open',
+        'start_date' => now()->addDay()->toDateString(),
+        'end_date' => now()->addDays(2)->toDateString(),
+        'status' => 'completed',
     ]);
-
-    $approvedEvent->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
-    $pendingEvent->players()->attach($player->id, ['status' => 'pending']);
 
     $this->actingAs($player)
         ->get(route('events.index'))
         ->assertSuccessful()
-        ->assertSee($hostedEvent->name)
-        ->assertSee('Approved Cup')
-        ->assertSee('Pending Cup')
-        ->assertSee($unjoinedEvent->name)
-        ->assertSee($quickPlayEvent->name);
+        ->assertSee($activeOpenEvent->name)
+        ->assertSee($activeOngoingEvent->name)
+        ->assertDontSee($oldEvent->name)
+        ->assertDontSee($completedEvent->name);
 });

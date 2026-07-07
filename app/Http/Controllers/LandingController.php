@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+
 class LandingController extends Controller
 {
     public function index()
@@ -11,6 +13,13 @@ class LandingController extends Controller
             return redirect()->route('admin.dashboard');
         }
 
-        return view('landing');
+        $featured = Event::featured()
+            ->with('organizer')
+            ->whereIn('status', ['open', 'ongoing'])
+            ->whereDate('end_date', '>=', today())
+            ->orderByDesc('start_date')
+            ->get();
+
+        return view('landing', compact('featured'));
     }
 }

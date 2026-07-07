@@ -17,43 +17,61 @@
             top: 0;
             z-index: 1000;
         }
-        .event-slide {
-            width: calc((100% - 40px) / 3);
-            flex-shrink: 0;
-            display: flex;
-            height: 520px;
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+            align-items: stretch;
         }
-        .review-item {
+        .event-slide { min-width: 0; }
+        .event-card {
             height: 100%;
             width: 100%;
             display: flex;
             flex-direction: column;
             margin-bottom: 0;
+            overflow: hidden;
+            background: #fff;
+            border: 1px solid #d6dee7;
+            border-radius: 8px;
+            box-shadow: 0 16px 38px rgba(19, 19, 19, .07);
         }
         .review-cover {
-            height: 200px;
-            min-height: 200px;
+            display: block;
+            height: 210px;
+            min-height: 210px;
             flex-shrink: 0;
             background-size: cover;
             background-position: center;
             position: relative;
         }
         .event-text {
-            background: #fff;
-            border: 1px solid #d6dee7;
-            border-top: none;
             padding: 24px;
             flex: 1;
-            overflow: hidden;
+            min-height: 0;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 16px;
+        }
+        .event-text h4 {
+            color: #131313;
+            font-size: 21px;
+            line-height: 1.35;
+            margin: 0;
+            overflow-wrap: anywhere;
         }
         .event-text h4 a { color: #131313; text-decoration: none; }
         .event-text h4 a:hover { color: #4EDFCE; }
-        .event-text .ti-text ul { list-style: none; padding: 0; margin: 0 0 14px; }
+        .event-text .ti-text { flex: 1; }
+        .event-text .ti-text ul { list-style: none; padding: 0; margin: 0; }
         .event-text .ti-text ul li { font-size: 13px; color: #878787; margin-bottom: 5px; }
         .event-text .ti-text ul li span { color: #131313; font-weight: 600; margin-right: 6px; }
+        .event-description {
+            font-size: 13px;
+            color: #878787;
+            margin: 12px 0 0;
+            line-height: 1.55;
+        }
         .featured-badge {
             position: absolute; top: 12px; left: 12px;
             background: #4EDFCE; color: #131313;
@@ -69,13 +87,34 @@
         .status-ongoing { background: #fff3e0; color: #e07c3a; }
         .status-completed { background: #f0f0f0; color: #878787; }
         .btn-join {
-            display: inline-block; background: transparent;
+            display: inline-flex; align-items: center; justify-content: center;
+            background: transparent;
             border: 2px solid #4EDFCE; color: #131313;
             font-size: 13px; font-weight: 600; padding: 7px 20px;
             border-radius: 999px; cursor: pointer; transition: all .2s;
-            text-decoration: none; margin-left: 8px;
+            text-decoration: none;
         }
         .btn-join:hover { background: #4EDFCE; }
+        .event-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+        .event-actions form { margin: 0; }
+        .event-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 35px;
+            padding: 7px 16px;
+            border-radius: 999px;
+            background: #eef2f6;
+            color: #131313;
+            font-size: 13px;
+            font-weight: 700;
+        }
         .casual-item {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
@@ -191,12 +230,23 @@
         }
         .modal-submit:hover { filter: brightness(0.96); }
         @media (max-width: 640px) {
+            .events-grid { grid-template-columns: 1fr; }
+            .review-cover { height: 190px; min-height: 190px; }
+            .event-text { padding: 20px; }
+            .event-actions > * { width: 100%; }
+            .event-actions .site-btn,
+            .event-actions .btn-join,
+            .event-actions .event-pill { text-align: center; }
+            .event-actions form .btn-join { width: 100%; }
             .modal-grid { grid-template-columns: 1fr; gap: 0; }
             .event-modal-header,
             .event-modal-body { padding-left: 20px; padding-right: 20px; }
             .modal-actions { flex-direction: column-reverse; }
             .modal-cancel,
             .modal-submit { width: 100%; }
+        }
+        @media (min-width: 641px) and (max-width: 991px) {
+            .events-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
     </style>
 </head>
@@ -237,7 +287,7 @@
             @endif
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-                <div class="tournament-title" style="margin:0;">All Events</div>
+                <div class="tournament-title" style="margin:0;">Active Events</div>
                 @auth
                     <button type="button" id="open-event-modal" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px; border:0;">+ Create Event</button>
                 @endauth
@@ -246,64 +296,61 @@
             @if($events->isEmpty())
                 <p style="color:#878787; text-align:center; padding:60px 0;">No events available right now.</p>
             @else
-                <div id="events-slider" style="overflow:hidden; position:relative;">
-                    <div id="events-track" style="display:flex; gap:20px; transition: transform 0.4s cubic-bezier(.4,0,.2,1);">
-                        @foreach($events as $event)
-                            <div class="event-slide">
-                                <div class="review-item" style="margin-bottom:0; width:100%;">
-                                    <div class="review-cover set-bg" data-setbg="{{ $event->photoUrl() }}" style="height:200px; background-size:cover; background-position:center; position:relative;">
-                                        @if($event->is_featured)
-                                            <div class="featured-badge">⭐ Featured</div>
-                                        @endif
-                                    </div>
-                                    <div class="event-text">
+                <div class="events-grid">
+                    @foreach($events as $event)
+                        @php
+                            $participation = $event->players->firstWhere('id', auth()->id())?->pivot?->status;
+                            $isHost = (int) $event->organizer_id === (int) auth()->id();
+                        @endphp
+                        <div class="event-slide">
+                            <article class="event-card">
+                                <a href="{{ route('events.show', $event) }}" class="review-cover" style="background-image: url('{{ $event->photoUrl() }}');">
+                                    @if($event->is_featured)
+                                        <div class="featured-badge">Featured</div>
+                                    @endif
+                                </a>
+                                <div class="event-text">
+                                    <div>
                                         <span class="status-badge status-{{ $event->status }}">{{ ucfirst($event->status) }}</span>
-                                        <h4 style="margin-bottom:12px;">
+                                        <h4>
                                             <a href="{{ route('events.show', $event) }}">{{ $event->name }}</a>
                                         </h4>
-                                        <div class="ti-text">
-                                            <ul>
-                                                <li><span>Type:</span> {{ ucfirst(str_replace('_', ' ', $event->type)) }}</li>
-                                                <li><span>Starts:</span> {{ $event->start_date->format('M d, Y') }}</li>
-                                                <li><span>Ends:</span> {{ $event->end_date->format('M d, Y') }}</li>
-                                                <li><span>Location:</span> {{ $event->location }}</li>
-                                                <li><span>Host:</span> {{ $event->organizer->name ?? 'Shuttl' }}</li>
-                                                <li><span>Players:</span> {{ $event->approved_players_count ?? 0 }} approved</li>
-                                                @if($event->max_participants)
-                                                    <li><span>Slots:</span> {{ $event->max_participants }} participants</li>
-                                                @endif
-                                            </ul>
-                                            @if($event->description)
-                                                <p style="font-size:13px; color:#878787; margin-bottom:14px;">{{ Str::limit($event->description, 90) }}</p>
+                                    </div>
+                                    <div class="ti-text">
+                                        <ul>
+                                            <li><span>Type:</span> {{ ucfirst(str_replace('_', ' ', $event->type)) }}</li>
+                                            <li><span>Starts:</span> {{ $event->start_date->format('M d, Y') }}</li>
+                                            <li><span>Ends:</span> {{ $event->end_date->format('M d, Y') }}</li>
+                                            <li><span>Location:</span> {{ $event->location }}</li>
+                                            <li><span>Host:</span> {{ $event->organizer->name ?? 'Shuttl' }}</li>
+                                            <li><span>Players:</span> {{ $event->approved_players_count ?? 0 }} approved</li>
+                                            @if($event->max_participants)
+                                                <li><span>Slots:</span> {{ $event->max_participants }} participants</li>
                                             @endif
-                                        </div>
-                                        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-                                            <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:7px 18px;">View Details</a>
-                                            @if((int) $event->organizer_id === (int) auth()->id())
-                                                <span class="btn-join" style="cursor:default;">Host</span>
-                                            @endif
-                                        </div>
+                                        </ul>
+                                        @if($event->description)
+                                            <p class="event-description">{{ Str::limit($event->description, 120) }}</p>
+                                        @endif
+                                    </div>
+                                    <div class="event-actions">
+                                        <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:7px 18px;">View Details</a>
+                                        @if($isHost)
+                                            <span class="event-pill">Host</span>
+                                        @elseif($participation === 'approved')
+                                            <span class="event-pill">Joined</span>
+                                        @elseif($participation === 'pending')
+                                            <span class="event-pill">Pending Approval</span>
+                                        @elseif($event->status === 'open')
+                                            <form method="POST" action="{{ route('events.join', $event) }}">
+                                                @csrf
+                                                <button type="submit" class="btn-join">Request to Join</button>
+                                            </form>
+                                        @endif
                                     </div>
                                 </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="text-center pt-4" style="margin-top:24px;">
-                    <ul id="events-pagination" style="display:inline-flex; gap:8px; list-style:none; padding:0; margin:0; align-items:center;">
-                        <li>
-                            <a id="btn-prev" href="#" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:#e5e5e5; color:#131313; font-size:13px; text-decoration:none; transition:all .2s;">
-                                <i class="fa fa-angle-left"></i>
-                            </a>
-                        </li>
-                        <li id="page-numbers" style="display:inline-flex; gap:8px;"></li>
-                        <li>
-                            <a id="btn-next" href="#" style="display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; border-radius:50%; background:#e5e5e5; color:#131313; font-size:13px; text-decoration:none; transition:all .2s;">
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
+                            </article>
+                        </div>
+                    @endforeach
                 </div>
             @endif
         </div>
@@ -458,73 +505,6 @@
                 option.hidden = query !== '' && !option.dataset.search.includes(query);
             });
         });
-    })();
-
-    (function () {
-        const slider = document.getElementById('events-slider');
-        const track = document.getElementById('events-track');
-        const pageNumbers = document.getElementById('page-numbers');
-        const btnPrev = document.getElementById('btn-prev');
-        const btnNext = document.getElementById('btn-next');
-
-        if (!track) return;
-
-        const slides = Array.from(track.querySelectorAll('.event-slide'));
-        const perPage = 3;
-        const totalPages = Math.ceil(slides.length / perPage);
-        const gap = 20;
-        let currentPage = 0;
-
-        function goTo(page) {
-            currentPage = Math.max(0, Math.min(page, totalPages - 1));
-
-            const slideWidth = slides[0]?.getBoundingClientRect().width || 0;
-            let offset = currentPage * perPage * (slideWidth + gap);
-
-            const maxOffset = Math.max(0, track.scrollWidth - slider.offsetWidth);
-            offset = Math.min(offset, maxOffset);
-
-            track.style.transform = `translateX(-${offset}px)`;
-            renderDots();
-        }
-
-        function renderDots() {
-            pageNumbers.innerHTML = '';
-            for (let i = 0; i < totalPages; i++) {
-                const dot = document.createElement('li');
-                dot.innerHTML = `<a href="#" data-page="${i}" style="
-                    display:inline-flex; align-items:center; justify-content:center;
-                    width:38px; height:38px; border-radius:50%;
-                    background:${i === currentPage ? '#4EDFCE' : '#e5e5e5'};
-                    color:#131313;
-                    font-size:14px; font-weight:${i === currentPage ? '700' : '400'};
-                    text-decoration:none; transition:all .2s;">
-                    ${i + 1}
-                </a>`;
-                dot.querySelector('a').addEventListener('click', (e) => {
-                    e.preventDefault();
-                    goTo(i);
-                });
-                pageNumbers.appendChild(dot);
-            }
-
-            btnPrev.style.opacity = currentPage === 0 ? '0.4' : '1';
-            btnPrev.style.pointerEvents = currentPage === 0 ? 'none' : 'auto';
-            btnNext.style.opacity = currentPage === totalPages - 1 ? '0.4' : '1';
-            btnNext.style.pointerEvents = currentPage === totalPages - 1 ? 'none' : 'auto';
-        }
-
-        btnPrev.addEventListener('click', (e) => { e.preventDefault(); goTo(currentPage - 1); });
-        btnNext.addEventListener('click', (e) => { e.preventDefault(); goTo(currentPage + 1); });
-
-        [btnPrev, btnNext].forEach(btn => {
-            btn.addEventListener('mouseenter', () => { if (btn.style.opacity !== '0.4') btn.style.background = '#4EDFCE'; });
-            btn.addEventListener('mouseleave', () => { btn.style.background = '#e5e5e5'; });
-        });
-
-        window.addEventListener('resize', () => goTo(currentPage));
-
-        goTo(0);
     })();
     </script>
 

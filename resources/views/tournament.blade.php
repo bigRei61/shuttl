@@ -171,7 +171,7 @@
             <div class="tp-section-head">
                 <div>
                     <h2>{{ auth()->user()->isAdmin() ? 'All Tournaments' : 'My Tournaments' }}</h2>
-                    <p>{{ auth()->user()->isAdmin() ? 'Every tournament currently managed in Shuttl.' : 'Tournament events you host or have been approved to join.' }}</p>
+                    <p>{{ auth()->user()->isAdmin() ? 'Every tournament currently managed in Shuttl.' : 'Tournament events you have been approved to join.' }}</p>
                 </div>
                 <a href="{{ route('events.index') }}" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">Browse Events</a>
             </div>

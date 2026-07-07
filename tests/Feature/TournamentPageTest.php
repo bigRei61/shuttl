@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('shows approved joined and hosted tournaments for players', function () {
+it('shows only approved joined tournaments for players', function () {
     $player = User::factory()->create();
     $approvedTournament = createTournament([
         'name' => 'Approved Cup',
@@ -39,14 +39,14 @@ it('shows approved joined and hosted tournaments for players', function () {
         ->assertSuccessful()
         ->assertSee('Approved Cup')
         ->assertSee(route('events.show', $approvedTournament), false)
-        ->assertSee('Hosted Cup')
-        ->assertSee(route('events.show', $hostedTournament), false)
+        ->assertDontSee('Hosted Cup')
         ->assertDontSee('Pending Cup')
         ->assertDontSee('Rejected Cup')
         ->assertDontSee('Open Cup')
         ->assertDontSee('Approved Quick Play');
 
-    expect($unjoinedTournament->exists)->toBeTrue();
+    expect($hostedTournament->exists)->toBeTrue()
+        ->and($unjoinedTournament->exists)->toBeTrue();
 });
 
 it('shows all tournament events to admins', function () {

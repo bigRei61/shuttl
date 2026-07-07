@@ -18,3 +18,99 @@
 [2026-07-04 04:01:15] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
     at http://127.0.0.1:8000/landing/js/main.js:44:20
     at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/tournaments","user_agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36","timestamp":"2026-07-04T04:01:15.525Z"} 
+[2026-07-07 11:19:24] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:19:23.865Z"} 
+[2026-07-07 11:19:24] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:19:23.865Z"} 
+[2026-07-07 11:19:38] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:19:38.338Z"} 
+[2026-07-07 11:19:38] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:19:38.338Z"} 
+[2026-07-07 11:20:50] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:20:49.948Z"} 
+[2026-07-07 11:20:50] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:20:49.948Z"} 
+[2026-07-07 11:20:59] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:20:59.160Z"} 
+[2026-07-07 11:20:59] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:20:59.161Z"} 
+[2026-07-07 11:21:52] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:21:52.160Z"} 
+[2026-07-07 11:21:52] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:21:52.160Z"} 
+[2026-07-07 11:22:00] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:21:59.371Z"} 
+[2026-07-07 11:22:00] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:21:59.371Z"} 
+[2026-07-07 11:22:29] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:22:28.938Z"} 
+[2026-07-07 11:22:29] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:22:28.938Z"} 
+[2026-07-07 11:22:53] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:22:51.605Z"} 
+[2026-07-07 11:22:53] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:22:51.605Z"} 
+[2026-07-07 11:23:26] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:23:25.209Z"} 
+[2026-07-07 11:23:26] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T11:23:25.209Z"} 
+[2026-07-07 15:43:41] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/tournaments","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:43:40.969Z"} 
+[2026-07-07 15:43:41] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/tournaments","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:43:40.970Z"} 
+[2026-07-07 15:44:07] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:44:06.520Z"} 
+[2026-07-07 15:44:07] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:44:06.520Z"} 
+[2026-07-07 15:44:41] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/tournaments","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:44:41.010Z"} 
+[2026-07-07 15:44:41] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/tournaments","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:44:41.010Z"} 
+[2026-07-07 15:45:08] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:45:08.313Z"} 
+[2026-07-07 15:45:08] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:45:08.313Z"} 
+[2026-07-07 15:46:10] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/5","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:46:09.647Z"} 
+[2026-07-07 15:46:10] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/5","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:46:09.647Z"} 
+[2026-07-07 15:48:19] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/tournaments","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:48:18.439Z"} 
+[2026-07-07 15:48:19] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/tournaments","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:48:18.440Z"} 
+[2026-07-07 15:48:47] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:48:46.488Z"} 
+[2026-07-07 15:48:47] local.ERROR: Uncaught TypeError: $(...).owlCarousel is not a function http://127.0.0.1:8000/landing/js/main.js 44 20 TypeError $(...).owlCarousel is not a function TypeError: $(...).owlCarousel is not a function
+    at http://127.0.0.1:8000/landing/js/main.js:44:20
+    at http://127.0.0.1:8000/landing/js/main.js:79:3 {"url":"http://127.0.0.1:8000/events/7","user_agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36 Edg/150.0.0.0","timestamp":"2026-07-07T15:48:46.488Z"} 

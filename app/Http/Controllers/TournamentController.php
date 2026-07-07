@@ -16,10 +16,7 @@ class TournamentController extends Controller
             ->with(['organizer', 'approvedPlayers'])
             ->withCount(['approvedPlayers', 'games'])
             ->when(! $user->isAdmin(), function ($query) use ($user) {
-                $query->where(function ($query) use ($user) {
-                    $query->where('organizer_id', $user->id)
-                        ->orWhereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));
-                });
+                $query->whereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));
             })
             ->orderByDesc('start_date')
             ->get();

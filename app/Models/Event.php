@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
 
 class Event extends Model
 {
@@ -52,7 +51,7 @@ class Event extends Model
     public function photoUrl(): string
     {
         if ($this->photo_path) {
-            return Storage::disk('public')->url($this->photo_path);
+            return asset('storage/'.ltrim($this->photo_path, '/'));
         }
 
         return asset('landing/img/slider-1.png');
