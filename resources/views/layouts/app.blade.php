@@ -85,6 +85,16 @@
                     Events
                 </a>
 
+                <a href="{{ route('tournaments') }}"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150
+                        {{ request()->routeIs('tournaments') ? 'bg-teal-600/15 text-teal-400' : 'text-gray-400 hover:text-white hover:bg-gray-800/60' }}">
+                    <svg class="w-[18px] h-[18px] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 21h8M12 17v4m-6-9V5a1 1 0 011-1h10a1 1 0 011 1v7a6 6 0 11-12 0z"/>
+                    </svg>
+                    Tournaments
+                </a>
+
                 <a href="{{ route('calendar') }}"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-150
                         {{ request()->routeIs('calendar') ? 'bg-teal-600/15 text-teal-400' : 'text-gray-400 hover:text-white hover:bg-gray-800/60' }}">

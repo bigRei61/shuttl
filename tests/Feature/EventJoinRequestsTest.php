@@ -83,8 +83,17 @@ it('requires host approval before a player joins an event', function () {
     expect($event->fresh()->players()->whereKey($player->id)->first()->pivot->status)->toBe('approved');
 });
 
-it('shows only approved joined events on the tournament page for players', function () {
+it('shows all events on the events page for players', function () {
     $player = User::factory()->create();
+    $hostedEvent = Event::create([
+        'organizer_id' => $player->id,
+        'name' => 'Hosted Cup',
+        'type' => 'tournament',
+        'location' => 'Court 3',
+        'start_date' => '2026-07-12',
+        'end_date' => '2026-07-12',
+        'status' => 'open',
+    ]);
     $approvedEvent = Event::create([
         'organizer_id' => User::factory()->create()->id,
         'name' => 'Approved Cup',
@@ -103,6 +112,24 @@ it('shows only approved joined events on the tournament page for players', funct
         'end_date' => '2026-07-11',
         'status' => 'open',
     ]);
+    $unjoinedEvent = Event::create([
+        'organizer_id' => User::factory()->create()->id,
+        'name' => 'Open Community Cup',
+        'type' => 'tournament',
+        'location' => 'Court 4',
+        'start_date' => '2026-07-13',
+        'end_date' => '2026-07-13',
+        'status' => 'open',
+    ]);
+    $quickPlayEvent = Event::create([
+        'organizer_id' => User::factory()->create()->id,
+        'name' => 'Friday Quick Play',
+        'type' => 'quick_play',
+        'location' => 'Court 5',
+        'start_date' => '2026-07-14',
+        'end_date' => '2026-07-14',
+        'status' => 'open',
+    ]);
 
     $approvedEvent->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
     $pendingEvent->players()->attach($player->id, ['status' => 'pending']);
@@ -110,6 +137,9 @@ it('shows only approved joined events on the tournament page for players', funct
     $this->actingAs($player)
         ->get(route('events.index'))
         ->assertSuccessful()
+        ->assertSee($hostedEvent->name)
         ->assertSee('Approved Cup')
-        ->assertDontSee('Pending Cup');
+        ->assertSee('Pending Cup')
+        ->assertSee($unjoinedEvent->name)
+        ->assertSee($quickPlayEvent->name);
 });

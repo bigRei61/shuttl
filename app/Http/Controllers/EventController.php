@@ -15,16 +15,10 @@ class EventController extends Controller
 {
     public function index(): View
     {
-        $user = auth()->user();
         $hosts = User::where('role', 'player')->orderBy('name')->get();
 
-        $events = Event::with(['organizer', 'approvedPlayers'])
-            ->when(! $user->isAdmin(), function ($query) use ($user) {
-                $query->where(function ($query) use ($user) {
-                    $query->where('organizer_id', $user->id)
-                        ->orWhereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));
-                });
-            })
+        $events = Event::with('organizer')
+            ->withCount('approvedPlayers')
             ->orderByDesc('start_date')
             ->get();
 
@@ -93,7 +87,7 @@ class EventController extends Controller
             'approvedPlayers',
             'games' => fn ($query) => $query->with(['gamePlayers.player', 'setScores'])
                 ->orderByRaw("case status when 'ongoing' then 0 when 'scheduled' then 1 else 2 end")
-                ->latest('scheduled_at'),
+                ->orderBy('scheduled_at'),
         ]);
 
         $participation = $event->players->firstWhere('id', auth()->id())?->pivot?->status;

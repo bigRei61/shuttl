@@ -11,15 +11,12 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PlayHistoryController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TournamentController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Public landing page (accessible whether logged in or not)
 Route::get('/', [LandingController::class, 'index'])->name('landing');
-
-Route::get('/tournaments', function () {
-    return view('tournament');
-})->name('tournaments');
 
 // Guest-only routes
 Route::middleware('guest')->group(function () {
@@ -50,6 +47,8 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    Route::get('/tournaments', [TournamentController::class, 'index'])->name('tournaments');
 
     // Dashboard (players redirected to events list)
     Route::get('/dashboard', function () {

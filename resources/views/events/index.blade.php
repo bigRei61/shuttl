@@ -147,6 +147,11 @@
             transition: border-color .2s, box-shadow .2s;
         }
         .modal-field textarea { min-height: 112px; resize: vertical; }
+        .modal-help {
+            color: #878787;
+            font-size: 12px;
+            margin: -2px 0 8px;
+        }
         .modal-field input:focus,
         .modal-field select:focus,
         .modal-field textarea:focus {
@@ -232,14 +237,14 @@
             @endif
 
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-                <div class="tournament-title" style="margin:0;">{{ auth()->check() && auth()->user()->isAdmin() ? 'All Events' : 'My Tournaments' }}</div>
+                <div class="tournament-title" style="margin:0;">All Events</div>
                 @auth
                     <button type="button" id="open-event-modal" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px; border:0;">+ Create Event</button>
                 @endauth
             </div>
 
             @if($events->isEmpty())
-                <p style="color:#878787; text-align:center; padding:60px 0;">{{ auth()->check() && auth()->user()->isAdmin() ? 'No events available right now.' : 'No joined tournaments yet. Join an event from the landing page to see it here after host approval.' }}</p>
+                <p style="color:#878787; text-align:center; padding:60px 0;">No events available right now.</p>
             @else
                 <div id="events-slider" style="overflow:hidden; position:relative;">
                     <div id="events-track" style="display:flex; gap:20px; transition: transform 0.4s cubic-bezier(.4,0,.2,1);">
@@ -263,6 +268,7 @@
                                                 <li><span>Ends:</span> {{ $event->end_date->format('M d, Y') }}</li>
                                                 <li><span>Location:</span> {{ $event->location }}</li>
                                                 <li><span>Host:</span> {{ $event->organizer->name ?? 'Shuttl' }}</li>
+                                                <li><span>Players:</span> {{ $event->approved_players_count ?? 0 }} approved</li>
                                                 @if($event->max_participants)
                                                     <li><span>Slots:</span> {{ $event->max_participants }} participants</li>
                                                 @endif
@@ -315,11 +321,13 @@
 
                         @if(auth()->user()->isAdmin())
                             <div class="modal-field">
-                                <label for="host_id">Event Host</label>
-                                <select id="host_id" name="host_id">
+                                <label for="event-host-search">Event Host</label>
+                                <p class="modal-help">Search by player name or email, then choose the host.</p>
+                                <input id="event-host-search" type="search" autocomplete="off" placeholder="Search player name or email">
+                                <select id="event-host-select" name="host_id" style="margin-top:8px;">
                                     <option value="">Select host</option>
                                     @foreach($hosts ?? collect() as $host)
-                                        <option value="{{ $host->id }}" {{ old('host_id') == $host->id ? 'selected' : '' }}>
+                                        <option value="{{ $host->id }}" data-search="{{ Str::lower($host->name.' '.$host->email) }}" {{ old('host_id') == $host->id ? 'selected' : '' }}>
                                             {{ $host->name }} ({{ $host->email }})
                                         </option>
                                     @endforeach
@@ -429,6 +437,27 @@
         @if(isset($errors) && $errors->any())
             openModal();
         @endif
+    })();
+
+    (function () {
+        const searchInput = document.getElementById('event-host-search');
+        const hostSelect = document.getElementById('event-host-select');
+
+        if (!searchInput || !hostSelect) return;
+
+        searchInput.addEventListener('input', function () {
+            const query = searchInput.value.trim().toLowerCase();
+
+            Array.from(hostSelect.options).forEach(function (option, index) {
+                if (index === 0) {
+                    option.hidden = false;
+
+                    return;
+                }
+
+                option.hidden = query !== '' && !option.dataset.search.includes(query);
+            });
+        });
     })();
 
     (function () {

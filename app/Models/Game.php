@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Game extends Model
 {
@@ -17,19 +19,23 @@ class Game extends Model
         'played_at' => 'datetime',
     ];
 
-    public function event() {
+    public function event(): BelongsTo
+    {
         return $this->belongsTo(Event::class);
     }
 
-    public function gamePlayers() {
+    public function gamePlayers(): HasMany
+    {
         return $this->hasMany(GamePlayer::class);
     }
 
-    public function setScores() {
-        return $this->hasMany(SetScore::class);
+    public function setScores(): HasMany
+    {
+        return $this->hasMany(SetScore::class)->orderBy('set_number');
     }
 
-    public function ratingChanges() {
+    public function ratingChanges(): HasMany
+    {
         return $this->hasMany(RatingChange::class);
     }
 }

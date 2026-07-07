@@ -12,13 +12,17 @@
         @csrf
 
         <div>
-            <label class="block text-sm text-gray-400 mb-1">Tournament Host</label>
-            <select name="host_id"
+            <label for="featured-host-search" class="block text-sm text-gray-400 mb-1">Tournament Host</label>
+            <p class="text-xs text-gray-500 mb-2">Required. This player approves join requests and manages games for the featured tournament.</p>
+            <input id="featured-host-search" type="search" autocomplete="off"
+                   class="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500 mb-2"
+                   placeholder="Search player name or email">
+            <select id="featured-host-select" name="host_id"
                     class="w-full bg-gray-800 border {{ $errors->has('host_id') ? 'border-red-500' : 'border-gray-700' }}
                            text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500">
                 <option value="">Select host</option>
                 @foreach($hosts as $host)
-                    <option value="{{ $host->id }}" {{ old('host_id') == $host->id ? 'selected' : '' }}>
+                    <option value="{{ $host->id }}" data-search="{{ Str::lower($host->name.' '.$host->email) }}" {{ old('host_id') == $host->id ? 'selected' : '' }}>
                         {{ $host->name }} ({{ $host->email }})
                     </option>
                 @endforeach
@@ -115,4 +119,29 @@
         </div>
     </form>
 </div>
+
+<script>
+    (function () {
+        const searchInput = document.getElementById('featured-host-search');
+        const hostSelect = document.getElementById('featured-host-select');
+
+        if (!searchInput || !hostSelect) {
+            return;
+        }
+
+        searchInput.addEventListener('input', function () {
+            const query = searchInput.value.trim().toLowerCase();
+
+            Array.from(hostSelect.options).forEach(function (option, index) {
+                if (index === 0) {
+                    option.hidden = false;
+
+                    return;
+                }
+
+                option.hidden = query !== '' && !option.dataset.search.includes(query);
+            });
+        });
+    })();
+</script>
 @endsection
