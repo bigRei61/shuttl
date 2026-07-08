@@ -33,6 +33,7 @@
     .day-cell.featured { border:2px solid #4EDFCE; font-weight:700; background:#fff; color:#131313; z-index:1; }
     .day-cell:hover { background:#4EDFCE; color:#131313; }
     .side-widget, .upcoming-widget { background:#fff; border:1px solid #d6dee7; padding:30px 26px; margin-bottom:30px; }
+	.upcoming-widget { margin-top:30px; }
     .widget-title { font-size:18px; margin-bottom:25px; }
     .event-link { display:flex; align-items:center; justify-content:space-between; background:#eef2f6; border:1px solid #d6dee7; color:#131313; padding:13px 18px; border-radius:30px; margin-bottom:12px; font-size:14px; font-weight:500; text-decoration:none; }
     .event-link:hover { background:#4EDFCE; border-color:#4EDFCE; color:#131313; }
