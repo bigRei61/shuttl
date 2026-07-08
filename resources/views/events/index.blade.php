@@ -125,6 +125,11 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+        .event-pagination { margin-top: 32px; }
+        .event-pagination .pagination { justify-content: center; margin-bottom: 0; }
+        .event-pagination .page-link { color: #131313; border-color: #d6dee7; }
+        .event-pagination .page-item.active .page-link { background: #4EDFCE; border-color: #4EDFCE; color: #131313; }
+        .event-pagination .page-link:focus { box-shadow: 0 0 0 3px rgba(78, 223, 206, .18); }
         .casual-item {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
@@ -362,6 +367,11 @@
                         </div>
                     @endforeach
                 </div>
+                @if(method_exists($events, 'hasPages') && $events->hasPages())
+                    <div class="event-pagination">
+                        {{ $events->links('pagination::bootstrap-4') }}
+                    </div>
+                @endif
             @endif
         </div>
     </section>

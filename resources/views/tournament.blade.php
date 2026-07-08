@@ -148,6 +148,30 @@
             white-space: nowrap;
         }
 
+        .tp-pagination {
+            margin-top: 12px;
+        }
+
+        .tp-pagination .pagination {
+            justify-content: center;
+            margin-bottom: 0;
+        }
+
+        .tp-pagination .page-link {
+            color: #131313;
+            border-color: #d6dee7;
+        }
+
+        .tp-pagination .page-item.active .page-link {
+            background: #4EDFCE;
+            border-color: #4EDFCE;
+            color: #131313;
+        }
+
+        .tp-pagination .page-link:focus {
+            box-shadow: 0 0 0 3px rgba(78, 223, 206, .18);
+        }
+
         .tp-empty-state {
             background: #fff;
             border: 1px solid #eaedf2;
@@ -234,6 +258,12 @@
                     <p>No joined or hosted events yet. Join an event and wait for host approval to see it here.</p>
                 </div>
             @endforelse
+
+            @if(isset($tournaments) && method_exists($tournaments, 'hasPages') && $tournaments->hasPages())
+                <div class="tp-pagination">
+                    {{ $tournaments->links('pagination::bootstrap-4') }}
+                </div>
+            @endif
         </div>
     </section>
 

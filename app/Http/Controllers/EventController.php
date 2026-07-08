@@ -24,8 +24,11 @@ class EventController extends Controller
             ->withCount('approvedPlayers')
             ->whereIn('status', ['open', 'ongoing'])
             ->whereDate('end_date', '>=', today())
-            ->orderByDesc('start_date')
-            ->get();
+            ->orderBy('start_date')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(3)
+            ->withQueryString();
 
         $casualGames = Game::with(['gamePlayers.player', 'event'])
             ->whereHas('event', fn ($q) => $q->where('type', 'quick_play'))

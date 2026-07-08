@@ -22,8 +22,11 @@ class TournamentController extends Controller
                         ->orWhereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));
                 });
             })
-            ->orderByDesc('start_date')
-            ->get();
+            ->orderBy('start_date')
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(3)
+            ->withQueryString();
 
         return view('tournament', compact('tournaments'));
     }
