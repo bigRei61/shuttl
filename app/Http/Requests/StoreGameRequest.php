@@ -39,7 +39,6 @@ class StoreGameRequest extends FormRequest
     {
         return [
             'format' => ['required', Rule::in(['singles', 'doubles'])],
-            'scheduled_at' => ['required', 'date'],
             'team_one_players' => ['required', 'array', 'min:1', 'max:2'],
             'team_one_players.*' => ['required', 'integer', 'distinct', Rule::exists('users', 'id')],
             'team_two_players' => ['required', 'array', 'min:1', 'max:2'],

@@ -14,7 +14,6 @@ it('allows a host to schedule a singles game with approved players', function ()
     $this->actingAs($host)
         ->post(route('games.store', $event), [
             'format' => 'singles',
-            'scheduled_at' => '2026-07-20 10:00:00',
             'team_one_players' => [$players[0]->id],
             'team_two_players' => [$players[1]->id],
         ])
@@ -25,6 +24,7 @@ it('allows a host to schedule a singles game with approved players', function ()
     expect($game)->not->toBeNull()
         ->and($game->format)->toBe('singles')
         ->and($game->competitive_type)->toBe('competitive')
+        ->and($game->scheduled_at)->toBeNull()
         ->and($game->status)->toBe('scheduled')
         ->and($game->gamePlayers)->toHaveCount(2)
         ->and($game->gamePlayers->where('team_side', 1)->pluck('player_id')->all())->toBe([$players[0]->id])
@@ -37,7 +37,6 @@ it('allows a host to schedule a doubles game with approved players', function ()
     $this->actingAs($host)
         ->post(route('games.store', $event), [
             'format' => 'doubles',
-            'scheduled_at' => '2026-07-20 11:00:00',
             'team_one_players' => [$players[0]->id, $players[1]->id],
             'team_two_players' => [$players[2]->id, $players[3]->id],
         ])
@@ -47,6 +46,7 @@ it('allows a host to schedule a doubles game with approved players', function ()
 
     expect($game)->not->toBeNull()
         ->and($game->format)->toBe('doubles')
+        ->and($game->scheduled_at)->toBeNull()
         ->and($game->gamePlayers)->toHaveCount(4)
         ->and($game->gamePlayers->pluck('role')->unique()->values()->all())->toBe(['doubles_partner']);
 });
@@ -58,7 +58,6 @@ it('forbids non-hosts from creating games', function () {
     $this->actingAs($otherPlayer)
         ->post(route('games.store', $event), [
             'format' => 'singles',
-            'scheduled_at' => '2026-07-20 10:00:00',
             'team_one_players' => [$players[0]->id],
             'team_two_players' => [$players[1]->id],
         ])
@@ -76,7 +75,6 @@ it('validates game player assignment rules', function () {
         ->from(route('events.show', $event))
         ->post(route('games.store', $event), [
             'format' => 'singles',
-            'scheduled_at' => '2026-07-20 10:00:00',
             'team_one_players' => [$players[0]->id],
             'team_two_players' => [$players[0]->id],
         ])
@@ -86,7 +84,6 @@ it('validates game player assignment rules', function () {
         ->from(route('events.show', $event))
         ->post(route('games.store', $event), [
             'format' => 'doubles',
-            'scheduled_at' => '2026-07-20 10:00:00',
             'team_one_players' => [$players[0]->id],
             'team_two_players' => [$players[1]->id],
         ])
@@ -96,7 +93,6 @@ it('validates game player assignment rules', function () {
         ->from(route('events.show', $event))
         ->post(route('games.store', $event), [
             'format' => 'singles',
-            'scheduled_at' => '2026-07-20 10:00:00',
             'team_one_players' => [$players[0]->id],
             'team_two_players' => [$unapprovedPlayer->id],
         ])
@@ -168,10 +164,21 @@ it('shows games to players without management controls', function () {
         ->assertSee($players[1]->name)
         ->assertSee('Set 1 21-18')
         ->assertSee('2-0')
+        ->assertDontSee('10:00am')
         ->assertDontSee('Schedule Game')
         ->assertDontSee('Record final score');
 
     expect($host->exists)->toBeTrue();
+});
+
+it('shows host game controls without a scheduled at field', function () {
+    [$event, $host] = eventWithApprovedPlayers(2);
+
+    $this->actingAs($host)
+        ->get(route('events.show', $event))
+        ->assertSuccessful()
+        ->assertSee('Schedule Game')
+        ->assertDontSee('Scheduled At');
 });
 
 /**

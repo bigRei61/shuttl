@@ -2,40 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Event;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use App\Models\Game;
 
 class CalendarController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): View
     {
-        // Basic implementation: fetch upcoming games tied to the user or their events
-        $userId = auth()->id();
+        $user = $request->user();
 
-        $games = Game::with('event')
-            ->whereNotNull('scheduled_at')
-            ->where(function ($q) use ($userId) {
-                $q->whereHas('gamePlayers', fn($q2) => $q2->where('player_id', $userId))
-                  ->orWhereHas('event', fn($q3) => $q3->where('organizer_id', $userId));
+        $events = Event::query()
+            ->select(['id', 'organizer_id', 'name', 'type', 'location', 'start_date', 'end_date', 'status'])
+            ->whereIn('status', ['open', 'ongoing'])
+            ->whereDate('end_date', '>=', today())
+            ->where(function ($query) use ($user) {
+                $query->whereBelongsTo($user, 'organizer')
+                    ->orWhereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));
             })
-            ->orderBy('scheduled_at')
-            ->get();
+            ->orderBy('start_date')
+            ->orderBy('name')
+            ->get()
+            ->map(fn (Event $event): array => [
+                'id' => $event->id,
+                'title' => $event->name,
+                'location' => $event->location,
+                'start_date' => $event->start_date->toDateString(),
+                'end_date' => $event->end_date->toDateString(),
+                'url' => route('events.show', $event),
+                'role' => (int) $event->organizer_id === (int) $user->id ? 'host' : 'joined',
+                'status' => $event->status,
+                'type' => $event->type,
+            ]);
 
-        $events = $games->map(function ($game) {
-            $scheduledAt = $game->scheduled_at;
-            $endTime = $scheduledAt ? $scheduledAt->copy()->addHours(2) : null;
-
-            return [
-                'id' => $game->id,
-                'title' => optional($game->event)->name ?? 'Match',
-                'date' => $scheduledAt ? $scheduledAt->toDateString() : null,
-                'time' => $scheduledAt ? $scheduledAt->format('g:ia') . ' - ' . $endTime->format('g:ia') : null,
-                'location' => optional($game->event)->location,
-                'event_id' => $game->event_id,
-                'status' => $game->status ?? 'Upcoming',
-            ];
-        });
-
-        return view('calendar', ['events' => $events]);
+        return view('calendar', [
+            'events' => $events,
+            'roleColors' => [
+                'joined' => '#DEF3EE',
+                'host' => '#EA7632',
+            ],
+        ]);
     }
 }

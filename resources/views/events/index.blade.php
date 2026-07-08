@@ -48,6 +48,7 @@
         .event-text {
             padding: 24px;
             flex: 1;
+            min-width: 0;
             min-height: 0;
             display: flex;
             flex-direction: column;
@@ -58,19 +59,24 @@
             font-size: 21px;
             line-height: 1.35;
             margin: 0;
-            overflow-wrap: anywhere;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        .event-text h4 a { color: #131313; text-decoration: none; }
+        .event-text h4 a { color: #131313; display: block; overflow: hidden; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
         .event-text h4 a:hover { color: #4EDFCE; }
-        .event-text .ti-text { flex: 1; }
+        .event-text .ti-text { flex: 1; min-width: 0; }
         .event-text .ti-text ul { list-style: none; padding: 0; margin: 0; }
-        .event-text .ti-text ul li { font-size: 13px; color: #878787; margin-bottom: 5px; }
+        .event-text .ti-text ul li { color: #878787; font-size: 13px; margin-bottom: 5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .event-text .ti-text ul li span { color: #131313; font-weight: 600; margin-right: 6px; }
         .event-description {
             font-size: 13px;
             color: #878787;
             margin: 12px 0 0;
             line-height: 1.55;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .featured-badge {
             position: absolute; top: 12px; left: 12px;
@@ -114,6 +120,10 @@
             color: #131313;
             font-size: 13px;
             font-weight: 700;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .casual-item {
             background: rgba(255,255,255,0.05);

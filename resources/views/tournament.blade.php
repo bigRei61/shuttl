@@ -40,6 +40,7 @@
         .tournament-item.tp-card {
             display: block;
             height: 100%;
+            min-width: 0;
             background: #fff;
             border: 1px solid #eaedf2;
             border-radius: 14px;
@@ -94,10 +95,12 @@
         }
 
         .tournament-item .ti-content {
+            min-width: 0;
             padding: 26px 26px 22px;
         }
 
         .tournament-item .ti-text {
+            min-width: 0;
             padding-left: 0;
             padding-top: 0;
         }
@@ -107,6 +110,9 @@
             font-size: 22px;
             margin-bottom: 18px;
             line-height: 1.35;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .tournament-item .ti-content .ti-meta {
@@ -119,6 +125,9 @@
             font-size: 13px;
             color: #6b7280;
             margin-bottom: 9px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .tournament-item .ti-content .ti-meta li strong {
@@ -134,6 +143,9 @@
             border-top: 1px solid #eef0f3;
             font-size: 13px;
             color: #6b7280;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .tp-empty-state {
@@ -159,7 +171,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-7 text-white">
                         <h2>Tournaments</h2>
-                        <p>Open your approved tournaments, check scheduled games, and follow completed results.</p>
+                        <p>Open your joined or hosted events, check games, and follow completed results.</p>
                     </div>
                 </div>
             </div>
@@ -170,8 +182,8 @@
         <div class="container">
             <div class="tp-section-head">
                 <div>
-                    <h2>{{ auth()->user()->isAdmin() ? 'All Tournaments' : 'My Tournaments' }}</h2>
-                    <p>{{ auth()->user()->isAdmin() ? 'Every tournament currently managed in Shuttl.' : 'Tournament events you have been approved to join.' }}</p>
+                    <h2>{{ auth()->user()->isAdmin() ? 'All Active Events' : 'My Events' }}</h2>
+                    <p>{{ auth()->user()->isAdmin() ? 'Every active event currently managed in Shuttl.' : 'Active events you have joined or hosted.' }}</p>
                 </div>
                 <a href="{{ route('events.index') }}" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">Browse Events</a>
             </div>
@@ -195,10 +207,11 @@
                                 <ul class="ti-meta">
                                     <li><strong>Starts:</strong> {{ $tournament->start_date->format('M d, Y') }}</li>
                                     <li><strong>Ends:</strong> {{ $tournament->end_date->format('M d, Y') }}</li>
+                                    <li><strong>Type:</strong> {{ ucfirst(str_replace('_', ' ', $tournament->type)) }}</li>
                                     <li><strong>Location:</strong> {{ $tournament->location }}</li>
                                     <li><strong>Host:</strong> {{ $tournament->organizer->name ?? 'Shuttl' }}</li>
                                     <li><strong>Players:</strong> {{ $tournament->approved_players_count }} approved</li>
-                                    <li><strong>Games:</strong> {{ $tournament->games_count }} scheduled</li>
+                                    <li><strong>Games:</strong> {{ $tournament->games_count }}</li>
                                     @if($tournament->max_participants)
                                         <li><strong>Slots:</strong> {{ $tournament->max_participants }} participants</li>
                                     @endif
@@ -206,7 +219,7 @@
                                 @if($tournament->description)
                                     <p class="ti-caption">{{ Str::limit($tournament->description, 110) }}</p>
                                 @else
-                                    <p class="ti-caption">Open this tournament to see game schedules, assigned players, and final scores.</p>
+                                    <p class="ti-caption">Open this event to see assigned players and final scores.</p>
                                 @endif
                             </div>
                         </div>
@@ -218,7 +231,7 @@
                 @endif
             @empty
                 <div class="tp-empty-state">
-                    <p>No joined tournaments yet. Join an event and wait for host approval to see it here.</p>
+                    <p>No joined or hosted events yet. Join an event and wait for host approval to see it here.</p>
                 </div>
             @endforelse
         </div>

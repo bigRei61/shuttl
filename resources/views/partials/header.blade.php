@@ -1,5 +1,7 @@
 <style>
-    .header-section { position: sticky; top: 0; z-index: 1000; }
+    :root { --shuttl-header-offset: 74px; }
+    body { padding-top: var(--shuttl-header-offset); }
+    .header-section { position: fixed !important; top: 0; left: 0; right: 0; width: 100%; z-index: 2147483000 !important; }
     .header-logo { position: absolute; top: 0; left: 0; width: 120px; padding-top: 0; padding-bottom: 0; z-index: 2; }
     .header-logo img { width: 100%; height: auto; display: block; }
     #header-profile { position: relative; display: inline-block; }
@@ -7,6 +9,9 @@
         position: fixed; /* taken out of normal flow entirely */
         z-index: 2147483647; /* max safe z-index */
         display: none;
+    }
+    @media only screen and (max-width: 767px) {
+        :root { --shuttl-header-offset: 126px; }
     }
 </style>
 

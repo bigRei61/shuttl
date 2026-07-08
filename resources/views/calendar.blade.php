@@ -12,32 +12,69 @@
     /* Use landing header styles; don't override header layout here */
     /* Embedded calendar styles adapted from provided template */
     .calendar-page-section { background-color: #eef2f6; border-top: 1px solid #d6dee7; border-bottom: 1px solid #d6dee7; }
+    .calendar-page-section .container { max-width:1180px; }
     .header-section { padding: 18px 0; margin-bottom: 0; border-bottom: 1px solid #4EDFCE; position: sticky; top: 0; z-index: 1000; }
-    .calendar-page-section.spad, .calendar-page-section { padding-top: 20px !important; padding-bottom: 0 !important; }
-    .calendar-wrap { display:flex; gap:30px; align-items:flex-start; }
-    .calendar-main { flex:0 0 64%; max-width:64%; background:#fff; border:1px solid #d6dee7; padding:38px 38px 28px; }
-    .calendar-side { flex:1; min-width:0; }
-    .calendar-month-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:30px; }
-    .calendar-month-title { font-size:24px; font-weight:500; color:#131313; margin:0; }
-    .calendar-nav a { display:inline-block; width:33px; height:33px; text-align:center; padding-top:7px; border-radius:50%; background:#e5e5e5; color:#131313; margin-left:8px; font-size:13px; }
+    .calendar-page-section.spad, .calendar-page-section { padding-top: 28px !important; padding-bottom: 28px !important; }
+    .calendar-wrap { display:flex; gap:22px; align-items:stretch; margin-bottom:22px; }
+    .calendar-main { flex:0 0 64%; max-width:64%; min-height:496px; background:#fff; border:1px solid #d6dee7; padding:30px 32px 26px; }
+    .calendar-side { flex:1; min-width:0; display:flex; }
+    .calendar-month-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:24px; }
+    .calendar-month-title { font-size:22px; font-weight:700; color:#131313; margin:0; }
+    .calendar-nav a { display:inline-flex; width:30px; height:30px; align-items:center; justify-content:center; border-radius:50%; background:#e5e5e5; color:#131313; margin-left:7px; font-size:11px; padding:0; }
     .calendar-nav a:hover { background:#4EDFCE; color:#131313; }
     .calendar-grid { width:100%; border-collapse:collapse; }
-    .calendar-grid th { font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#131313; text-align:center; padding-bottom:18px; border-bottom:1px solid #d6dee7; }
-    .calendar-grid td { text-align:center; vertical-align:middle; padding:8px 0; height:66px; width:14.28%; }
-    .day-cell { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:50%; color:#131313; font-size:14px; font-weight:500; transition:all .25s; cursor:pointer; position:relative; }
+    .calendar-grid th { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#131313; text-align:center; padding-bottom:14px; border-bottom:1px solid #d6dee7; }
+    .calendar-grid td { text-align:center; vertical-align:middle; padding:6px 0; height:60px; width:14.28%; }
+    .day-cell { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; color:#131313; font-size:13px; font-weight:700; transition:all .25s; cursor:pointer; position:relative; }
     .day-cell.muted { color:#c4c9ce; }
-    .day-cell.today { background:#d8d8d8; color:#131313; border:1px solid #d8d8d8; }
-    .day-cell.today.featured { background:#fff; color:#131313; border:2px solid #4EDFCE; }
-    .day-cell.has-event { background:#D7F5EF; color:#131313; border:1px solid #D7F5EF; }
-    .day-cell.joined-event { background:#E0426A; color:#fff; border:1px solid #E0426A; }
-    .day-cell.featured { border:2px solid #4EDFCE; font-weight:700; background:#fff; color:#131313; z-index:1; }
+    .day-cell.today { box-shadow:0 0 0 2px rgba(78, 223, 206, .72); font-weight:700; }
+    .day-cell.has-joined-event { background:#DEF3EE; color:#131313; }
+    .day-cell.has-host-event { background:#EA7632; color:#fff; }
+    .day-cell.selected { box-shadow:0 0 0 4px rgba(78, 223, 206, .28); font-weight:700; z-index:1; }
+    .day-cell.has-host-event.selected { box-shadow:0 0 0 4px rgba(234, 118, 50, .22); }
+    .day-cell.has-joined-event.selected { box-shadow:0 0 0 4px rgba(78, 223, 206, .34); }
+    .day-cell.today.selected { box-shadow:0 0 0 2px rgba(78, 223, 206, .72); }
     .day-cell:hover { background:#4EDFCE; color:#131313; }
-    .side-widget, .upcoming-widget { background:#fff; border:1px solid #d6dee7; padding:30px 26px; margin-bottom:30px; }
-    .widget-title { font-size:18px; margin-bottom:25px; }
-    .event-link { display:flex; align-items:center; justify-content:space-between; background:#eef2f6; border:1px solid #d6dee7; color:#131313; padding:13px 18px; border-radius:30px; margin-bottom:12px; font-size:14px; font-weight:500; text-decoration:none; }
-    .event-link:hover { background:#4EDFCE; border-color:#4EDFCE; color:#131313; }
-    .event-detail-card { background:#eef2f6; border-left:3px solid #ff205f; padding:20px; margin-bottom:12px; }
+    .side-widget, .upcoming-widget { background:#fff; border:1px solid #d6dee7; padding:22px 20px; margin-bottom:0; }
+    .side-widget { flex:1; height:496px; min-height:496px; overflow:hidden; display:flex; flex-direction:column; }
+    .upcoming-widget { padding:26px 22px; }
+    .widget-title { color:#131313; font-size:20px; font-weight:700; margin-bottom:18px; }
+    .side-widget .widget-title { font-size:18px; margin-bottom:18px; }
+    .focus-list, .schedule-list { display:grid; gap:12px; }
+    .focus-list { flex:1; min-height:0; align-content:start; overflow-y:auto; padding:4px 4px 2px 0; }
+    .focus-list:empty { display:none; }
+    .focus-list::-webkit-scrollbar { width:6px; }
+    .focus-list::-webkit-scrollbar-thumb { background:#d6dee7; border-radius:999px; }
+    .focus-event, .schedule-item { display:flex; flex-direction:column; justify-content:space-between; min-height:98px; min-width:0; background:#f8fbfb; border:1px solid #d6dee7; color:#131313; padding:14px 16px; border-radius:8px; text-decoration:none; transition:all .2s; }
+    .focus-event { min-height:124px; justify-content:flex-start; background:#fff; }
+    .focus-event.joined-card { border-color:#cbece7; }
+    .focus-event.host-card { border-color:#f1bc9e; }
+    .schedule-item { min-height:112px; }
+    .schedule-item.joined-card { background:#f4fffc; border-color:#92e5d8; }
+    .schedule-item.host-card { background:#fff0e8; border-color:#EA7632; }
+    .focus-event:hover, .schedule-item:hover { border-color:#4EDFCE; color:#131313; text-decoration:none; transform:translateY(-1px); }
+    .focus-event.joined-card:hover, .schedule-item.joined-card:hover { border-color:#4EDFCE; }
+    .focus-event.host-card:hover, .schedule-item.host-card:hover { border-color:#EA7632; }
+    .event-card-top { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; margin-bottom:10px; min-width:0; }
+    .focus-event .event-card-top { align-items:center; background:#DEF3EE; border-radius:999px; margin:-2px 0 14px; padding:9px 12px; }
+    .focus-event.host-card .event-card-top { background:#fff0e8; }
+    .event-card-date { color:#131313; display:block; font-size:11px; font-weight:700; min-width:0; overflow:hidden; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }
+    .event-card-title { color:#131313; font-size:15px; font-weight:700; line-height:1.3; margin:0 0 7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .event-card-location { color:#626262; font-size:12px; line-height:1.4; margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .role-pill { display:inline-flex; align-items:center; flex-shrink:0; gap:5px; border-radius:999px; color:#131313; font-size:10px; font-weight:700; line-height:1; max-width:50%; overflow:hidden; padding:6px 10px; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }
+    .role-pill::before { content:""; width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.62; }
+    .role-pill.host { background:#EA7632; color:#fff; }
+    .role-pill.joined { background:#DEF3EE; color:#131313; }
+    .upcoming-widget .schedule-list { grid-template-columns:repeat(var(--upcoming-count, 1), minmax(0, 1fr)); gap:12px; }
+    .upcoming-widget .schedule-list.is-empty { grid-template-columns:1fr; }
     .no-event-message { font-size:14px; color:#878787; margin-top:8px; }
+    @media (max-width: 991px) {
+        .calendar-wrap { flex-direction:column; }
+        .calendar-main, .calendar-side { flex:1 1 auto; max-width:100%; width:100%; }
+        .side-widget { height:auto; max-height:496px; min-height:0; }
+        .focus-list { overflow-y:auto; padding-right:4px; }
+        .upcoming-widget .schedule-list { grid-template-columns:1fr; }
+    }
 
     /* Force-reduce hero height, overriding external style.css rules */
     section.page-info-section.set-bg {
@@ -107,23 +144,9 @@
 				<!-- Sidebar -->
 				<div class="calendar-side">
 					<div class="side-widget">
-						<h4 class="widget-title">Today's Focus</h4>
-						<div class="event-detail-card" id="event-detail-card">
-							<h6 id="selected-date-label">Loading…</h6>
-							<p id="selected-date-title">Select a day to view upcoming events.</p>
-							<p class="strong" id="selected-date-location">Arena West</p>
-							<p id="selected-date-time">6:00pm - 8:00pm</p>
-							<div class="event-detail-meta">
-								<span id="selected-date-meta">Today</span>
-								<span id="selected-date-range">Live session</span>
-							</div>
-						</div>
-						<div id="today-min-list"></div>
-						<p id="no-event-message" class="no-event-message" style="display:none;">No event scheduled for this day.</p>
-						<div id="events-list-container" style="display:none;">
-							<div id="events-list-toggle">0 events — click to expand</div>
-							<div id="events-list"></div>
-						</div>
+						<h4 class="widget-title" id="date-focus-title">Date's Focus</h4>
+						<div class="focus-list" id="today-focus-list"></div>
+						<p id="no-event-message" class="no-event-message" style="display:none;">No events on this date.</p>
 					</div>
 				</div>
 			</div>
@@ -154,13 +177,11 @@
 	<script src="{{ asset('landing/js/main.js') }}"></script>
 	<script>
 		(function () {
-			// Server-provided events
 			const serverEvents = @json($events);
-			const today = new Date();
+			const roleColors = @json($roleColors);
+			const today = startOfDay(new Date());
 			let currentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 			let selectedDate = new Date(today);
-			let openEventIndex = null;
-			let openEventForDateKey = null;
 
 			function dateFromYMD(ymd) {
 				if (!ymd) return null;
@@ -168,19 +189,90 @@
 				return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
 			}
 
+			function startOfDay(date) {
+				return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+			}
+
+			function eventStart(event) {
+				return dateFromYMD(event.start_date);
+			}
+
+			function eventEnd(event) {
+				return dateFromYMD(event.end_date);
+			}
+
+			function eventCoversDate(event, date) {
+				const day = startOfDay(date);
+				return day >= eventStart(event) && day <= eventEnd(event);
+			}
+
 			function getEventsForDate(date) {
-				const key = date.getFullYear() + '-' + (date.getMonth()+1).toString().padStart(2,'0') + '-' + date.getDate().toString().padStart(2,'0');
-				return serverEvents.filter(ev => ev.date === key).map(ev => ({
-					title: ev.title,
-					type: ev.title,
-					location: ev.location || '',
-					time: ev.time || '',
-					status: ev.status || 'Upcoming'
-				}));
+				return serverEvents
+					.filter(event => eventCoversDate(event, date))
+					.sort((a, b) => {
+						if (a.role !== b.role) return a.role === 'host' ? -1 : 1;
+						return eventStart(a) - eventStart(b) || String(a.title).localeCompare(String(b.title));
+					});
 			}
 
 			function formatDate(date) {
 				return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+			}
+
+			function formatShortDate(date) {
+				return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+			}
+
+			function formatFocusTitleDate(date) {
+				return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+			}
+
+			function formatEventDateRange(event) {
+				const start = eventStart(event);
+				const end = eventEnd(event);
+
+				if (isSameDay(start, end)) {
+					return formatShortDate(start);
+				}
+
+				return `${formatShortDate(start)} - ${formatShortDate(end)}`;
+			}
+
+			function escapeHTML(value) {
+				return String(value ?? '')
+					.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/"/g, '&quot;')
+					.replace(/'/g, '&#039;');
+			}
+
+			function roleLabel(role) {
+				return role === 'host' ? 'Host' : 'Joined';
+			}
+
+			function rolePill(event) {
+				const role = event.role === 'host' ? 'host' : 'joined';
+				const color = roleColors[role] || (role === 'host' ? '#EA7632' : '#DEF3EE');
+
+				return `<span class="role-pill ${role}" style="background:${color};">${roleLabel(role)}</span>`;
+			}
+
+			function createEventCard(event, className, showDate) {
+				const item = document.createElement('a');
+				const role = event.role === 'host' ? 'host' : 'joined';
+				item.href = event.url;
+				item.className = `${className} ${role}-card`;
+				item.innerHTML = `
+					<div class="event-card-top">
+						${showDate ? `<span class="event-card-date">${escapeHTML(formatEventDateRange(event))}</span>` : '<span></span>'}
+						${rolePill(event)}
+					</div>
+					<h6 class="event-card-title">${escapeHTML(event.title)}</h6>
+					<p class="event-card-location">${escapeHTML(event.location || '')}</p>
+				`;
+
+				return item;
 			}
 
 			function isSameDay(a, b) {
@@ -189,16 +281,10 @@
 
 			const monthTitle = document.getElementById('calendar-month-title');
 			const gridBody = document.getElementById('calendar-grid-body');
-			const selectedDateLabel = document.getElementById('selected-date-label');
-			const selectedDateTitle = document.getElementById('selected-date-title');
-			const selectedDateLocation = document.getElementById('selected-date-location');
-			const selectedDateTime = document.getElementById('selected-date-time');
-			const selectedDateMeta = document.getElementById('selected-date-meta');
-			const selectedDateRange = document.getElementById('selected-date-range');
-			const eventDetailCard = document.getElementById('event-detail-card');
 			const noEventMessage = document.getElementById('no-event-message');
 			const scheduleList = document.getElementById('schedule-list');
-			const minListContainer = document.getElementById('today-min-list');
+			const dateFocusTitle = document.getElementById('date-focus-title');
+			const todayFocusList = document.getElementById('today-focus-list');
 
 			function renderCalendar() {
 				const year = currentMonth.getFullYear();
@@ -235,18 +321,17 @@
 						if (isSameDay(cell.date, today) && month === today.getMonth() && year === today.getFullYear()) span.classList.add('today');
 						const eventsForDay = getEventsForDate(cell.date);
 						if (eventsForDay.length) {
-							if (eventsForDay.some(event => event.status === 'Joined')) {
-								span.classList.add('joined-event');
+							if (eventsForDay.some(event => event.role === 'host')) {
+								span.classList.add('has-host-event');
 							} else {
-								span.classList.add('has-event');
+								span.classList.add('has-joined-event');
 							}
 						}
-						if (isSameDay(cell.date, selectedDate)) span.classList.add('featured');
+						if (isSameDay(cell.date, selectedDate)) span.classList.add('selected');
 						span.textContent = cell.day;
 						span.addEventListener('click', () => {
 							selectedDate = new Date(cell.date);
 							renderCalendar();
-							renderDetails();
 						});
 						td.appendChild(span);
 						tr.appendChild(td);
@@ -254,101 +339,50 @@
 					gridBody.appendChild(tr);
 				}
 
-				renderDetails();
+				renderDateFocus();
+				renderUpcomingEvents();
 			}
 
-			function parseStartToDate(day, timeRange) {
-				const part = (timeRange || '').split('-')[0].trim();
-				const m = part.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)/i);
-				if (!m) return new Date(day.getFullYear(), day.getMonth(), day.getDate(), 0, 0);
-				let hh = parseInt(m[1], 10);
-				const mm = m[2] ? parseInt(m[2], 10) : 0;
-				const ampm = m[3].toLowerCase();
-				if (ampm === 'pm' && hh < 12) hh += 12;
-				if (ampm === 'am' && hh === 12) hh = 0;
-				return new Date(day.getFullYear(), day.getMonth(), day.getDate(), hh, mm);
-			}
+			function renderDateFocus() {
+				const selectedDateEvents = getEventsForDate(selectedDate);
+				dateFocusTitle.textContent = `${formatFocusTitleDate(selectedDate)} Events`;
+				todayFocusList.innerHTML = '';
 
-			function renderDetails() {
-				selectedDateLabel.textContent = formatDate(selectedDate);
-				const events = getEventsForDate(selectedDate).map(ev => ({ ...ev, startDate: parseStartToDate(selectedDate, ev.time) }));
-
-				if (!events.length) {
-					eventDetailCard.style.display = 'none';
+				if (!selectedDateEvents.length) {
 					noEventMessage.style.display = 'block';
-					noEventMessage.textContent = 'No event scheduled for this day.';
-					selectedDateMeta.textContent = '';
-					selectedDateRange.textContent = '';
-					if (minListContainer) minListContainer.innerHTML = '';
-				} else {
-					events.sort((a, b) => a.startDate - b.startDate);
+					noEventMessage.textContent = 'No events on this date.';
 
-					const dateKey = `${selectedDate.getFullYear()}-${selectedDate.getMonth()}-${selectedDate.getDate()}`;
-					if (openEventForDateKey !== dateKey || openEventIndex === null || openEventIndex >= events.length) {
-						const joinedIndex = events.findIndex(ev => ev.status === 'Joined');
-						openEventIndex = joinedIndex >= 0 ? joinedIndex : 0;
-						openEventForDateKey = dateKey;
-					}
-
-					if (minListContainer) minListContainer.innerHTML = '';
-
-					events.forEach((ev, idx) => {
-						const div = document.createElement('div');
-						const isActive = idx === openEventIndex;
-						div.className = 'today-min-item' + (ev.status === 'Joined' ? ' joined' : '') + (isActive ? ' active' : '');
-						div.innerHTML = `
-							<div class="today-min-item-main">
-								<div><span class="time">${ev.time.split('-')[0].trim()}</span><span class="name">${ev.title}</span></div>
-								<div class="schedule-pill">${ev.status === 'Joined' ? 'Joined' : ''}</div>
-							</div>
-							<div class="event-inline-details">
-								<div><strong>${ev.type}</strong></div>
-								<div>${ev.location}</div>
-								<div>${ev.time}</div>
-							</div>
-						`;
-						div.addEventListener('click', () => { openEventIndex = idx; renderDetails(); });
-						if (minListContainer) minListContainer.appendChild(div);
-					});
-
-					if (openEventIndex !== null && events[openEventIndex]) {
-						eventDetailCard.style.display = 'block';
-						noEventMessage.style.display = 'none';
-						selectedDateTitle.textContent = events[openEventIndex].title;
-						selectedDateLocation.textContent = events[openEventIndex].location || '';
-						selectedDateTime.textContent = events[openEventIndex].time || '';
-						selectedDateMeta.textContent = events[openEventIndex].status || '';
-						selectedDateRange.textContent = '';
-					} else {
-						eventDetailCard.style.display = 'none';
-						noEventMessage.style.display = 'block';
-						noEventMessage.textContent = 'Select an event to view details.';
-					}
+					return;
 				}
 
-				// populate bottom schedule list with the next three upcoming events
+				noEventMessage.style.display = 'none';
+				selectedDateEvents.forEach(event => {
+					todayFocusList.appendChild(createEventCard(event, 'focus-event', true));
+				});
+			}
+
+			function renderUpcomingEvents() {
 				scheduleList.innerHTML = '';
 				const upcomingEvents = serverEvents
-					.map(ev => ({ ...ev, dateObj: dateFromYMD(ev.date) }))
-					.filter(ev => ev.dateObj && ev.dateObj >= today)
-					.sort((a, b) => a.dateObj - b.dateObj)
+					.filter(event => eventStart(event) > today)
+					.sort((a, b) => eventStart(a) - eventStart(b) || String(a.title).localeCompare(String(b.title)))
 					.slice(0, 3);
+				const count = upcomingEvents.length;
+
+				scheduleList.style.setProperty('--upcoming-count', count || 1);
+				scheduleList.classList.toggle('is-empty', count === 0);
+
+				if (!count) {
+					const empty = document.createElement('p');
+					empty.className = 'no-event-message';
+					empty.textContent = 'No upcoming events after today.';
+					scheduleList.appendChild(empty);
+
+					return;
+				}
 
 				upcomingEvents.forEach(event => {
-					const item = document.createElement('div');
-					const classes = ['schedule-item'];
-					if (event.status === 'Live Now') classes.push('live');
-					if (event.status === 'Joined') classes.push('joined');
-					item.className = classes.join(' ');
-					item.innerHTML = `
-						<div class="schedule-top">
-							<span>${event.dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
-							<span class="schedule-pill">${event.status}</span>
-						</div>
-						<h6>${event.title}</h6>
-						<p>${event.location || ''}</p>
-						<p>${event.time || ''}</p>`;
-					scheduleList.appendChild(item);
+					scheduleList.appendChild(createEventCard(event, 'schedule-item', true));
 				});
 			}
 

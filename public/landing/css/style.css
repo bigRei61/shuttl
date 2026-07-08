@@ -253,9 +253,12 @@ ol {
 	overflow: hidden;
 	padding: 18px 0;
 	border-bottom: 1px solid #4EDFCE;
-	position: sticky;
+	position: fixed !important;
 	top: 0;
-	z-index: 1000;
+	left: 0;
+	right: 0;
+	width: 100%;
+	z-index: 2147483000;
 }
 
 .site-logo {

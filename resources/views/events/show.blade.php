@@ -370,6 +370,18 @@
             margin-top: 12px;
         }
 
+        .request-actions form {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .request-actions .site-btn {
+            width: 100%;
+            min-width: 0;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+        }
+
         .event-alert {
             border-radius: 8px;
             padding: 14px 18px;
@@ -423,6 +435,10 @@
 
             .score-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .request-actions {
+                flex-direction: column;
             }
         }
     </style>
@@ -498,7 +514,7 @@
                         <div class="event-section-head">
                             <div>
                                 <h3>Games</h3>
-                                <p>Scheduled and finished games for this event.</p>
+                                <p>Games and final scores for this event.</p>
                             </div>
                         </div>
 
@@ -517,7 +533,7 @@
                                                 <div class="game-title">
                                                     {{ $team1 ?: 'Team 1 TBD' }} <span class="game-vs">vs</span> {{ $team2 ?: 'Team 2 TBD' }}
                                                 </div>
-                                                <p class="game-meta">{{ ucfirst(str_replace('_', ' ', $game->format)) }} · {{ $game->scheduled_at?->format('M d, Y g:ia') ?? 'No schedule yet' }}</p>
+                                                <p class="game-meta">{{ ucfirst(str_replace('_', ' ', $game->format)) }}</p>
                                                 @if($game->setScores->isNotEmpty())
                                                     <p class="game-sets">
                                                         Sets:
@@ -576,7 +592,7 @@
                     @if($isHost)
                         <div class="side-card">
                             <h4>Schedule Game</h4>
-                            <p>Assign approved players, choose the match format, and set the schedule.</p>
+                            <p>Assign approved players and choose the match format.</p>
 
                             <form method="POST" action="{{ route('games.store', $event) }}" style="margin-top:18px;">
                                 @csrf
@@ -587,11 +603,6 @@
                                         <option value="singles" {{ old('format') === 'singles' ? 'selected' : '' }}>Singles</option>
                                         <option value="doubles" {{ old('format') === 'doubles' ? 'selected' : '' }}>Doubles</option>
                                     </select>
-                                </div>
-
-                                <div class="manage-field">
-                                    <label for="scheduled_at">Scheduled At</label>
-                                    <input id="scheduled_at" type="datetime-local" name="scheduled_at" value="{{ old('scheduled_at') }}">
                                 </div>
 
                                 <div class="manage-field">

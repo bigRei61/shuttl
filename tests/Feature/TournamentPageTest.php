@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('shows only approved joined tournaments for players', function () {
+it('shows active joined and hosted events for players', function () {
     $player = User::factory()->create();
     $approvedTournament = createTournament([
         'name' => 'Approved Cup',
@@ -28,43 +28,71 @@ it('shows only approved joined tournaments for players', function () {
         'name' => 'Approved Quick Play',
         'type' => 'quick_play',
     ]);
+    $completedEvent = createTournament([
+        'name' => 'Completed Cup',
+        'status' => 'completed',
+    ]);
+    $pastEvent = createTournament([
+        'name' => 'Past Cup',
+        'start_date' => now()->subDays(3)->toDateString(),
+        'end_date' => now()->subDay()->toDateString(),
+    ]);
 
     $approvedTournament->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
     $pendingTournament->players()->attach($player->id, ['status' => 'pending']);
     $rejectedTournament->players()->attach($player->id, ['status' => 'rejected', 'responded_at' => now()]);
     $approvedQuickPlay->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
+    $completedEvent->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
+    $pastEvent->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
 
     $this->actingAs($player)
         ->get(route('tournaments'))
         ->assertSuccessful()
         ->assertSee('Approved Cup')
         ->assertSee(route('events.show', $approvedTournament), false)
-        ->assertDontSee('Hosted Cup')
+        ->assertSee('Hosted Cup')
+        ->assertSee(route('events.show', $hostedTournament), false)
+        ->assertSee('Approved Quick Play')
+        ->assertSee(route('events.show', $approvedQuickPlay), false)
         ->assertDontSee('Pending Cup')
         ->assertDontSee('Rejected Cup')
         ->assertDontSee('Open Cup')
-        ->assertDontSee('Approved Quick Play');
+        ->assertDontSee('Completed Cup')
+        ->assertDontSee('Past Cup');
 
     expect($hostedTournament->exists)->toBeTrue()
         ->and($unjoinedTournament->exists)->toBeTrue();
 });
 
-it('shows all tournament events to admins', function () {
+it('shows all active events to admins', function () {
     $admin = User::factory()->create(['role' => 'admin']);
     $tournament = createTournament(['name' => 'Admin Visible Cup']);
     $quickPlay = createTournament([
-        'name' => 'Admin Hidden Quick Play',
+        'name' => 'Admin Visible Quick Play',
         'type' => 'quick_play',
+    ]);
+    $completedEvent = createTournament([
+        'name' => 'Admin Hidden Completed Cup',
+        'status' => 'completed',
+    ]);
+    $pastEvent = createTournament([
+        'name' => 'Admin Hidden Past Cup',
+        'start_date' => now()->subDays(3)->toDateString(),
+        'end_date' => now()->subDay()->toDateString(),
     ]);
 
     $this->actingAs($admin)
         ->get(route('tournaments'))
         ->assertSuccessful()
         ->assertSee('Admin Visible Cup')
-        ->assertDontSee('Admin Hidden Quick Play');
+        ->assertSee('Admin Visible Quick Play')
+        ->assertDontSee('Admin Hidden Completed Cup')
+        ->assertDontSee('Admin Hidden Past Cup');
 
     expect($quickPlay->exists)->toBeTrue()
-        ->and($tournament->exists)->toBeTrue();
+        ->and($tournament->exists)->toBeTrue()
+        ->and($completedEvent->exists)->toBeTrue()
+        ->and($pastEvent->exists)->toBeTrue();
 });
 
 function createTournament(array $attributes = []): Event
@@ -74,8 +102,8 @@ function createTournament(array $attributes = []): Event
         'name' => 'Tournament',
         'type' => 'tournament',
         'location' => 'Court 1',
-        'start_date' => '2026-07-10',
-        'end_date' => '2026-07-10',
+        'start_date' => now()->addDay()->toDateString(),
+        'end_date' => now()->addDays(2)->toDateString(),
         'status' => 'open',
     ], $attributes));
 }

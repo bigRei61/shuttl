@@ -12,11 +12,15 @@ class TournamentController extends Controller
         $user = auth()->user();
 
         $tournaments = Event::query()
-            ->where('type', 'tournament')
             ->with(['organizer', 'approvedPlayers'])
             ->withCount(['approvedPlayers', 'games'])
+            ->whereIn('status', ['open', 'ongoing'])
+            ->whereDate('end_date', '>=', today())
             ->when(! $user->isAdmin(), function ($query) use ($user) {
-                $query->whereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));
+                $query->where(function ($query) use ($user) {
+                    $query->whereBelongsTo($user, 'organizer')
+                        ->orWhereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));
+                });
             })
             ->orderByDesc('start_date')
             ->get();

@@ -92,7 +92,7 @@ class EventController extends Controller
             'approvedPlayers',
             'games' => fn ($query) => $query->with(['gamePlayers.player', 'setScores'])
                 ->orderByRaw("case status when 'ongoing' then 0 when 'scheduled' then 1 else 2 end")
-                ->orderBy('scheduled_at'),
+                ->latest(),
         ]);
 
         $participation = $event->players->firstWhere('id', auth()->id())?->pivot?->status;

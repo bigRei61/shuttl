@@ -22,7 +22,6 @@ class GameController extends Controller
             $game = $event->games()->create([
                 'format' => $request->validated('format'),
                 'competitive_type' => 'competitive',
-                'scheduled_at' => $request->validated('scheduled_at'),
                 'status' => 'scheduled',
             ]);
 

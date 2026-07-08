@@ -17,9 +17,16 @@
     <link rel="stylesheet" href="{{ asset('landing/css/animate.css') }}"/>
     <style>
         .header-section {
-            position: sticky;
+            position: fixed !important;
             top: 0;
-            z-index: 1000;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 2147483000 !important;
+        }
+
+        body {
+            padding-top: 74px;
         }
 
         .header-logo {
@@ -53,9 +60,12 @@
             display: none;
         }
         .header-section {
-            position: sticky;
+            position: fixed !important;
             top: 0;
-            z-index: 1000;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 2147483000 !important;
         }
 /* NEW SECTION */
         .header-logo {
@@ -75,6 +85,10 @@
         }
 
         @media only screen and (max-width: 767px) {
+            body {
+                padding-top: 126px;
+            }
+
             .header-logo {
                 position: static;
                 width: 100px;
