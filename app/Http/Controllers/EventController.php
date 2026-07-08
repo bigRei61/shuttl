@@ -27,8 +27,7 @@ class EventController extends Controller
             ->orderBy('start_date')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
-            ->paginate(3)
-            ->withQueryString();
+            ->get();
 
         $casualGames = Game::with(['gamePlayers.player', 'event'])
             ->whereHas('event', fn ($q) => $q->where('type', 'quick_play'))

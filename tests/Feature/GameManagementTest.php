@@ -178,6 +178,7 @@ it('shows host game controls without a scheduled at field', function () {
         ->get(route('events.show', $event))
         ->assertSuccessful()
         ->assertSee('Schedule Game')
+        ->assertSee('data-event-exit-transition-link', false)
         ->assertDontSee('Scheduled At');
 });
 

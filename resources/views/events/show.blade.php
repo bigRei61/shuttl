@@ -24,6 +24,17 @@
             background: #f5f7fa;
         }
 
+        body.event-show-page .page-info-section,
+        body.event-show-page .event-manage-page {
+            transition: opacity .2s ease, transform .2s ease;
+        }
+
+        body.event-show-page.is-leaving-event-list .page-info-section,
+        body.event-show-page.is-leaving-event-list .event-manage-page {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
         .event-back-link {
             display: inline-flex;
             align-items: center;
@@ -443,7 +454,7 @@
         }
     </style>
 </head>
-<body>
+<body class="event-show-page">
     <div id="preloder">
         <div class="loader"></div>
     </div>
@@ -465,7 +476,7 @@
 
     <section class="event-manage-page page-section spad">
         <div class="container">
-            <a href="{{ route('events.index') }}" class="event-back-link"><i class="fa fa-long-arrow-left"></i> Back to events</a>
+            <a href="{{ route('events.index') }}" class="event-back-link" data-event-exit-transition-link><i class="fa fa-long-arrow-left"></i> Back to events</a>
 
             @if($errors->any())
                 <div class="event-alert error">
@@ -695,6 +706,47 @@
             </div>
         </div>
     </section>
+
+    <script>
+    (function () {
+        const backLink = document.querySelector('[data-event-exit-transition-link]');
+
+        if (!backLink) return;
+
+        window.addEventListener('pageshow', function () {
+            document.body.classList.remove('is-leaving-event-list');
+        });
+
+        backLink.addEventListener('click', function (event) {
+            const fallbackUrl = backLink.href;
+
+            if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+            event.preventDefault();
+            document.body.classList.add('is-leaving-event-list');
+
+            window.setTimeout(function () {
+                try {
+                    const previousUrl = document.referrer ? new URL(document.referrer) : null;
+                    const cameFromEventList = previousUrl
+                        && previousUrl.origin === window.location.origin
+                        && (previousUrl.pathname === '{{ parse_url(route('events.index'), PHP_URL_PATH) }}'
+                            || previousUrl.pathname === '{{ parse_url(route('tournaments'), PHP_URL_PATH) }}');
+
+                    if (cameFromEventList && window.history.length > 1) {
+                        window.history.back();
+
+                        return;
+                    }
+                } catch (error) {
+                    // Fall back to the event list below.
+                }
+
+                window.location.href = fallbackUrl;
+            }, 170);
+        });
+    })();
+    </script>
 
     <script src="{{ asset('landing/js/jquery-3.2.1.min.js') }}"></script>
     <script src="{{ asset('landing/js/bootstrap.min.js') }}"></script>

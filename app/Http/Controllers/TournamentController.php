@@ -25,8 +25,7 @@ class TournamentController extends Controller
             ->orderBy('start_date')
             ->orderByDesc('created_at')
             ->orderByDesc('id')
-            ->paginate(3)
-            ->withQueryString();
+            ->get();
 
         return view('tournament', compact('tournaments'));
     }

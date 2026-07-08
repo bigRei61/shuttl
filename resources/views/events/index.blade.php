@@ -125,11 +125,99 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .event-pagination { margin-top: 32px; }
-        .event-pagination .pagination { justify-content: center; margin-bottom: 0; }
-        .event-pagination .page-link { color: #131313; border-color: #d6dee7; }
-        .event-pagination .page-item.active .page-link { background: #4EDFCE; border-color: #4EDFCE; color: #131313; }
-        .event-pagination .page-link:focus { box-shadow: 0 0 0 3px rgba(78, 223, 206, .18); }
+        .events-results { position: relative; }
+        .events-pages-viewport {
+            overflow: hidden;
+            width: 100%;
+        }
+        .events-pages-track {
+            display: flex;
+            transition: transform .34s ease;
+            will-change: transform;
+        }
+        .events-page-slide {
+            flex: 0 0 100%;
+            min-width: 100%;
+        }
+        .events-page-fragment {
+            animation: eventsFragmentEnter .26s ease both;
+            transition: opacity .22s ease, transform .22s ease;
+            will-change: opacity, transform;
+        }
+        .events-page-fragment.is-transitioning-out {
+            animation: none;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(var(--transition-exit-x, -18px));
+        }
+        .events-page-fragment.is-transitioning-in {
+            animation: eventsFragmentEnter .26s ease both;
+        }
+        .pagination-side {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 72px;
+            height: 72px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #e9edf2;
+            color: #fff;
+            font-size: 44px;
+            line-height: 1;
+            border: 0;
+            text-decoration: none;
+            transition: background .2s, transform .2s;
+            cursor: pointer;
+            z-index: 2;
+        }
+        .pagination-side:hover { background:#4EDFCE; color:#fff; text-decoration:none; transform:translateY(-50%) scale(1.03); }
+        .pagination-side.is-disabled { opacity:.38; pointer-events:none; }
+        .events-results .pagination-prev { left:-86px; }
+        .events-results .pagination-next { right:-86px; }
+        .event-pagination { display:flex; justify-content:center; margin-top:28px; }
+        .pagination-dots { display:flex; align-items:center; justify-content:center; gap:18px; flex-wrap:wrap; }
+        .pagination-dot {
+            width:34px;
+            height:34px;
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            border-radius:50%;
+            background:#fff;
+            color:#131313;
+            font-size:15px;
+            font-weight:700;
+            border:0;
+            text-decoration:none;
+            transition:background .2s, color .2s;
+            cursor:pointer;
+        }
+        .pagination-dot:hover { background:#DEF3EE; color:#131313; text-decoration:none; }
+        .pagination-dot.is-active { background:#4EDFCE; color:#131313; }
+        .pagination-dot.pagination-ellipsis { background: transparent; pointer-events: none; }
+        body.events-index-page .page-info-section,
+        body.events-index-page .tournament-page {
+            transition: opacity .2s ease, transform .2s ease;
+        }
+        body.events-index-page.is-leaving-event .page-info-section,
+        body.events-index-page.is-leaving-event .tournament-page,
+        body.events-index-page.is-leaving-event .review-section {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        @keyframes eventsFragmentEnter {
+            from {
+                opacity: 0;
+                transform: translateX(var(--transition-enter-x, 18px));
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
         .casual-item {
             background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255,255,255,0.1);
@@ -246,6 +334,10 @@
         .modal-submit:hover { filter: brightness(0.96); }
         @media (max-width: 640px) {
             .events-grid { grid-template-columns: 1fr; }
+            .events-results { display:flex; flex-direction:column; }
+            .pagination-side { position:static; transform:none; width:46px; height:46px; font-size:30px; }
+            .pagination-side:hover { transform:none; }
+            .event-pagination { align-items:center; gap:14px; }
             .review-cover { height: 190px; min-height: 190px; }
             .event-text { padding: 20px; }
             .event-actions > * { width: 100%; }
@@ -262,10 +354,12 @@
         }
         @media (min-width: 641px) and (max-width: 991px) {
             .events-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .events-results .pagination-prev { left:-24px; }
+            .events-results .pagination-next { right:-24px; }
         }
     </style>
 </head>
-<body>
+<body class="events-index-page">
     <div id="preloder">
         <div class="loader"></div>
     </div>
@@ -308,71 +402,94 @@
                 @endauth
             </div>
 
-            @if($events->isEmpty())
-                <p style="color:#878787; text-align:center; padding:60px 0;">No events available right now.</p>
-            @else
-                <div class="events-grid">
-                    @foreach($events as $event)
-                        @php
-                            $participation = $event->players->firstWhere('id', auth()->id())?->pivot?->status;
-                            $isHost = (int) $event->organizer_id === (int) auth()->id();
-                        @endphp
-                        <div class="event-slide">
-                            <article class="event-card">
-                                <a href="{{ route('events.show', $event) }}" class="review-cover" style="background-image: url('{{ $event->photoUrl() }}');">
-                                    @if($event->is_featured)
-                                        <div class="featured-badge">Featured</div>
-                                    @endif
-                                </a>
-                                <div class="event-text">
-                                    <div>
-                                        <span class="status-badge status-{{ $event->status }}">{{ ucfirst($event->status) }}</span>
-                                        <h4>
-                                            <a href="{{ route('events.show', $event) }}">{{ $event->name }}</a>
-                                        </h4>
+            @php
+                $eventPages = $events->chunk(3)->values();
+                $eventPageCount = $eventPages->count();
+            @endphp
+
+            <div id="events-page-fragment" class="events-page-fragment" data-transition-fragment data-client-pager data-current-page="1" data-page-count="{{ $eventPageCount }}" aria-live="polite">
+                @if($events->isEmpty())
+                    <p style="color:#878787; text-align:center; padding:60px 0;">No events available right now.</p>
+                @else
+                    <div class="events-results">
+                        <div class="events-pages-viewport">
+                            <div class="events-pages-track">
+                                @foreach($eventPages as $eventPage)
+                                    <div class="events-page-slide" data-client-page="{{ $loop->iteration }}">
+                                        <div class="events-grid">
+                                            @foreach($eventPage as $event)
+                                                @php
+                                                    $participation = $event->players->firstWhere('id', auth()->id())?->pivot?->status;
+                                                    $isHost = (int) $event->organizer_id === (int) auth()->id();
+                                                @endphp
+                                                <div class="event-slide">
+                                                    <article class="event-card">
+                                                        <a href="{{ route('events.show', $event) }}" class="review-cover" style="background-image: url('{{ $event->photoUrl() }}');" data-event-transition-link>
+                                                            @if($event->is_featured)
+                                                                <div class="featured-badge">Featured</div>
+                                                            @endif
+                                                        </a>
+                                                        <div class="event-text">
+                                                            <div>
+                                                                <span class="status-badge status-{{ $event->status }}">{{ ucfirst($event->status) }}</span>
+                                                                <h4>
+                                                                    <a href="{{ route('events.show', $event) }}" data-event-transition-link>{{ $event->name }}</a>
+                                                                </h4>
+                                                            </div>
+                                                            <div class="ti-text">
+                                                                <ul>
+                                                                    <li><span>Type:</span> {{ ucfirst(str_replace('_', ' ', $event->type)) }}</li>
+                                                                    <li><span>Starts:</span> {{ $event->start_date->format('M d, Y') }}</li>
+                                                                    <li><span>Ends:</span> {{ $event->end_date->format('M d, Y') }}</li>
+                                                                    <li><span>Location:</span> {{ $event->location }}</li>
+                                                                    <li><span>Host:</span> {{ $event->organizer->name ?? 'Shuttl' }}</li>
+                                                                    <li><span>Players:</span> {{ $event->approved_players_count ?? 0 }} approved</li>
+                                                                    @if($event->max_participants)
+                                                                        <li><span>Slots:</span> {{ $event->max_participants }} participants</li>
+                                                                    @endif
+                                                                </ul>
+                                                                @if($event->description)
+                                                                    <p class="event-description">{{ Str::limit($event->description, 120) }}</p>
+                                                                @endif
+                                                            </div>
+                                                            <div class="event-actions">
+                                                                <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:7px 18px;" data-event-transition-link>View Details</a>
+                                                                @if($isHost)
+                                                                    <span class="event-pill">Host</span>
+                                                                @elseif($participation === 'approved')
+                                                                    <span class="event-pill">Joined</span>
+                                                                @elseif($participation === 'pending')
+                                                                    <span class="event-pill">Pending Approval</span>
+                                                                @elseif($event->status === 'open')
+                                                                    <form method="POST" action="{{ route('events.join', $event) }}">
+                                                                        @csrf
+                                                                        <button type="submit" class="btn-join">Request to Join</button>
+                                                                    </form>
+                                                                @endif
+                                                            </div>
+                                                        </div>
+                                                    </article>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     </div>
-                                    <div class="ti-text">
-                                        <ul>
-                                            <li><span>Type:</span> {{ ucfirst(str_replace('_', ' ', $event->type)) }}</li>
-                                            <li><span>Starts:</span> {{ $event->start_date->format('M d, Y') }}</li>
-                                            <li><span>Ends:</span> {{ $event->end_date->format('M d, Y') }}</li>
-                                            <li><span>Location:</span> {{ $event->location }}</li>
-                                            <li><span>Host:</span> {{ $event->organizer->name ?? 'Shuttl' }}</li>
-                                            <li><span>Players:</span> {{ $event->approved_players_count ?? 0 }} approved</li>
-                                            @if($event->max_participants)
-                                                <li><span>Slots:</span> {{ $event->max_participants }} participants</li>
-                                            @endif
-                                        </ul>
-                                        @if($event->description)
-                                            <p class="event-description">{{ Str::limit($event->description, 120) }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="event-actions">
-                                        <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:7px 18px;">View Details</a>
-                                        @if($isHost)
-                                            <span class="event-pill">Host</span>
-                                        @elseif($participation === 'approved')
-                                            <span class="event-pill">Joined</span>
-                                        @elseif($participation === 'pending')
-                                            <span class="event-pill">Pending Approval</span>
-                                        @elseif($event->status === 'open')
-                                            <form method="POST" action="{{ route('events.join', $event) }}">
-                                                @csrf
-                                                <button type="submit" class="btn-join">Request to Join</button>
-                                            </form>
-                                        @endif
-                                    </div>
-                                </div>
-                            </article>
+                                @endforeach
+                            </div>
                         </div>
-                    @endforeach
-                </div>
-                @if(method_exists($events, 'hasPages') && $events->hasPages())
-                    <div class="event-pagination">
-                        {{ $events->links('pagination::bootstrap-4') }}
+
+                        @if($eventPageCount > 1)
+                            <button type="button" class="pagination-side pagination-prev is-disabled" data-client-pagination="prev" aria-label="Previous page" disabled><i class="fa fa-angle-left"></i></button>
+                            <button type="button" class="pagination-side pagination-next" data-client-pagination="next" aria-label="Next page"><i class="fa fa-angle-right"></i></button>
+                        @endif
                     </div>
+
+                    @if($eventPageCount > 1)
+                        <div class="event-pagination">
+                            <nav class="pagination-dots" aria-label="Events pages" data-client-dots></nav>
+                        </div>
+                    @endif
                 @endif
-            @endif
+            </div>
         </div>
     </section>
 
@@ -474,6 +591,128 @@
     @endauth
 
     <script>
+    (function () {
+        const fragment = document.getElementById('events-page-fragment');
+        const track = fragment?.querySelector('.events-pages-track');
+        const dots = fragment?.querySelector('[data-client-dots]');
+        const previousButton = fragment?.querySelector('[data-client-pagination="prev"]');
+        const nextButton = fragment?.querySelector('[data-client-pagination="next"]');
+        const totalPages = parseInt(fragment?.dataset.pageCount || '1', 10);
+        let currentPage = parseInt(fragment?.dataset.currentPage || '1', 10);
+
+        if (!fragment) return;
+
+        function visiblePages() {
+            if (totalPages <= 4) {
+                return Array.from({ length: totalPages }, (_, index) => index + 1);
+            }
+
+            if (currentPage <= 3) {
+                return [1, 2, 3, totalPages];
+            }
+
+            if (currentPage >= totalPages - 2) {
+                return [1, totalPages - 2, totalPages - 1, totalPages];
+            }
+
+            return [1, currentPage, currentPage + 1, totalPages];
+        }
+
+        function renderDots() {
+            if (!dots || totalPages <= 1) return;
+
+            dots.innerHTML = '';
+
+            visiblePages().forEach(function (page, index, pages) {
+                if (index > 0 && page > pages[index - 1] + 1) {
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'pagination-dot pagination-ellipsis';
+                    ellipsis.setAttribute('aria-hidden', 'true');
+                    ellipsis.textContent = '...';
+                    dots.appendChild(ellipsis);
+                }
+
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'pagination-dot';
+                button.dataset.clientPage = String(page);
+                button.textContent = String(page);
+
+                if (page === currentPage) {
+                    button.classList.add('is-active');
+                    button.setAttribute('aria-current', 'page');
+                    button.disabled = true;
+                }
+
+                dots.appendChild(button);
+            });
+        }
+
+        function updateControls() {
+            if (previousButton) {
+                previousButton.disabled = currentPage === 1;
+                previousButton.classList.toggle('is-disabled', currentPage === 1);
+            }
+
+            if (nextButton) {
+                nextButton.disabled = currentPage === totalPages;
+                nextButton.classList.toggle('is-disabled', currentPage === totalPages);
+            }
+        }
+
+        function goToPage(page) {
+            if (!track || totalPages <= 1) return;
+
+            currentPage = Math.min(Math.max(page, 1), totalPages);
+            fragment.dataset.currentPage = String(currentPage);
+            track.style.transform = `translateX(-${(currentPage - 1) * 100}%)`;
+
+            updateControls();
+            renderDots();
+        }
+
+        if (track && totalPages > 1) {
+            previousButton?.addEventListener('click', function () {
+                goToPage(currentPage - 1);
+            });
+
+            nextButton?.addEventListener('click', function () {
+                goToPage(currentPage + 1);
+            });
+
+            dots?.addEventListener('click', function (event) {
+                const button = event.target.closest('[data-client-page]');
+
+                if (!button) return;
+
+                goToPage(parseInt(button.dataset.clientPage, 10));
+            });
+
+            goToPage(currentPage);
+        }
+
+        window.addEventListener('pageshow', function () {
+            document.body.classList.remove('is-leaving-event');
+        });
+
+        document.addEventListener('click', function (event) {
+            const link = event.target.closest('[data-event-transition-link]');
+
+            if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+            const url = new URL(link.href, window.location.href);
+
+            if (url.origin !== window.location.origin) return;
+
+            event.preventDefault();
+            document.body.classList.add('is-leaving-event');
+
+            window.setTimeout(() => {
+                window.location.href = url.href;
+            }, 170);
+        });
+    })();
+
     (function () {
         const overlay = document.getElementById('event-modal-overlay');
         const openButton = document.getElementById('open-event-modal');

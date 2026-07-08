@@ -95,7 +95,7 @@ it('shows all active events to admins', function () {
         ->and($pastEvent->exists)->toBeTrue();
 });
 
-it('paginates tournament page events three per page', function () {
+it('renders tournament page events in three-card client pages', function () {
     $player = User::factory()->create();
 
     $firstEvent = createTournament([
@@ -126,18 +126,56 @@ it('paginates tournament page events three per page', function () {
     $this->actingAs($player)
         ->get(route('tournaments'))
         ->assertSuccessful()
+        ->assertSee($firstEvent->name)
         ->assertSee($secondEvent->name)
         ->assertSee($thirdEvent->name)
         ->assertSee($fourthEvent->name)
-        ->assertSeeInOrder([$fourthEvent->name, $thirdEvent->name, $secondEvent->name])
-        ->assertDontSee($firstEvent->name)
-        ->assertSee('?page=2', false);
+        ->assertSeeInOrder([$fourthEvent->name, $thirdEvent->name, $secondEvent->name, $firstEvent->name])
+        ->assertSee('data-page-count="2"', false)
+        ->assertSee('tp-pages-track', false)
+        ->assertSee('tp-page-slide', false)
+        ->assertSee('pagination-dot', false)
+        ->assertSee('pagination-side pagination-next', false)
+        ->assertSee('data-client-pagination="next"', false)
+        ->assertSee('data-client-dots', false)
+        ->assertDontSee('?page=2', false)
+        ->assertDontSee('data-pagination-url', false)
+        ->assertDontSee('pagination-dot" href', false)
+        ->assertDontSee('pagination-side pagination-next" href', false)
+        ->assertDontSee('fetch(', false)
+        ->assertDontSee('window.history.pushState', false)
+        ->assertDontSee('window.location.href = url;', false)
+        ->assertSee('profile-icon-button', false)
+        ->assertSee('header-profile-email', false)
+        ->assertSee('header-profile-logout', false)
+        ->assertSee(route('logout'), false)
+        ->assertSee($player->email)
+        ->assertSee('tournament-page-fragment', false)
+        ->assertSee('data-event-transition-link', false)
+        ->assertDontSee('X-Requested-With', false);
+});
+
+it('compresses tournament client pagination after four numbered circles', function () {
+    $player = User::factory()->create();
+
+    foreach (range(1, 13) as $startsInDays) {
+        $event = createTournament([
+            'name' => "Paged Tournament {$startsInDays}",
+            'start_date' => now()->addDays($startsInDays)->toDateString(),
+            'end_date' => now()->addDays($startsInDays + 1)->toDateString(),
+        ]);
+
+        $event->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
+    }
 
     $this->actingAs($player)
-        ->get(route('tournaments', ['page' => 2]))
+        ->get(route('tournaments'))
         ->assertSuccessful()
-        ->assertSee($firstEvent->name)
-        ->assertDontSee($fourthEvent->name);
+        ->assertSee('data-page-count="5"', false)
+        ->assertSee('data-client-dots', false)
+        ->assertDontSee('?page=2', false)
+        ->assertDontSee('data-pagination-url', false)
+        ->assertSee('pagination-ellipsis', false);
 });
 
 function createTournament(array $attributes = []): Event

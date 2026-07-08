@@ -14,7 +14,7 @@ it('renders the events page successfully', function () {
         ->and($html)->toContain('Casual Matches');
 });
 
-it('paginates active events three per page', function () {
+it('renders active events in three-card client pages', function () {
     $host = User::factory()->create();
 
     $firstEvent = createEventsPageEvent($host, 'First Event', 5);
@@ -25,18 +25,50 @@ it('paginates active events three per page', function () {
     $this->actingAs($host)
         ->get(route('events.index'))
         ->assertSuccessful()
+        ->assertSee($firstEvent->name)
         ->assertSee($secondEvent->name)
         ->assertSee($thirdEvent->name)
         ->assertSee($fourthEvent->name)
-        ->assertSeeInOrder([$fourthEvent->name, $thirdEvent->name, $secondEvent->name])
-        ->assertDontSee($firstEvent->name)
-        ->assertSee('?page=2', false);
+        ->assertSeeInOrder([$fourthEvent->name, $thirdEvent->name, $secondEvent->name, $firstEvent->name])
+        ->assertSee('data-page-count="2"', false)
+        ->assertSee('events-pages-track', false)
+        ->assertSee('events-page-slide', false)
+        ->assertSee('pagination-dot', false)
+        ->assertSee('pagination-side pagination-next', false)
+        ->assertSee('data-client-pagination="next"', false)
+        ->assertSee('data-client-dots', false)
+        ->assertDontSee('?page=2', false)
+        ->assertDontSee('data-pagination-url', false)
+        ->assertDontSee('pagination-dot" href', false)
+        ->assertDontSee('pagination-side pagination-next" href', false)
+        ->assertDontSee('fetch(', false)
+        ->assertDontSee('window.history.pushState', false)
+        ->assertDontSee('window.location.href = url;', false)
+        ->assertSee('profile-icon-button', false)
+        ->assertSee('header-profile-email', false)
+        ->assertSee('header-profile-logout', false)
+        ->assertSee(route('logout'), false)
+        ->assertSee($host->email)
+        ->assertSee('events-page-fragment', false)
+        ->assertSee('data-event-transition-link', false)
+        ->assertDontSee('X-Requested-With', false);
+});
+
+it('compresses event client pagination after four numbered circles', function () {
+    $host = User::factory()->create();
+
+    foreach (range(1, 13) as $startsInDays) {
+        createEventsPageEvent($host, "Paged Event {$startsInDays}", $startsInDays);
+    }
 
     $this->actingAs($host)
-        ->get(route('events.index', ['page' => 2]))
+        ->get(route('events.index'))
         ->assertSuccessful()
-        ->assertSee($firstEvent->name)
-        ->assertDontSee($fourthEvent->name);
+        ->assertSee('data-page-count="5"', false)
+        ->assertSee('data-client-dots', false)
+        ->assertDontSee('?page=2', false)
+        ->assertDontSee('data-pagination-url', false)
+        ->assertSee('pagination-ellipsis', false);
 });
 
 function createEventsPageEvent(User $host, string $name, int $startsInDays): Event
