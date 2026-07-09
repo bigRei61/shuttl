@@ -293,6 +293,32 @@
             margin-bottom: 7px;
         }
 
+        .manage-field-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 7px;
+        }
+
+        .manage-field-heading .manage-field-title {
+            margin-bottom: 0;
+        }
+
+        .manage-error {
+            display: inline-flex;
+            align-items: center;
+            border: 1px solid #f6b3c3;
+            border-radius: 6px;
+            background: #fdecea;
+            color: #bf174a;
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.35;
+            padding: 4px 8px;
+            text-align: right;
+        }
+
         .manage-field input,
         .manage-field select {
             width: 100%;
@@ -304,6 +330,51 @@
             padding: 11px 13px;
             outline: none;
             transition: border-color .2s, box-shadow .2s;
+        }
+
+        .player-slot.is-placeholder {
+            color: #9ca3af;
+        }
+
+        .player-slot option {
+            color: #131313;
+        }
+
+        .player-slot option.is-player-unavailable,
+        .player-slot option:disabled {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        .player-slot-wrap {
+            display: block;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .player-slot-wrap .player-slot {
+            margin-bottom: 0 !important;
+        }
+
+        .player-slot-wrap.is-pending-toggle::after {
+            content: attr(data-selected-label);
+            position: absolute;
+            top: 50%;
+            right: 42px;
+            left: 13px;
+            z-index: 1;
+            overflow: hidden;
+            color: #131313;
+            font-size: 14px;
+            line-height: 1;
+            pointer-events: none;
+            text-overflow: ellipsis;
+            transform: translateY(-50%);
+            white-space: nowrap;
+        }
+
+        .player-slot-wrap.is-pending-toggle .player-slot {
+            color: transparent;
         }
 
         .manage-field input:focus,
@@ -325,6 +396,25 @@
             font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
+        }
+
+        .score-grid.has-score-error input {
+            border-color: #f6b3c3;
+            background: #fff7f8;
+        }
+
+        .score-form-error {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 12px;
+        }
+
+        .score-form-error[hidden] {
+            display: none;
+        }
+
+        .score-form-error .manage-error {
+            text-align: left;
         }
 
         .player-list {
@@ -478,11 +568,24 @@
         <div class="container">
             <a href="{{ route('events.index') }}" class="event-back-link" data-event-exit-transition-link><i class="fa fa-long-arrow-left"></i> Back to events</a>
 
-            @if($errors->any())
+            @php
+                $teamOneErrors = collect($errors->getMessages())
+                    ->filter(fn (array $messages, string $key): bool => \Illuminate\Support\Str::startsWith($key, 'team_one_players'))
+                    ->flatten();
+                $teamTwoErrors = collect($errors->getMessages())
+                    ->filter(fn (array $messages, string $key): bool => \Illuminate\Support\Str::startsWith($key, 'team_two_players'))
+                    ->flatten();
+                $generalErrors = collect($errors->getMessages())
+                    ->reject(fn (array $messages, string $key): bool => \Illuminate\Support\Str::startsWith($key, ['team_one_players', 'team_two_players', 'set_scores']))
+                    ->flatten();
+                $selectedFormat = old('format', 'singles');
+            @endphp
+
+            @if($generalErrors->isNotEmpty())
                 <div class="event-alert error">
                     <strong>Please fix the highlighted game fields.</strong>
                     <ul style="margin:8px 0 0; padding-left:18px;">
-                        @foreach($errors->all() as $error)
+                        @foreach($generalErrors as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -549,7 +652,7 @@
                                                     <p class="game-sets">
                                                         Sets:
                                                         @foreach($game->setScores as $setScore)
-                                                            <span>Set {{ $setScore->set_number }} {{ $setScore->team1_score }}-{{ $setScore->team2_score }}</span>@if(! $loop->last), @endif
+                                                            <span>SET {{ $setScore->set_number }} ({{ $setScore->team1_score }}-{{ $setScore->team2_score }})</span>@if(! $loop->last), @endif
                                                         @endforeach
                                                     </p>
                                                 @endif
@@ -564,29 +667,52 @@
 
                                         @if($isHost)
                                             <details class="host-form">
-                                                <summary>Record final score</summary>
-                                                <form method="POST" action="{{ route('games.result', $game) }}" style="margin-top:16px;">
+                                                <summary>Record Final Score</summary>
+                                                @php
+                                                    $showScoreErrors = (string) old('record_game_id') === (string) $game->id;
+                                                    $scoreErrors = $showScoreErrors
+                                                        ? collect($errors->getMessages())
+                                                            ->filter(fn (array $messages, string $key): bool => \Illuminate\Support\Str::startsWith($key, 'set_scores'))
+                                                            ->flatten()
+                                                            ->unique()
+                                                            ->values()
+                                                        : collect();
+                                                    $scoreErrorMessage = $scoreErrors->first();
+                                                @endphp
+                                                <form method="POST" action="{{ route('games.result', $game) }}" class="score-form" style="margin-top:16px;" novalidate>
                                                     @csrf
                                                     @method('PUT')
+                                                    <input type="hidden" name="record_game_id" value="{{ $game->id }}">
 
                                                     @for($setNumber = 1; $setNumber <= 3; $setNumber++)
                                                         @php
+                                                            $setIndex = $setNumber - 1;
                                                             $existingSet = $game->setScores->firstWhere('set_number', $setNumber);
+                                                            $setScoreErrors = $showScoreErrors
+                                                                ? collect($errors->get("set_scores.{$setIndex}.team1_score"))
+                                                                    ->merge($errors->get("set_scores.{$setIndex}.team2_score"))
+                                                                    ->unique()
+                                                                    ->values()
+                                                                : collect();
                                                         @endphp
-                                                        <div class="score-grid">
+                                                        <div class="score-grid {{ $setScoreErrors->isNotEmpty() ? 'has-score-error' : '' }}" data-score-row>
                                                             <span>Set {{ $setNumber }}</span>
                                                             <div class="manage-field" style="margin-bottom:0;">
-                                                                <input type="number" name="set_scores[{{ $setNumber - 1 }}][team1_score]" min="0"
+                                                                <input type="number" name="set_scores[{{ $setNumber - 1 }}][team1_score]" min="0" max="30" step="1" data-score-side="team1"
                                                                     value="{{ old("set_scores.".($setNumber - 1).".team1_score", $existingSet?->team1_score) }}"
                                                                     placeholder="Team 1 score">
                                                             </div>
                                                             <div class="manage-field" style="margin-bottom:0;">
-                                                                <input type="number" name="set_scores[{{ $setNumber - 1 }}][team2_score]" min="0"
+                                                                <input type="number" name="set_scores[{{ $setNumber - 1 }}][team2_score]" min="0" max="30" step="1" data-score-side="team2"
                                                                     value="{{ old("set_scores.".($setNumber - 1).".team2_score", $existingSet?->team2_score) }}"
                                                                     placeholder="Team 2 score">
                                                             </div>
                                                         </div>
                                                     @endfor
+
+                                                    <div class="score-form-error" data-score-error {{ $scoreErrorMessage ? '' : 'hidden' }}>
+                                                        <span class="manage-error" data-score-error-text>{{ $scoreErrorMessage }}</span>
+                                                    </div>
 
                                                     <button type="submit" class="site-btn btn-sm" style="border:0; font-size:13px; padding:8px 22px; margin-top:16px;">Save Final Score</button>
                                                 </form>
@@ -611,32 +737,46 @@
                                 <div class="manage-field">
                                     <label for="format">Format</label>
                                     <select id="format" name="format">
-                                        <option value="singles" {{ old('format') === 'singles' ? 'selected' : '' }}>Singles</option>
-                                        <option value="doubles" {{ old('format') === 'doubles' ? 'selected' : '' }}>Doubles</option>
+                                        <option value="singles" {{ $selectedFormat === 'singles' ? 'selected' : '' }}>Singles</option>
+                                        <option value="doubles" {{ $selectedFormat === 'doubles' ? 'selected' : '' }}>Doubles</option>
                                     </select>
                                 </div>
 
                                 <div class="manage-field">
-                                    <span class="manage-field-title">Team 1</span>
+                                    <div class="manage-field-heading">
+                                        <span class="manage-field-title">Team 1</span>
+                                        @if($teamOneErrors->isNotEmpty())
+                                            <span class="manage-error">{{ $teamOneErrors->join(' ') }}</span>
+                                        @endif
+                                    </div>
                                     @for($slot = 0; $slot < 2; $slot++)
-                                        <select name="team_one_players[]" style="margin-bottom:8px;">
-                                            <option value="">{{ $slot === 0 ? 'Required player' : 'Doubles partner' }}</option>
-                                            @foreach($event->approvedPlayers as $player)
-                                                <option value="{{ $player->id }}" {{ (string) old("team_one_players.{$slot}") === (string) $player->id ? 'selected' : '' }}>{{ $player->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <span class="player-slot-wrap" {{ $slot === 1 && $selectedFormat !== 'doubles' ? 'hidden' : '' }}>
+                                            <select name="team_one_players[]" class="player-slot {{ blank(old("team_one_players.{$slot}")) ? 'is-placeholder' : '' }} {{ $slot === 1 ? 'doubles-player-slot' : '' }}" data-slot="{{ $slot }}" {{ $slot === 1 && $selectedFormat !== 'doubles' ? 'disabled hidden' : '' }}>
+                                                <option value="" disabled hidden {{ blank(old("team_one_players.{$slot}")) ? 'selected' : '' }}>{{ $selectedFormat === 'doubles' ? 'Select Doubles Player' : 'Select Singles Player' }}</option>
+                                                @foreach($event->approvedPlayers as $player)
+                                                    <option value="{{ $player->id }}" {{ (string) old("team_one_players.{$slot}") === (string) $player->id ? 'selected' : '' }}>{{ $player->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </span>
                                     @endfor
                                 </div>
 
                                 <div class="manage-field">
-                                    <span class="manage-field-title">Team 2</span>
+                                    <div class="manage-field-heading">
+                                        <span class="manage-field-title">Team 2</span>
+                                        @if($teamTwoErrors->isNotEmpty())
+                                            <span class="manage-error">{{ $teamTwoErrors->join(' ') }}</span>
+                                        @endif
+                                    </div>
                                     @for($slot = 0; $slot < 2; $slot++)
-                                        <select name="team_two_players[]" style="margin-bottom:8px;">
-                                            <option value="">{{ $slot === 0 ? 'Required player' : 'Doubles partner' }}</option>
-                                            @foreach($event->approvedPlayers as $player)
-                                                <option value="{{ $player->id }}" {{ (string) old("team_two_players.{$slot}") === (string) $player->id ? 'selected' : '' }}>{{ $player->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        <span class="player-slot-wrap" {{ $slot === 1 && $selectedFormat !== 'doubles' ? 'hidden' : '' }}>
+                                            <select name="team_two_players[]" class="player-slot {{ blank(old("team_two_players.{$slot}")) ? 'is-placeholder' : '' }} {{ $slot === 1 ? 'doubles-player-slot' : '' }}" data-slot="{{ $slot }}" {{ $slot === 1 && $selectedFormat !== 'doubles' ? 'disabled hidden' : '' }}>
+                                                <option value="" disabled hidden {{ blank(old("team_two_players.{$slot}")) ? 'selected' : '' }}>{{ $selectedFormat === 'doubles' ? 'Select Doubles Player' : 'Select Singles Player' }}</option>
+                                                @foreach($event->approvedPlayers as $player)
+                                                    <option value="{{ $player->id }}" {{ (string) old("team_two_players.{$slot}") === (string) $player->id ? 'selected' : '' }}>{{ $player->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </span>
                                     @endfor
                                 </div>
 
@@ -745,6 +885,398 @@
                 window.location.href = fallbackUrl;
             }, 170);
         });
+    })();
+    </script>
+
+    <script>
+    (function () {
+        const scoreForms = document.querySelectorAll('.score-form');
+
+        if (!scoreForms.length) return;
+
+        function isFilled(value) {
+            return value !== null && value.trim() !== '';
+        }
+
+        function isWholeNumber(value) {
+            return /^-?\d+$/.test(value.trim());
+        }
+
+        function scoreRows(form) {
+            return Array.from(form.querySelectorAll('[data-score-row]')).map(function (row) {
+                return {
+                    row: row,
+                    teamOneInput: row.querySelector('[data-score-side="team1"]'),
+                    teamTwoInput: row.querySelector('[data-score-side="team2"]'),
+                };
+            });
+        }
+
+        function setScoreError(teamOneValue, teamTwoValue) {
+            const values = [teamOneValue, teamTwoValue];
+
+            for (const value of values) {
+                if (isFilled(value) && !Number.isNaN(Number(value)) && Number(value) < 0) {
+                    return 'Scores cannot be negative.';
+                }
+            }
+
+            for (const value of values) {
+                if (isFilled(value) && !Number.isNaN(Number(value)) && Number(value) > 30) {
+                    return 'No set score can exceed 30.';
+                }
+            }
+
+            for (const value of values) {
+                if (!isWholeNumber(value)) {
+                    return 'Scores must be whole numbers.';
+                }
+            }
+
+            const teamOneScore = Number(teamOneValue);
+            const teamTwoScore = Number(teamTwoValue);
+
+            if (teamOneScore === teamTwoScore) {
+                return 'A set cannot end in a tie.';
+            }
+
+            const winnerScore = Math.max(teamOneScore, teamTwoScore);
+            const loserScore = Math.min(teamOneScore, teamTwoScore);
+            const margin = winnerScore - loserScore;
+
+            if (loserScore >= winnerScore) {
+                return 'Loser\'s score cannot equal or exceed winner\'s.';
+            }
+
+            if (winnerScore < 21) {
+                return 'Winning score must be at least 21.';
+            }
+
+            if (margin < 2 && winnerScore !== 30) {
+                return 'Winner must lead by at least 2 points.';
+            }
+
+            if (winnerScore >= 22 && winnerScore <= 29 && margin !== 2) {
+                return 'Margin must be exactly 2 between 22–29.';
+            }
+
+            if (winnerScore === 30 && loserScore !== 29) {
+                return 'At 30 points, loser must be exactly 29.';
+            }
+
+            if (teamOneScore === 29 && teamTwoScore === 29) {
+                return 'Once at 29-29, next point wins — no further extension.';
+            }
+
+            return null;
+        }
+
+        function matchScoreError(setWinners) {
+            const completedSetCount = setWinners.length;
+
+            if (completedSetCount < 1) {
+                return 'Match must have 1 to 3 completed sets.';
+            }
+
+            if (completedSetCount > 3) {
+                return 'Cannot exceed 3 sets in a best-of-3 match.';
+            }
+
+            let teamOneSetsWon = 0;
+            let teamTwoSetsWon = 0;
+
+            for (let index = 0; index < setWinners.length; index += 1) {
+                if (setWinners[index] === 1) {
+                    teamOneSetsWon += 1;
+                } else {
+                    teamTwoSetsWon += 1;
+                }
+
+                if (index < completedSetCount - 1 && (teamOneSetsWon === 2 || teamTwoSetsWon === 2)) {
+                    return 'Match must end once a side wins 2 sets.';
+                }
+            }
+
+            if (completedSetCount === 1) {
+                return 'Match can\'t end 1-0 — third set required unless 2 sets already won.';
+            }
+
+            if (teamOneSetsWon + teamTwoSetsWon !== completedSetCount) {
+                return 'Set win totals don\'t add up correctly.';
+            }
+
+            if (Math.max(teamOneSetsWon, teamTwoSetsWon) < 2) {
+                return 'Winner must have won at least 2 sets.';
+            }
+
+            const isRecognizedScore = [
+                '2-0',
+                '2-1',
+                '1-2',
+                '0-2',
+            ].includes(`${teamOneSetsWon}-${teamTwoSetsWon}`);
+
+            return isRecognizedScore ? null : 'Unrecognized scoring error — check set scores and try again.';
+        }
+
+        function showScoreError(form, message, row) {
+            const errorBox = form.querySelector('[data-score-error]');
+            const errorText = form.querySelector('[data-score-error-text]');
+
+            if (errorText) {
+                errorText.textContent = message;
+            }
+
+            if (errorBox) {
+                errorBox.hidden = false;
+            }
+
+            if (row) {
+                row.classList.add('has-score-error');
+            }
+        }
+
+        function clearScoreErrors(form) {
+            const errorBox = form.querySelector('[data-score-error]');
+            const errorText = form.querySelector('[data-score-error-text]');
+
+            form.querySelectorAll('[data-score-row]').forEach(function (row) {
+                row.classList.remove('has-score-error');
+            });
+
+            if (errorText) {
+                errorText.textContent = '';
+            }
+
+            if (errorBox) {
+                errorBox.hidden = true;
+            }
+        }
+
+        function validateFinalScoreForm(form) {
+            clearScoreErrors(form);
+
+            const enteredRows = scoreRows(form).filter(function (row) {
+                return isFilled(row.teamOneInput.value) || isFilled(row.teamTwoInput.value);
+            });
+
+            if (!enteredRows.length) {
+                showScoreError(form, 'Match must have 1 to 3 completed sets.');
+
+                return false;
+            }
+
+            let hasMissingScore = false;
+            const setWinners = [];
+
+            for (const row of enteredRows) {
+                const teamOneValue = row.teamOneInput.value.trim();
+                const teamTwoValue = row.teamTwoInput.value.trim();
+
+                if (!isFilled(teamOneValue) || !isFilled(teamTwoValue)) {
+                    hasMissingScore = true;
+
+                    continue;
+                }
+
+                const error = setScoreError(teamOneValue, teamTwoValue);
+
+                if (error) {
+                    showScoreError(form, error, row.row);
+
+                    return false;
+                }
+
+                setWinners.push(Number(teamOneValue) > Number(teamTwoValue) ? 1 : 2);
+            }
+
+            if (hasMissingScore) {
+                showScoreError(form, 'Missing one or more set scores.');
+
+                return false;
+            }
+
+            const matchError = matchScoreError(setWinners);
+
+            if (matchError) {
+                showScoreError(form, matchError);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        scoreForms.forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (validateFinalScoreForm(form)) return;
+
+                event.preventDefault();
+            });
+        });
+    })();
+    </script>
+
+    <script>
+    (function () {
+        const formatSelect = document.getElementById('format');
+
+        if (!formatSelect) return;
+
+        const form = formatSelect.closest('form');
+        const playerSlots = form ? form.querySelectorAll('.player-slot') : [];
+
+        function emptyPlayerLabel(isDoubles) {
+            return isDoubles ? 'Select Doubles Player' : 'Select Singles Player';
+        }
+
+        function playerSlotWrap(select) {
+            return select.closest('.player-slot-wrap');
+        }
+
+        function selectedPlayerLabel(select) {
+            const selectedOption = select.selectedOptions[0];
+
+            return selectedOption ? selectedOption.textContent.trim() : '';
+        }
+
+        function effectivePlayerValue(select) {
+            if (select.dataset.pendingClearValue && select.dataset.changedAfterClear !== 'true') {
+                return select.dataset.pendingClearValue;
+            }
+
+            return select.value;
+        }
+
+        function syncPlaceholderState(select) {
+            select.classList.toggle('is-placeholder', !select.value);
+        }
+
+        function syncUnavailablePlayerOptions() {
+            const selectedValues = Array.from(playerSlots)
+                .filter(function (select) {
+                    return !select.disabled && effectivePlayerValue(select);
+                })
+                .map(function (select) {
+                    return {
+                        select: select,
+                        value: effectivePlayerValue(select),
+                    };
+                });
+
+            playerSlots.forEach(function (select) {
+                const unavailableValues = new Set(selectedValues
+                    .filter(function (selected) {
+                        return selected.select !== select;
+                    })
+                    .map(function (selected) {
+                        return selected.value;
+                    }));
+
+                select.querySelectorAll('option[value]').forEach(function (option) {
+                    if (!option.value) return;
+
+                    const isUnavailable = unavailableValues.has(option.value);
+
+                    option.disabled = isUnavailable;
+                    option.classList.toggle('is-player-unavailable', isUnavailable);
+                });
+            });
+        }
+
+        function syncPlayerSlots() {
+            const isDoubles = formatSelect.value === 'doubles';
+
+            playerSlots.forEach(function (select) {
+                const slot = Number(select.dataset.slot || 0);
+                const shouldShow = isDoubles || slot === 0;
+                const emptyOption = select.querySelector('option[value=""]');
+                const wrap = playerSlotWrap(select);
+
+                if (emptyOption) {
+                    emptyOption.textContent = emptyPlayerLabel(isDoubles);
+                }
+
+                select.disabled = !shouldShow;
+                select.hidden = !shouldShow;
+
+                if (wrap) {
+                    wrap.hidden = !shouldShow;
+                }
+
+                syncPlaceholderState(select);
+            });
+
+            syncUnavailablePlayerOptions();
+        }
+
+        function clearToggleState(select) {
+            const wrap = playerSlotWrap(select);
+
+            if (wrap) {
+                wrap.classList.remove('is-pending-toggle');
+                delete wrap.dataset.selectedLabel;
+            }
+
+            delete select.dataset.pendingClearValue;
+            delete select.dataset.changedAfterClear;
+        }
+
+        function prepareSelectedPlayerToggle(select) {
+            if (select.disabled || !select.value) return;
+
+            select.dataset.pendingClearValue = select.value;
+            select.dataset.changedAfterClear = 'false';
+
+            const wrap = playerSlotWrap(select);
+
+            if (wrap) {
+                wrap.dataset.selectedLabel = selectedPlayerLabel(select);
+                wrap.classList.add('is-pending-toggle');
+            }
+
+            select.value = '';
+            syncPlaceholderState(select);
+            syncUnavailablePlayerOptions();
+        }
+
+        playerSlots.forEach(function (select) {
+            select.addEventListener('pointerdown', function () {
+                prepareSelectedPlayerToggle(select);
+            });
+
+            select.addEventListener('keydown', function (event) {
+                if (!['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(event.key)) return;
+
+                prepareSelectedPlayerToggle(select);
+            });
+
+            select.addEventListener('change', function () {
+                const pendingClearValue = select.dataset.pendingClearValue || '';
+                select.dataset.changedAfterClear = 'true';
+
+                if (pendingClearValue && select.value === pendingClearValue) {
+                    select.value = '';
+                }
+
+                syncPlaceholderState(select);
+                clearToggleState(select);
+                syncUnavailablePlayerOptions();
+            });
+
+            select.addEventListener('blur', function () {
+                if (select.dataset.pendingClearValue && select.dataset.changedAfterClear !== 'true' && select.value === '') {
+                    select.value = select.dataset.pendingClearValue;
+                }
+
+                syncPlaceholderState(select);
+                clearToggleState(select);
+                syncUnavailablePlayerOptions();
+            });
+        });
+
+        formatSelect.addEventListener('change', syncPlayerSlots);
+        syncPlayerSlots();
     })();
     </script>
 

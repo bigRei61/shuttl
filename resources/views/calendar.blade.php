@@ -27,14 +27,18 @@
     .calendar-grid td { text-align:center; vertical-align:middle; padding:6px 0; height:60px; width:14.28%; }
     .day-cell { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; color:#131313; font-size:13px; font-weight:700; transition:all .25s; cursor:pointer; position:relative; }
     .day-cell.muted { color:#c4c9ce; }
-    .day-cell.today { box-shadow:0 0 0 2px rgba(78, 223, 206, .72); font-weight:700; }
-    .day-cell.has-joined-event { background:#DEF3EE; color:#131313; }
+    .day-cell.today { box-shadow:0 0 0 2px #E5E7EB; font-weight:700; }
+    .day-cell.has-joined-event { background:#4EDFCE; color:#131313; }
     .day-cell.has-host-event { background:#EA7632; color:#fff; }
-    .day-cell.selected { box-shadow:0 0 0 4px rgba(78, 223, 206, .28); font-weight:700; z-index:1; }
-    .day-cell.has-host-event.selected { box-shadow:0 0 0 4px rgba(234, 118, 50, .22); }
-    .day-cell.has-joined-event.selected { box-shadow:0 0 0 4px rgba(78, 223, 206, .34); }
-    .day-cell.today.selected { box-shadow:0 0 0 2px rgba(78, 223, 206, .72); }
-    .day-cell:hover { background:#4EDFCE; color:#131313; }
+    .day-cell.has-past-joined-event { background:#DEF3EE; color:#131313; }
+    .day-cell.has-past-host-event { background:#FFF0E8; color:#131313; }
+    .day-cell.selected { box-shadow:0 0 0 4px #E5E7EB; font-weight:700; z-index:1; }
+    .day-cell.has-host-event.selected,
+    .day-cell.has-joined-event.selected,
+    .day-cell.has-past-host-event.selected,
+    .day-cell.has-past-joined-event.selected,
+    .day-cell.today.selected { box-shadow:0 0 0 4px #E5E7EB; }
+    .day-cell:hover { background:#E5E7EB; color:#131313; }
     .side-widget, .upcoming-widget { background:#fff; border:1px solid #d6dee7; padding:22px 20px; margin-bottom:0; }
     .side-widget { flex:1; height:496px; min-height:496px; overflow:hidden; display:flex; flex-direction:column; }
     .upcoming-widget { padding:26px 22px; }
@@ -64,7 +68,7 @@
     .role-pill { display:inline-flex; align-items:center; flex-shrink:0; gap:5px; border-radius:999px; color:#131313; font-size:10px; font-weight:700; line-height:1; max-width:50%; overflow:hidden; padding:6px 10px; text-overflow:ellipsis; text-transform:uppercase; white-space:nowrap; }
     .role-pill::before { content:""; width:6px; height:6px; border-radius:50%; background:currentColor; opacity:.62; }
     .role-pill.host { background:#EA7632; color:#fff; }
-    .role-pill.joined { background:#DEF3EE; color:#131313; }
+    .role-pill.joined { background:#4EDFCE; color:#131313; }
     .upcoming-widget .schedule-list { grid-template-columns:repeat(var(--upcoming-count, 1), minmax(0, 1fr)); gap:12px; }
     .upcoming-widget .schedule-list.is-empty { grid-template-columns:1fr; }
     .no-event-message { font-size:14px; color:#878787; margin-top:8px; }
@@ -76,10 +80,10 @@
         .upcoming-widget .schedule-list { grid-template-columns:1fr; }
     }
 
-    /* Force-reduce hero height, overriding external style.css rules */
+    /* Match the shared Events/Tournament hero height while keeping this page's local alignment overrides. */
     section.page-info-section.set-bg {
-        height: 260px !important;
-        min-height: 260px !important;
+        height: 499px !important;
+        min-height: 499px !important;
         padding: 0 !important;
         display: flex !important;
         align-items: center !important;
@@ -253,7 +257,7 @@
 
 			function rolePill(event) {
 				const role = event.role === 'host' ? 'host' : 'joined';
-				const color = roleColors[role] || (role === 'host' ? '#EA7632' : '#DEF3EE');
+				const color = roleColors[role] || (role === 'host' ? '#EA7632' : '#4EDFCE');
 
 				return `<span class="role-pill ${role}" style="background:${color};">${roleLabel(role)}</span>`;
 			}
@@ -277,6 +281,10 @@
 
 			function isSameDay(a, b) {
 				return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+			}
+
+			function isPastDay(date) {
+				return startOfDay(date) < today;
 			}
 
 			const monthTitle = document.getElementById('calendar-month-title');
@@ -321,11 +329,9 @@
 						if (isSameDay(cell.date, today) && month === today.getMonth() && year === today.getFullYear()) span.classList.add('today');
 						const eventsForDay = getEventsForDate(cell.date);
 						if (eventsForDay.length) {
-							if (eventsForDay.some(event => event.role === 'host')) {
-								span.classList.add('has-host-event');
-							} else {
-								span.classList.add('has-joined-event');
-							}
+							const hasHostEvent = eventsForDay.some(event => event.role === 'host');
+							const dayRole = hasHostEvent ? 'host' : 'joined';
+							span.classList.add(isPastDay(cell.date) ? `has-past-${dayRole}-event` : `has-${dayRole}-event`);
 						}
 						if (isSameDay(cell.date, selectedDate)) span.classList.add('selected');
 						span.textContent = cell.day;

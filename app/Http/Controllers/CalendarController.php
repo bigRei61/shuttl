@@ -38,7 +38,7 @@ class CalendarController extends Controller
         return view('calendar', [
             'events' => $events,
             'roleColors' => [
-                'joined' => '#DEF3EE',
+                'joined' => '#4EDFCE',
                 'host' => '#EA7632',
             ],
         ]);

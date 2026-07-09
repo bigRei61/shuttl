@@ -12,6 +12,14 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public const STARTING_RATING = 400.00;
+
+    public const AVERAGE_RATING = 1200.00;
+
+    public const RATING_SCALE = 400.00;
+
+    public const RATING_K_FACTOR = 32.00;
+
     protected $fillable = [
         'name', 'email', 'password', 'phone',
         'gender', 'date_of_birth', 'role',
@@ -24,6 +32,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'date_of_birth' => 'date',
         'password' => 'hashed',
+        'rating_value' => 'decimal:2',
+        'matches_played' => 'integer',
     ];
 
     public function organizedEvents(): HasMany
