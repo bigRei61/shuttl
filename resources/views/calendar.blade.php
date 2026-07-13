@@ -24,21 +24,22 @@
     .calendar-nav a:hover { background:#4EDFCE; color:#131313; }
     .calendar-grid { width:100%; border-collapse:collapse; }
     .calendar-grid th { font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#131313; text-align:center; padding-bottom:14px; border-bottom:1px solid #d6dee7; }
-    .calendar-grid td { text-align:center; vertical-align:middle; padding:6px 0; height:60px; width:14.28%; }
-    .day-cell { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; color:#131313; font-size:13px; font-weight:700; transition:all .25s; cursor:pointer; position:relative; }
+    .calendar-grid td { text-align:center; vertical-align:top; padding:8px 0 6px; height:64px; width:14.28%; }
+    .calendar-day { min-height:50px; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; gap:5px; cursor:pointer; }
+    .day-cell { display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; border-radius:50%; color:#131313; font-size:14px; font-weight:700; transition:all .25s; position:relative; }
     .day-cell.muted { color:#c4c9ce; }
-    .day-cell.today { box-shadow:0 0 0 2px #E5E7EB; font-weight:700; }
-    .day-cell.has-joined-event { background:#4EDFCE; color:#131313; }
-    .day-cell.has-host-event { background:#EA7632; color:#fff; }
-    .day-cell.has-past-joined-event { background:#DEF3EE; color:#131313; }
-    .day-cell.has-past-host-event { background:#FFF0E8; color:#131313; }
-    .day-cell.selected { box-shadow:0 0 0 4px #E5E7EB; font-weight:700; z-index:1; }
-    .day-cell.has-host-event.selected,
-    .day-cell.has-joined-event.selected,
-    .day-cell.has-past-host-event.selected,
-    .day-cell.has-past-joined-event.selected,
-    .day-cell.today.selected { box-shadow:0 0 0 4px #E5E7EB; }
-    .day-cell:hover { background:#E5E7EB; color:#131313; }
+    .day-cell.today, .day-cell.selected { width:30px; height:30px; margin:2px; }
+    .day-cell.today { box-shadow:0 0 0 2px #E15554; font-weight:700; }
+    .day-cell.selected { box-shadow:0 0 0 2px #E5E7EB; font-weight:700; z-index:1; }
+    .day-cell.today.selected { box-shadow:0 0 0 2px #E15554; }
+    .calendar-day:hover .day-cell { background:#E5E7EB; color:#131313; }
+    .calendar-day:hover .day-cell.today { background:#E15554; color:#fff; }
+    .calendar-event-dots { min-height:6px; display:flex; align-items:center; justify-content:center; gap:3px; }
+    .calendar-event-dot { display:block; width:6px; height:6px; border-radius:50%; }
+    .calendar-event-dot.joined { background:#4EDFCE; }
+    .calendar-event-dot.host { background:#EA7632; }
+    .calendar-event-dot.joined.past { background:#DEF3EE; }
+    .calendar-event-dot.host.past { background:#FFF0E8; }
     .side-widget, .upcoming-widget { background:#fff; border:1px solid #d6dee7; padding:22px 20px; margin-bottom:0; }
     .side-widget { flex:1; height:496px; min-height:496px; overflow:hidden; display:flex; flex-direction:column; }
     .upcoming-widget { padding:26px 22px; }
@@ -94,6 +95,7 @@
         width: 100% !important;
     }
 </style>
+	@include('partials.caret-guard')
 </head>
 <body>
 	<div id="preloder">
@@ -323,23 +325,36 @@
 					for (let col = 0; col < 7; col++) {
 						const cell = days[row * 7 + col];
 						const td = document.createElement('td');
-						const span = document.createElement('span');
-						span.className = 'day-cell';
-						if (cell.muted) span.classList.add('muted');
-						if (isSameDay(cell.date, today) && month === today.getMonth() && year === today.getFullYear()) span.classList.add('today');
+						const dayWrapper = document.createElement('div');
+						const dayNumber = document.createElement('span');
+						const eventDots = document.createElement('div');
+
+						dayWrapper.className = 'calendar-day';
+						dayNumber.className = 'day-cell';
+						eventDots.className = 'calendar-event-dots';
+
+						if (cell.muted) dayNumber.classList.add('muted');
+						if (isSameDay(cell.date, today) && month === today.getMonth() && year === today.getFullYear()) dayNumber.classList.add('today');
 						const eventsForDay = getEventsForDate(cell.date);
-						if (eventsForDay.length) {
-							const hasHostEvent = eventsForDay.some(event => event.role === 'host');
-							const dayRole = hasHostEvent ? 'host' : 'joined';
-							span.classList.add(isPastDay(cell.date) ? `has-past-${dayRole}-event` : `has-${dayRole}-event`);
-						}
-						if (isSameDay(cell.date, selectedDate)) span.classList.add('selected');
-						span.textContent = cell.day;
-						span.addEventListener('click', () => {
+
+						eventsForDay.slice(0, 3).forEach(event => {
+							const role = event.role === 'host' ? 'host' : 'joined';
+							const dot = document.createElement('span');
+							dot.className = `calendar-event-dot ${role}`;
+							if (isPastDay(cell.date)) dot.classList.add('past');
+							dot.setAttribute('aria-hidden', 'true');
+							eventDots.appendChild(dot);
+						});
+
+						if (isSameDay(cell.date, selectedDate)) dayNumber.classList.add('selected');
+						dayNumber.textContent = cell.day;
+						dayWrapper.addEventListener('click', () => {
 							selectedDate = new Date(cell.date);
 							renderCalendar();
 						});
-						td.appendChild(span);
+						dayWrapper.appendChild(dayNumber);
+						dayWrapper.appendChild(eventDots);
+						td.appendChild(dayWrapper);
 						tr.appendChild(td);
 					}
 					gridBody.appendChild(tr);

@@ -37,6 +37,7 @@
             transition: background-color 5000s ease-in-out 0s;
         }
     </style>
+    @include('partials.caret-guard')
 </head>
 <body class="min-h-screen relative">
 

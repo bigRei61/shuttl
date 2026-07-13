@@ -13,9 +13,15 @@ use Illuminate\Validation\Rules\File;
 
 class EventController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $hosts = User::where('role', 'player')->orderBy('name')->get();
+        $date = in_array($request->query('date'), ['earliest', 'latest'], true)
+            ? $request->query('date')
+            : 'earliest';
+        $type = in_array($request->query('type'), ['quick_play', 'tournament'], true)
+            ? $request->query('type')
+            : null;
 
         $events = Event::with([
             'organizer',
@@ -24,7 +30,11 @@ class EventController extends Controller
             ->withCount('approvedPlayers')
             ->whereIn('status', ['open', 'ongoing'])
             ->whereDate('end_date', '>=', today())
-            ->orderBy('start_date')
+            ->when(
+                $date === 'latest',
+                fn ($query) => $query->orderByDesc('start_date'),
+                fn ($query) => $query->orderBy('start_date'),
+            )
             ->orderByDesc('created_at')
             ->orderByDesc('id')
             ->get();
@@ -35,7 +45,7 @@ class EventController extends Controller
             ->take(3)
             ->get();
 
-        return view('events.index', compact('events', 'casualGames', 'hosts'));
+        return view('events.index', compact('events', 'casualGames', 'hosts', 'date', 'type'));
     }
 
     public function create()

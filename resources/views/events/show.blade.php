@@ -543,6 +543,7 @@
             }
         }
     </style>
+    @include('partials.caret-guard')
 </head>
 <body class="event-show-page">
     <div id="preloder">

@@ -338,6 +338,7 @@
             }
         }
     </style>
+    @include('partials.caret-guard')
 </head>
 <body class="tournaments-index-page">
     <div id="preloder">

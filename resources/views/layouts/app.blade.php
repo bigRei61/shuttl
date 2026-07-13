@@ -11,6 +11,7 @@
         .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800 transition-all duration-200; }
         .sidebar-link.active { @apply text-white bg-teal-700; }
     </style>
+    @include('partials.caret-guard')
 </head>
 <body class="bg-gray-950 text-white min-h-screen flex">
 

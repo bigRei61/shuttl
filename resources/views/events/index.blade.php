@@ -125,6 +125,118 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+        .events-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+        .events-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            min-width: 0;
+        }
+        .events-filter-dropdown {
+            position: relative;
+            flex-shrink: 0;
+        }
+        .events-filter-dropdown summary {
+            list-style: none;
+        }
+        .events-filter-dropdown summary::-webkit-details-marker {
+            display: none;
+        }
+        .events-filter-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 38px;
+            padding: 8px 18px;
+            border: 1px solid #d6dee7;
+            border-radius: 999px;
+            background: #fff;
+            color: #131313;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: border-color .2s, background .2s;
+        }
+        .events-filter-button:hover,
+        .events-filter-dropdown[open] .events-filter-button {
+            border-color: #4EDFCE;
+            background: #DEF3EE;
+        }
+        .events-filter-panel {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            z-index: 20;
+            width: 260px;
+            padding: 18px;
+            border: 1px solid #d6dee7;
+            border-radius: 8px;
+            background: #fff;
+            box-shadow: 0 18px 42px rgba(19, 19, 19, .14);
+        }
+        .events-filter-group + .events-filter-group {
+            margin-top: 16px;
+        }
+        .events-filter-heading {
+            margin: 0 0 9px;
+            color: #131313;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+        .events-filter-option {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0;
+            padding: 7px 0;
+            color: #131313;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .events-filter-option input {
+            width: 15px;
+            height: 15px;
+            accent-color: #4EDFCE;
+        }
+        .events-filter-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 18px;
+            padding-top: 16px;
+            border-top: 1px solid #edf2f5;
+        }
+        .events-filter-clear {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            border: 1px solid #d6dee7;
+            padding: 8px 16px;
+            border-radius: 999px;
+            background: #fff;
+            color: #131313;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .events-filter-clear:hover {
+            border-color: #4EDFCE;
+            color: #131313;
+            text-decoration: none;
+        }
         .events-results { position: relative; }
         .events-pages-viewport {
             overflow: hidden;
@@ -333,6 +445,20 @@
         }
         .modal-submit:hover { filter: brightness(0.96); }
         @media (max-width: 640px) {
+            .events-toolbar,
+            .events-toolbar-left {
+                align-items: stretch;
+                flex-direction: column;
+            }
+            .events-filter-dropdown,
+            .events-filter-button,
+            .events-filter-panel {
+                width: 100%;
+            }
+            .events-filter-panel {
+                position: static;
+                margin-top: 10px;
+            }
             .events-grid { grid-template-columns: 1fr; }
             .events-results { display:flex; flex-direction:column; }
             .pagination-side { position:static; transform:none; width:46px; height:46px; font-size:30px; }
@@ -358,6 +484,7 @@
             .events-results .pagination-next { right:-24px; }
         }
     </style>
+    @include('partials.caret-guard')
 </head>
 <body class="events-index-page">
     <div id="preloder">
@@ -395,8 +522,51 @@
                 </div>
             @endif
 
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-                <div class="tournament-title" style="margin:0;">Active Events</div>
+            @php
+                $selectedDate = $date ?? 'earliest';
+                $selectedType = $type ?? null;
+            @endphp
+
+            <div class="events-toolbar">
+                <div class="events-toolbar-left">
+                    <div class="tournament-title" style="margin:0;">Active Events</div>
+                    <details class="events-filter-dropdown">
+                        <summary class="events-filter-button">
+                            Filter By
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </summary>
+                        <div class="events-filter-panel">
+                            <div class="events-filter-group">
+                                <p class="events-filter-heading">Date</p>
+                                <label class="events-filter-option">
+                                    <input type="radio" name="date" value="earliest" data-events-filter-input {{ $selectedDate === 'earliest' ? 'checked' : '' }}>
+                                    Earliest
+                                </label>
+                                <label class="events-filter-option">
+                                    <input type="radio" name="date" value="latest" data-events-filter-input {{ $selectedDate === 'latest' ? 'checked' : '' }}>
+                                    Latest
+                                </label>
+                            </div>
+
+                            <div class="events-filter-group">
+                                <p class="events-filter-heading">Type</p>
+                                <label class="events-filter-option">
+                                    <input type="radio" name="type" value="quick_play" data-events-filter-input {{ $selectedType === 'quick_play' ? 'checked' : '' }}>
+                                    Quick Play
+                                </label>
+                                <label class="events-filter-option">
+                                    <input type="radio" name="type" value="tournament" data-events-filter-input {{ $selectedType === 'tournament' ? 'checked' : '' }}>
+                                    Tournament
+                                </label>
+                            </div>
+
+                            <div class="events-filter-actions">
+                                <button type="button" class="events-filter-clear" data-events-filter-clear>Clear</button>
+                            </div>
+                        </div>
+                    </details>
+                </div>
+
                 @auth
                     <button type="button" id="open-event-modal" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px; border:0;">+ Create Event</button>
                 @endauth
@@ -422,7 +592,7 @@
                                                     $participation = $event->players->firstWhere('id', auth()->id())?->pivot?->status;
                                                     $isHost = (int) $event->organizer_id === (int) auth()->id();
                                                 @endphp
-                                                <div class="event-slide">
+                                                <div class="event-slide" data-event-slide data-event-type="{{ $event->type }}" data-event-start-date="{{ $event->start_date->toDateString() }}" data-event-created-at="{{ $event->created_at?->timestamp ?? 0 }}" data-event-id="{{ $event->id }}">
                                                     <article class="event-card">
                                                         <a href="{{ route('events.show', $event) }}" class="review-cover" style="background-image: url('{{ $event->photoUrl() }}');" data-event-transition-link>
                                                             @if($event->is_featured)
@@ -482,6 +652,8 @@
                             <button type="button" class="pagination-side pagination-next" data-client-pagination="next" aria-label="Next page"><i class="fa fa-angle-right"></i></button>
                         @endif
                     </div>
+
+                    <p id="events-empty-message" style="color:#878787; text-align:center; padding:60px 0;" hidden>No events match this filter.</p>
 
                     @if($eventPageCount > 1)
                         <div class="event-pagination">
@@ -597,12 +769,30 @@
         const dots = fragment?.querySelector('[data-client-dots]');
         const previousButton = fragment?.querySelector('[data-client-pagination="prev"]');
         const nextButton = fragment?.querySelector('[data-client-pagination="next"]');
-        const totalPages = parseInt(fragment?.dataset.pageCount || '1', 10);
+        const results = fragment?.querySelector('.events-results');
+        const emptyMessage = document.getElementById('events-empty-message');
+        const filterInputs = Array.from(document.querySelectorAll('[data-events-filter-input]'));
+        const clearButton = document.querySelector('[data-events-filter-clear]');
+        const eventSlides = track ? Array.from(track.querySelectorAll('[data-event-slide]')) : [];
+        const pageSize = 3;
+        let totalPages = parseInt(fragment?.dataset.pageCount || '1', 10);
         let currentPage = parseInt(fragment?.dataset.currentPage || '1', 10);
 
         if (!fragment) return;
 
+        function selectedDate() {
+            return document.querySelector('input[name="date"]:checked')?.value === 'latest' ? 'latest' : 'earliest';
+        }
+
+        function selectedType() {
+            return document.querySelector('input[name="type"]:checked')?.value || '';
+        }
+
         function visiblePages() {
+            if (totalPages <= 0) {
+                return [];
+            }
+
             if (totalPages <= 4) {
                 return Array.from({ length: totalPages }, (_, index) => index + 1);
             }
@@ -619,9 +809,15 @@
         }
 
         function renderDots() {
-            if (!dots || totalPages <= 1) return;
+            if (!dots) return;
+
+            const dotsWrap = dots.closest('.event-pagination');
+            if (dotsWrap) {
+                dotsWrap.hidden = totalPages <= 1;
+            }
 
             dots.innerHTML = '';
+            if (totalPages <= 1) return;
 
             visiblePages().forEach(function (page, index, pages) {
                 if (index > 0 && page > pages[index - 1] + 1) {
@@ -649,47 +845,150 @@
         }
 
         function updateControls() {
+            const shouldShowPaging = totalPages > 1;
+
             if (previousButton) {
+                previousButton.hidden = !shouldShowPaging;
                 previousButton.disabled = currentPage === 1;
                 previousButton.classList.toggle('is-disabled', currentPage === 1);
             }
 
             if (nextButton) {
+                nextButton.hidden = !shouldShowPaging;
                 nextButton.disabled = currentPage === totalPages;
                 nextButton.classList.toggle('is-disabled', currentPage === totalPages);
             }
         }
 
         function goToPage(page) {
-            if (!track || totalPages <= 1) return;
+            if (!track) return;
 
-            currentPage = Math.min(Math.max(page, 1), totalPages);
+            currentPage = totalPages <= 1 ? 1 : Math.min(Math.max(page, 1), totalPages);
             fragment.dataset.currentPage = String(currentPage);
-            track.style.transform = `translateX(-${(currentPage - 1) * 100}%)`;
+            track.style.transform = totalPages <= 1 ? 'translateX(0)' : `translateX(-${(currentPage - 1) * 100}%)`;
 
             updateControls();
             renderDots();
         }
 
-        if (track && totalPages > 1) {
-            previousButton?.addEventListener('click', function () {
-                goToPage(currentPage - 1);
+        function sortedSlides(slides) {
+            const dateOrder = selectedDate();
+
+            return slides.slice().sort(function (a, b) {
+                const dateCompare = a.dataset.eventStartDate.localeCompare(b.dataset.eventStartDate);
+                if (dateCompare !== 0) {
+                    return dateOrder === 'latest' ? -dateCompare : dateCompare;
+                }
+
+                const createdAtCompare = Number(b.dataset.eventCreatedAt || 0) - Number(a.dataset.eventCreatedAt || 0);
+                if (createdAtCompare !== 0) {
+                    return createdAtCompare;
+                }
+
+                return Number(b.dataset.eventId || 0) - Number(a.dataset.eventId || 0);
             });
-
-            nextButton?.addEventListener('click', function () {
-                goToPage(currentPage + 1);
-            });
-
-            dots?.addEventListener('click', function (event) {
-                const button = event.target.closest('[data-client-page]');
-
-                if (!button) return;
-
-                goToPage(parseInt(button.dataset.clientPage, 10));
-            });
-
-            goToPage(currentPage);
         }
+
+        function rebuildPages(slides) {
+            if (!track) return;
+
+            track.innerHTML = '';
+            totalPages = slides.length ? Math.ceil(slides.length / pageSize) : 0;
+            fragment.dataset.pageCount = String(totalPages);
+
+            if (results) {
+                results.hidden = slides.length === 0;
+            }
+
+            if (emptyMessage) {
+                emptyMessage.hidden = slides.length > 0;
+            }
+
+            for (let index = 0; index < slides.length; index += pageSize) {
+                const page = document.createElement('div');
+                const grid = document.createElement('div');
+
+                page.className = 'events-page-slide';
+                page.dataset.clientPage = String((index / pageSize) + 1);
+                grid.className = 'events-grid';
+
+                slides.slice(index, index + pageSize).forEach(function (slide) {
+                    grid.appendChild(slide);
+                });
+
+                page.appendChild(grid);
+                track.appendChild(page);
+            }
+
+            goToPage(1);
+        }
+
+        function updateFilterUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const date = selectedDate();
+            const type = selectedType();
+
+            if (date === 'latest') {
+                params.set('date', date);
+            } else {
+                params.delete('date');
+            }
+
+            if (type) {
+                params.set('type', type);
+            } else {
+                params.delete('type');
+            }
+
+            const query = params.toString();
+            const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash}`;
+            window.history.replaceState({}, '', nextUrl);
+        }
+
+        function applyEventFilters(updateUrl = true) {
+            const type = selectedType();
+            const matchingSlides = sortedSlides(eventSlides.filter(function (slide) {
+                return !type || slide.dataset.eventType === type;
+            }));
+
+            rebuildPages(matchingSlides);
+
+            if (updateUrl) {
+                updateFilterUrl();
+            }
+        }
+
+        previousButton?.addEventListener('click', function () {
+            goToPage(currentPage - 1);
+        });
+
+        nextButton?.addEventListener('click', function () {
+            goToPage(currentPage + 1);
+        });
+
+        dots?.addEventListener('click', function (event) {
+            const button = event.target.closest('[data-client-page]');
+
+            if (!button) return;
+
+            goToPage(parseInt(button.dataset.clientPage, 10));
+        });
+
+        filterInputs.forEach(function (input) {
+            input.addEventListener('change', function () {
+                applyEventFilters();
+            });
+        });
+
+        clearButton?.addEventListener('click', function () {
+            document.querySelector('input[name="date"][value="earliest"]').checked = true;
+            document.querySelectorAll('input[name="type"]').forEach(function (input) {
+                input.checked = false;
+            });
+            applyEventFilters();
+        });
+
+        applyEventFilters(false);
 
         window.addEventListener('pageshow', function () {
             document.body.classList.remove('is-leaving-event');

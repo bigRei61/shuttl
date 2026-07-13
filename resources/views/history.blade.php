@@ -55,6 +55,7 @@
             .stats-content { grid-template-columns: 1fr; }
         }
     </style>
+@include('partials.caret-guard')
 </head>
 <body>
 <div id="preloder"><div class="loader"></div></div>

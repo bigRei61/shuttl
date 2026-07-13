@@ -9,6 +9,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
     </style>
+    @include('partials.caret-guard')
 </head>
 <body class="min-h-screen bg-gray-900">
     <div class="min-h-screen flex">

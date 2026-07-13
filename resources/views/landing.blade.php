@@ -513,6 +513,7 @@
             .featured-nav.next { right: 8px; }
         }
     </style>
+    @include('partials.caret-guard')
 </head>
 <body>
     <div id="preloder">
