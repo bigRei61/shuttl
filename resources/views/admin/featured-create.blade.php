@@ -87,7 +87,7 @@
         </div>
 
         <div>
-            <label class="block text-sm text-gray-400 mb-1">Description</label>
+            <label class="block text-sm text-gray-400 mb-1">Description <span class="text-xs text-gray-500">(Optional)</span></label>
             <textarea name="description" rows="4"
                       class="w-full bg-gray-800 border {{ $errors->has('description') ? 'border-red-500' : 'border-gray-700' }}
                              text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500"
@@ -98,7 +98,7 @@
         </div>
 
         <div>
-            <label class="block text-sm text-gray-400 mb-1">Tournament Photo</label>
+            <label class="block text-sm text-gray-400 mb-1">Tournament Photo <span class="text-xs text-gray-500">(Optional)</span></label>
             <input type="file" name="photo" accept="image/*"
                    class="w-full bg-gray-800 border {{ $errors->has('photo') ? 'border-red-500' : 'border-gray-700' }}
                           text-white rounded-lg px-4 py-3 text-sm file:mr-4 file:rounded-md file:border-0 file:bg-teal-600 file:px-3 file:py-2 file:text-sm file:font-semibold file:text-white focus:outline-none focus:border-teal-500">

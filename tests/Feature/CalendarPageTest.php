@@ -11,7 +11,7 @@ afterEach(function () {
     Carbon::setTestNow();
 });
 
-it('passes active hosted and approved joined events to the calendar', function () {
+it('passes hosted and approved joined events, including previous ones, to the calendar', function () {
     Carbon::setTestNow('2026-07-08 09:00:00');
 
     $player = User::factory()->create();
@@ -31,43 +31,55 @@ it('passes active hosted and approved joined events to the calendar', function (
         'start_date' => '2026-07-09',
         'end_date' => '2026-07-09',
     ]);
-    $pendingEvent = createCalendarEvent(['name' => 'Pending Event']);
-    $rejectedEvent = createCalendarEvent(['name' => 'Rejected Event']);
-    $unjoinedEvent = createCalendarEvent(['name' => 'Unjoined Event']);
-    $completedEvent = createCalendarEvent([
-        'name' => 'Completed Event',
-        'status' => 'completed',
-    ]);
-    $pastEvent = createCalendarEvent([
-        'name' => 'Past Event',
+    $pastJoined = createCalendarEvent([
+        'name' => 'Past Joined',
         'start_date' => '2026-07-01',
         'end_date' => '2026-07-02',
     ]);
+    $completedJoined = createCalendarEvent([
+        'name' => 'Completed Joined',
+        'start_date' => '2026-07-03',
+        'end_date' => '2026-07-04',
+        'status' => 'completed',
+    ]);
+    $pastHosted = createCalendarEvent([
+        'organizer_id' => $player->id,
+        'name' => 'Past Hosted',
+        'start_date' => '2026-07-01',
+        'end_date' => '2026-07-02',
+        'status' => 'completed',
+    ]);
+    $pendingEvent = createCalendarEvent(['name' => 'Pending Event']);
+    $rejectedEvent = createCalendarEvent(['name' => 'Rejected Event']);
+    $unjoinedEvent = createCalendarEvent(['name' => 'Unjoined Event']);
 
     $joinedToday->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
     $futureJoined->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
+    $pastJoined->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
+    $completedJoined->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
     $pendingEvent->players()->attach($player->id, ['status' => 'pending']);
     $rejectedEvent->players()->attach($player->id, ['status' => 'rejected', 'responded_at' => now()]);
-    $completedEvent->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
-    $pastEvent->players()->attach($player->id, ['status' => 'approved', 'responded_at' => now()]);
 
     $this->actingAs($player)
         ->get(route('calendar'))
         ->assertSuccessful()
-        ->assertViewHas('events', function ($events) use ($hostedToday, $joinedToday, $futureJoined, $pendingEvent, $rejectedEvent, $unjoinedEvent, $completedEvent, $pastEvent) {
+        ->assertViewHas('events', function ($events) use ($hostedToday, $joinedToday, $futureJoined, $pastJoined, $completedJoined, $pastHosted, $pendingEvent, $rejectedEvent, $unjoinedEvent) {
             $events = collect($events);
             $eventIds = $events->pluck('id')->all();
 
             expect($eventIds)->toContain($hostedToday->id)
                 ->toContain($joinedToday->id)
                 ->toContain($futureJoined->id)
+                ->toContain($pastJoined->id)
+                ->toContain($completedJoined->id)
+                ->toContain($pastHosted->id)
                 ->not->toContain($pendingEvent->id)
                 ->not->toContain($rejectedEvent->id)
                 ->not->toContain($unjoinedEvent->id)
-                ->not->toContain($completedEvent->id)
-                ->not->toContain($pastEvent->id)
                 ->and($events->firstWhere('id', $hostedToday->id)['role'])->toBe('host')
                 ->and($events->firstWhere('id', $joinedToday->id)['role'])->toBe('joined')
+                ->and($events->firstWhere('id', $pastJoined->id)['role'])->toBe('joined')
+                ->and($events->firstWhere('id', $pastHosted->id)['role'])->toBe('host')
                 ->and($events->firstWhere('id', $hostedToday->id)['start_date'])->toBe('2026-07-08')
                 ->and($events->firstWhere('id', $hostedToday->id))->not->toHaveKey('time');
 

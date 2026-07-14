@@ -344,6 +344,7 @@
             border: 1px solid #e4ebf0;
             border-radius: 20px;
             box-shadow: 0 18px 45px rgba(19, 19, 19, 0.08);
+            cursor: pointer;
             padding: 24px;
         }
 
@@ -411,6 +412,9 @@
             font-size: 22px;
             margin-bottom: 12px;
             color: #131313;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .featured-list {
@@ -443,30 +447,32 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
+            width: 56px;
+            height: 56px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 42px;
-            height: 42px;
             border-radius: 50%;
-            background: #fff;
-            color: #131313;
-            font-size: 14px;
+            background: #e9edf2;
+            color: #fff;
+            font-size: 34px;
+            line-height: 1;
+            border: 0;
             text-decoration: none;
-            transition: all .2s ease;
-            z-index: 10;
-            box-shadow: 0 8px 20px rgba(19, 19, 19, 0.12);
-            border: 1px solid #e4ebf0;
+            transition: background .2s, transform .2s;
+            cursor: pointer;
+            z-index: 2;
         }
 
         .featured-nav:hover {
             background: #4EDFCE;
-            color: #131313;
+            color: #fff;
+            text-decoration: none;
             transform: translateY(-50%) scale(1.03);
         }
 
-        .featured-nav.prev { left: -16px; }
-        .featured-nav.next { right: -16px; }
+        .featured-nav.prev { left: -39px; }
+        .featured-nav.next { right: -39px; }
 
         .featured-dots {
             text-align: center;
@@ -505,12 +511,13 @@
             }
 
             .featured-nav {
-                width: 38px;
-                height: 38px;
+                width: 42px;
+                height: 42px;
+                font-size: 26px;
             }
 
-            .featured-nav.prev { left: 8px; }
-            .featured-nav.next { right: 8px; }
+            .featured-nav.prev { left: -29px; }
+            .featured-nav.next { right: -29px; }
         }
     </style>
     @include('partials.caret-guard')
@@ -663,11 +670,11 @@
             @if($featured->isEmpty())
                 <p style="color:#878787; text-align:center; padding:40px 0;">No featured tournaments available right now.</p>
             @else
-                <div style="position:relative; width:100%; overflow:hidden;">
+                <div style="position:relative; width:100%; overflow:visible;">
                     <div id="featured-track" style="width:100%;">
                         @foreach($featured as $event)
                             <div class="featured-slide" style="display:none; width:100%;">
-                                <div class="featured-shell">
+                                <div class="featured-shell" data-featured-event-url="{{ auth()->check() ? route('events.show', $event) : route('login') }}">
                                     <div class="row g-4 align-items-stretch">
                                         <div class="col-lg-5">
                                             <div class="featured-media" style="background: url('{{ $event->photoUrl() }}') center/cover no-repeat;"></div>
@@ -677,7 +684,7 @@
                                                 <div class="featured-badge">
                                                     {{ $event->status === 'ongoing' ? '🔴 Live Now' : '⭐ Featured Tournament' }}
                                                 </div>
-                                                <h4 class="featured-title">{{ $event->name }}</h4>
+                                                <h4 class="featured-title" title="{{ $event->name }}">{{ Str::limit($event->name, 70, '...') }}</h4>
                                                 <ul class="featured-list">
                                                     <li><strong>Begins:</strong>{{ $event->start_date->format('F d, Y') }}</li>
                                                     <li><strong>Ends:</strong>{{ $event->end_date->format('F d, Y') }}</li>
@@ -687,9 +694,6 @@
                                                     @endif
                                                     <li><strong>Host:</strong>{{ $event->organizer->name ?? 'Shuttl' }}</li>
                                                 </ul>
-                                                @if($event->description)
-                                                    <p style="font-size:13px; color:#878787; margin-bottom:16px;">{{ Str::limit($event->description, 120) }}</p>
-                                                @endif
                                                 <div class="featured-actions">
                                                     @auth
                                                         <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">View Details</a>
@@ -740,16 +744,31 @@
 
         const slides = track.querySelectorAll('.featured-slide');
         const total = slides.length;
-        if (total <= 1) return;
-
         let current = 0;
-        let autoplay = setInterval(() => goTo(current + 1), 5000);
+
+        track.addEventListener('click', (event) => {
+            const clickedElement = event.target instanceof Element ? event.target : null;
+
+            if (!clickedElement || clickedElement.closest('a, button, input, select, textarea, label, form')) return;
+
+            const featuredCard = clickedElement.closest('[data-featured-event-url]');
+
+            if (!featuredCard) return;
+
+            window.location.assign(featuredCard.dataset.featuredEventUrl);
+        });
 
         function renderSlides() {
             slides.forEach((slide, index) => {
                 slide.style.display = index === current ? 'block' : 'none';
             });
         }
+
+        renderSlides();
+
+        if (total <= 1) return;
+
+        let autoplay = setInterval(() => goTo(current + 1), 5000);
 
         function goTo(index) {
             current = (index + total) % total;

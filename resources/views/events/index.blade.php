@@ -69,15 +69,6 @@
         .event-text .ti-text ul { list-style: none; padding: 0; margin: 0; }
         .event-text .ti-text ul li { color: #878787; font-size: 13px; margin-bottom: 5px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .event-text .ti-text ul li span { color: #131313; font-weight: 600; margin-right: 6px; }
-        .event-description {
-            font-size: 13px;
-            color: #878787;
-            margin: 12px 0 0;
-            line-height: 1.55;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
         .featured-badge {
             position: absolute; top: 12px; left: 12px;
             background: #4EDFCE; color: #131313;
@@ -387,6 +378,11 @@
             font-weight: 700;
             margin-bottom: 7px;
         }
+        .modal-label-note {
+            color: #878787;
+            font-size: 12px;
+            font-weight: 500;
+        }
         .modal-field input,
         .modal-field select,
         .modal-field textarea {
@@ -618,9 +614,6 @@
                                                                         <li><span>Slots:</span> {{ $event->max_participants }} participants</li>
                                                                     @endif
                                                                 </ul>
-                                                                @if($event->description)
-                                                                    <p class="event-description">{{ Str::limit($event->description, 120) }}</p>
-                                                                @endif
                                                             </div>
                                                             <div class="event-actions">
                                                                 <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:7px 18px;" data-event-transition-link>View Details</a>
@@ -747,7 +740,7 @@
                         @endif
 
                         <div class="modal-field">
-                            <label for="event_photo">Event Photo</label>
+                            <label for="event_photo">Event Photo <span class="modal-label-note">(Optional)</span></label>
                             <input id="event_photo" type="file" name="photo" accept="image/*">
                             @error('photo') <p class="modal-error">{{ $message }}</p> @enderror
                         </div>

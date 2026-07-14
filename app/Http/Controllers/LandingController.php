@@ -17,7 +17,8 @@ class LandingController extends Controller
             ->with('organizer')
             ->whereIn('status', ['open', 'ongoing'])
             ->whereDate('end_date', '>=', today())
-            ->orderByDesc('start_date')
+            ->latest()
+            ->limit(3)
             ->get();
 
         return view('landing', compact('featured'));

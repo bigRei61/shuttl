@@ -41,17 +41,29 @@
         </thead>
         <tbody class="divide-y divide-gray-800">
             @forelse($events as $event)
+                @php
+                    $eventTypeLabel = str_replace('_', ' ', $event->type);
+                    $eventDateRange = $event->start_date->format('M d').' - '.$event->end_date->format('M d, Y');
+                    $eventHostName = $event->organizer->name ?? '-';
+                @endphp
+
                 <tr class="text-white hover:bg-gray-800/50">
-                    <td class="px-6 py-4 break-words">
-                        <span>{{ $event->name }}</span>
-                        @if($event->is_featured)
-                            <span class="ml-2 text-xs bg-teal-900 text-teal-300 px-2 py-0.5 rounded-full">Featured</span>
-                        @endif
+                    <td class="px-6 py-4 overflow-hidden">
+                        <div class="flex min-w-0 items-center gap-2">
+                            <span class="min-w-0 truncate" title="{{ $event->name }}">{{ $event->name }}</span>
+                            @if($event->is_featured)
+                                <span class="flex-shrink-0 text-xs bg-teal-900 text-teal-300 px-2 py-0.5 rounded-full">Featured</span>
+                            @endif
+                        </div>
                     </td>
-                    <td class="px-6 py-4 text-gray-400 capitalize break-words">{{ str_replace('_', ' ', $event->type) }}</td>
-                    <td class="px-6 py-4 text-gray-400 break-words">{{ $event->location }}</td>
-                    <td class="px-6 py-4 text-gray-400 break-words">
-                        {{ $event->start_date->format('M d') }} – {{ $event->end_date->format('M d, Y') }}
+                    <td class="px-6 py-4 text-gray-400 capitalize overflow-hidden">
+                        <span class="block truncate" title="{{ $eventTypeLabel }}">{{ $eventTypeLabel }}</span>
+                    </td>
+                    <td class="px-6 py-4 text-gray-400 overflow-hidden">
+                        <span class="block truncate" title="{{ $event->location }}">{{ $event->location }}</span>
+                    </td>
+                    <td class="px-6 py-4 text-gray-400 overflow-hidden">
+                        <span class="block truncate" title="{{ $eventDateRange }}">{{ $eventDateRange }}</span>
                     </td>
                     <td class="px-6 py-4">
                         <form method="POST" action="{{ route('admin.events.status', $event) }}">
@@ -65,7 +77,9 @@
                             </select>
                         </form>
                     </td>
-                    <td class="px-6 py-4 text-gray-400">{{ $event->organizer->name ?? '—' }}</td>
+                    <td class="px-6 py-4 text-gray-400 overflow-hidden">
+                        <span class="block truncate" title="{{ $eventHostName }}">{{ $eventHostName }}</span>
+                    </td>
                     <td class="px-6 py-4">
                         <form method="POST" action="{{ route('admin.events.delete', $event) }}"
                               onsubmit="return confirm('Are you sure you want to delete this event?');">

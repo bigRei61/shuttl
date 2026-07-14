@@ -65,6 +65,7 @@ it('renders active events in three-card client pages', function () {
         ->assertSee($host->email)
         ->assertSee('events-page-fragment', false)
         ->assertSee('data-event-transition-link', false)
+        ->assertSee('Event Photo <span class="modal-label-note">(Optional)</span>', false)
         ->assertDontSee('X-Requested-With', false);
 });
 
@@ -134,6 +135,36 @@ it('preselects combined tournament type filtering with latest date sorting', fun
         ->assertSeeInOrder([$quickPlayEvent->name, $newerTournament->name, $olderTournament->name]);
 });
 
+it('hides featured event descriptions on cards and shows them on the detail page', function () {
+    $host = User::factory()->create();
+    $descriptionFirstLine = 'A featured tournament description that should only appear after opening the event.';
+    $descriptionSecondLine = 'averyveryveryveryveryveryveryveryveryveryveryveryveryverylongdescriptionword';
+    $description = "{$descriptionFirstLine}\n{$descriptionSecondLine}";
+    $event = createEventsPageEvent($host, 'Featured Description Cup', 1, 'tournament', [
+        'description' => $description,
+        'is_featured' => true,
+    ]);
+
+    $this->actingAs($host)
+        ->get(route('events.index'))
+        ->assertSuccessful()
+        ->assertSee($event->name)
+        ->assertSee('Featured')
+        ->assertDontSee($descriptionFirstLine)
+        ->assertDontSee($descriptionSecondLine);
+
+    $this->actingAs($host)
+        ->get(route('events.show', $event))
+        ->assertSuccessful()
+        ->assertSee('<strong>Description:</strong>', false)
+        ->assertSee('white-space: pre-wrap;', false)
+        ->assertSee('overflow-wrap: anywhere;', false)
+        ->assertDontSee('border-left: 4px solid #4EDFCE;', false)
+        ->assertSee($descriptionFirstLine)
+        ->assertSee($descriptionSecondLine)
+        ->assertSeeInOrder(['Description:', $descriptionFirstLine, $descriptionSecondLine]);
+});
+
 it('falls back to earliest unfiltered events for invalid filter values', function () {
     $host = User::factory()->create();
 
@@ -150,9 +181,9 @@ it('falls back to earliest unfiltered events for invalid filter values', functio
         ->assertSeeInOrder([$earliestEvent->name, $latestEvent->name]);
 });
 
-function createEventsPageEvent(User $host, string $name, int $startsInDays, string $type = 'tournament'): Event
+function createEventsPageEvent(User $host, string $name, int $startsInDays, string $type = 'tournament', array $attributes = []): Event
 {
-    return Event::create([
+    return Event::create(array_merge([
         'organizer_id' => $host->id,
         'name' => $name,
         'type' => $type,
@@ -160,5 +191,5 @@ function createEventsPageEvent(User $host, string $name, int $startsInDays, stri
         'start_date' => now()->addDays($startsInDays)->toDateString(),
         'end_date' => now()->addDays($startsInDays + 1)->toDateString(),
         'status' => 'open',
-    ]);
+    ], $attributes));
 }

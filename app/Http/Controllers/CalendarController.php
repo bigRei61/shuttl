@@ -14,8 +14,6 @@ class CalendarController extends Controller
 
         $events = Event::query()
             ->select(['id', 'organizer_id', 'name', 'type', 'location', 'start_date', 'end_date', 'status'])
-            ->whereIn('status', ['open', 'ongoing'])
-            ->whereDate('end_date', '>=', today())
             ->where(function ($query) use ($user) {
                 $query->whereBelongsTo($user, 'organizer')
                     ->orWhereHas('approvedPlayers', fn ($players) => $players->whereKey($user->id));

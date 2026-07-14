@@ -117,7 +117,25 @@
         .event-description {
             color: #5a6472;
             font-size: 15px;
-            margin-bottom: 0;
+            line-height: 1.7;
+            margin: 16px 0 0;
+            max-width: 100%;
+            min-width: 0;
+        }
+
+        .event-description strong {
+            color: #131313;
+            display: block;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .event-description p {
+            margin: 0;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+            word-break: break-word;
         }
 
         .event-meta-grid {
@@ -606,7 +624,12 @@
                                 @endif
                             </div>
                             <h1 class="event-title">{{ $event->name }}</h1>
-                            <p class="event-description">{{ $event->description ?: 'Games for this event will appear here once the host schedules or records them.' }}</p>
+                            @if($event->description)
+                                <div class="event-description">
+                                    <strong>Description:</strong>
+                                    <p>{{ $event->description }}</p>
+                                </div>
+                            @endif
 
                             <div class="event-meta-grid">
                                 <div class="event-meta-box">
