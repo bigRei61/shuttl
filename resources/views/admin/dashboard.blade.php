@@ -13,16 +13,16 @@
         <p class="text-3xl font-bold text-white mt-1">{{ $stats['total_players'] }}</p>
     </div>
     <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
-        <p class="text-gray-400 text-sm">Total Events</p>
-        <p class="text-3xl font-bold text-white mt-1">{{ $stats['total_events'] }}</p>
+        <p class="text-gray-400 text-sm">Active Events</p>
+        <p class="text-3xl font-bold text-white mt-1">{{ $stats['active_events'] }}</p>
     </div>
     <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
         <p class="text-gray-400 text-sm">Featured Tournaments</p>
         <p class="text-3xl font-bold text-teal-400 mt-1">{{ $stats['featured_count'] }}</p>
     </div>
     <div class="bg-gray-900 border border-gray-800 rounded-xl p-6">
-        <p class="text-gray-400 text-sm">Active Events</p>
-        <p class="text-3xl font-bold text-white mt-1">{{ $stats['active_events'] }}</p>
+        <p class="text-gray-400 text-sm">Ongoing Events</p>
+        <p class="text-3xl font-bold text-white mt-1">{{ $stats['ongoing_events'] }}</p>
     </div>
 </div>
 

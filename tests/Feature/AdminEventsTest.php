@@ -227,7 +227,7 @@ it('allows admins to deactivate and activate events without hard deleting them',
     expect(Event::withTrashed()->find($event->id)->trashed())->toBeFalse();
 });
 
-it('does not count closed date events as active on the admin dashboard', function () {
+it('counts only activated events and ongoing events on the admin dashboard', function () {
     Carbon::setTestNow('2026-07-15 09:00:00');
 
     $admin = User::factory()->create(['role' => 'admin']);
@@ -244,6 +244,15 @@ it('does not count closed date events as active on the admin dashboard', functio
     ]);
     Event::create([
         'organizer_id' => $host->id,
+        'name' => 'Dashboard Open Cup',
+        'type' => 'tournament',
+        'location' => 'Court 3',
+        'start_date' => '2026-07-20',
+        'end_date' => '2026-07-21',
+        'status' => 'open',
+    ]);
+    Event::create([
+        'organizer_id' => $host->id,
         'name' => 'Dashboard Closed Cup',
         'type' => 'tournament',
         'location' => 'Court 4',
@@ -251,14 +260,32 @@ it('does not count closed date events as active on the admin dashboard', functio
         'end_date' => '2026-07-11',
         'status' => 'open',
     ]);
+    Event::create([
+        'organizer_id' => $host->id,
+        'name' => 'Dashboard Deactivated Ongoing Cup',
+        'type' => 'tournament',
+        'location' => 'Court 5',
+        'start_date' => '2026-07-14',
+        'end_date' => '2026-07-16',
+        'status' => 'open',
+    ])->delete();
 
     $this->actingAs($admin)
         ->get(route('admin.dashboard'))
         ->assertSuccessful()
+        ->assertViewHas('stats', function ($stats) {
+            expect($stats['active_events'])->toBe(3)
+                ->and($stats['ongoing_events'])->toBe(1);
+
+            return true;
+        })
+        ->assertDontSeeText('Total Events')
         ->assertSeeTextInOrder([
-            'Total Events',
-            '2',
             'Active Events',
+            '3',
+            'Featured Tournaments',
+            '0',
+            'Ongoing Events',
             '1',
         ]);
 });

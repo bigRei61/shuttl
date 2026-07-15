@@ -13,11 +13,15 @@ class AdminController extends Controller
 {
     public function index()
     {
+        $today = today()->toDateString();
+
         $stats = [
             'total_players' => User::where('role', 'player')->count(),
-            'total_events' => Event::count(),
+            'active_events' => Event::count(),
             'featured_count' => Event::featured()->count(),
-            'active_events' => Event::whereDate('end_date', '>=', today())->count(),
+            'ongoing_events' => Event::whereDate('start_date', '<=', $today)
+                ->whereDate('end_date', '>=', $today)
+                ->count(),
         ];
 
         return view('admin.dashboard', compact('stats'));
