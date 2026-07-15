@@ -14,10 +14,14 @@ class LandingController extends Controller
         }
 
         $featured = Event::featured()
-            ->with('organizer')
-            ->whereIn('status', ['open', 'ongoing'])
+            ->with([
+                'organizer',
+                'players' => fn ($query) => $query->whereKey(auth()->id()),
+            ])
             ->whereDate('end_date', '>=', today())
-            ->latest()
+            ->orderBy('start_date')
+            ->orderBy('end_date')
+            ->orderBy('id')
             ->limit(3)
             ->get();
 

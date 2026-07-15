@@ -42,6 +42,23 @@ it('stores a player created event with a photo and approves the creator as host'
     Storage::disk('public')->assertExists($event->photo_path);
 });
 
+it('uses the default event image when the stored event photo is missing', function () {
+    Storage::fake('public');
+
+    $event = Event::create([
+        'organizer_id' => User::factory()->create()->id,
+        'name' => 'Missing Photo Cup',
+        'type' => 'tournament',
+        'location' => 'Court 3',
+        'start_date' => now()->addDay()->toDateString(),
+        'end_date' => now()->addDays(2)->toDateString(),
+        'status' => 'open',
+        'photo_path' => 'event-photos/missing.jpg',
+    ]);
+
+    expect($event->photoUrl())->toContain('/landing/img/slider-1.png');
+});
+
 it('shows events hosted by the player even without an approved pivot row', function () {
     $player = User::factory()->create();
     $hostedEvent = Event::create([
@@ -49,8 +66,8 @@ it('shows events hosted by the player even without an approved pivot row', funct
         'name' => 'Hosted Cup',
         'type' => 'tournament',
         'location' => 'Court 3',
-        'start_date' => '2026-07-12',
-        'end_date' => '2026-07-12',
+        'start_date' => now()->addDay()->toDateString(),
+        'end_date' => now()->addDay()->toDateString(),
         'status' => 'open',
     ]);
 
@@ -76,7 +93,7 @@ it('requires host approval before a player joins an event', function () {
 
     $this->actingAs($player)
         ->post(route('events.join', $event))
-        ->assertSessionHas('success');
+        ->assertSessionMissing('success');
 
     expect($event->players()->whereKey($player->id)->first()->pivot->status)->toBe('pending');
 

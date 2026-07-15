@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Event extends Model
 {
@@ -53,8 +54,10 @@ class Event extends Model
 
     public function photoUrl(): string
     {
-        if ($this->photo_path) {
-            return asset('storage/'.ltrim($this->photo_path, '/'));
+        $photoPath = ltrim((string) $this->photo_path, '/');
+
+        if ($photoPath !== '' && Storage::disk('public')->exists($photoPath)) {
+            return Storage::disk('public')->url($photoPath);
         }
 
         return asset('landing/img/slider-1.png');

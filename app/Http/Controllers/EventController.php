@@ -135,7 +135,7 @@ class EventController extends Controller
             auth()->id() => ['status' => 'pending', 'responded_at' => null],
         ]);
 
-        return back()->with('success', 'Your join request was sent to the host.');
+        return back();
     }
 
     public function approveJoinRequest(Event $event, User $user): RedirectResponse

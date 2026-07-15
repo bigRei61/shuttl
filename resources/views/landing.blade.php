@@ -344,7 +344,6 @@
             border: 1px solid #e4ebf0;
             border-radius: 20px;
             box-shadow: 0 18px 45px rgba(19, 19, 19, 0.08);
-            cursor: pointer;
             padding: 24px;
         }
 
@@ -356,6 +355,13 @@
 
         .featured-slide-card {
             padding: 4px 2px;
+        }
+
+        .featured-carousel-wrap {
+            margin-top: 12px;
+            position: relative;
+            width: 100%;
+            overflow: visible;
         }
 
         @keyframes featuredFadeSlide {
@@ -441,6 +447,44 @@
             align-items: center;
             flex-wrap: wrap;
             margin-top: 6px;
+        }
+
+        .featured-actions form {
+            margin: 0;
+        }
+
+        .featured-join,
+        .featured-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 36px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .featured-join {
+            background: transparent;
+            border: 2px solid #4EDFCE;
+            color: #131313;
+            padding: 7px 20px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .featured-join:hover {
+            background: #4EDFCE;
+        }
+
+        .featured-pill {
+            background: #eef2f6;
+            color: #131313;
+            padding: 7px 16px;
         }
 
         .featured-nav {
@@ -670,11 +714,15 @@
             @if($featured->isEmpty())
                 <p style="color:#878787; text-align:center; padding:40px 0;">No featured tournaments available right now.</p>
             @else
-                <div style="position:relative; width:100%; overflow:visible;">
+                <div class="featured-carousel-wrap">
                     <div id="featured-track" style="width:100%;">
                         @foreach($featured as $event)
+                            @php
+                                $participation = $event->players->firstWhere('id', auth()->id())?->pivot?->status;
+                                $isHost = (int) $event->organizer_id === (int) auth()->id();
+                            @endphp
                             <div class="featured-slide" style="display:none; width:100%;">
-                                <div class="featured-shell" data-featured-event-url="{{ auth()->check() ? route('events.show', $event) : route('login') }}">
+                                <div class="featured-shell">
                                     <div class="row g-4 align-items-stretch">
                                         <div class="col-lg-5">
                                             <div class="featured-media" style="background: url('{{ $event->photoUrl() }}') center/cover no-repeat;"></div>
@@ -697,13 +745,16 @@
                                                 <div class="featured-actions">
                                                     @auth
                                                         <a href="{{ route('events.show', $event) }}" class="site-btn btn-sm" style="font-size:13px; padding:8px 22px;">View Details</a>
-                                                        @if($event->status === 'open')
-                                                            <form method="POST" action="{{ route('events.join', $event) }}" style="margin:0;">
+                                                        @if($isHost)
+                                                            <span class="featured-pill">Host</span>
+                                                        @elseif($participation === 'approved')
+                                                            <span class="featured-pill">Joined</span>
+                                                        @elseif($participation === 'pending')
+                                                            <span class="featured-pill">Pending Approval</span>
+                                                        @elseif($event->status === 'open')
+                                                            <form method="POST" action="{{ route('events.join', $event) }}">
                                                                 @csrf
-                                                                <button type="submit" style="background:transparent; border:2px solid #4EDFCE; color:#131313; font-size:13px; font-weight:600; padding:7px 22px; border-radius:999px; cursor:pointer; transition:all .2s;"
-                                                                        onmouseover="this.style.background='#4EDFCE'" onmouseout="this.style.background='transparent'">
-                                                                    Join Now
-                                                                </button>
+                                                                <button type="submit" class="featured-join">Request to Join</button>
                                                             </form>
                                                         @endif
                                                     @else
@@ -745,18 +796,6 @@
         const slides = track.querySelectorAll('.featured-slide');
         const total = slides.length;
         let current = 0;
-
-        track.addEventListener('click', (event) => {
-            const clickedElement = event.target instanceof Element ? event.target : null;
-
-            if (!clickedElement || clickedElement.closest('a, button, input, select, textarea, label, form')) return;
-
-            const featuredCard = clickedElement.closest('[data-featured-event-url]');
-
-            if (!featuredCard) return;
-
-            window.location.assign(featuredCard.dataset.featuredEventUrl);
-        });
 
         function renderSlides() {
             slides.forEach((slide, index) => {
