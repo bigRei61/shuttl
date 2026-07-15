@@ -9,14 +9,30 @@
 
 <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
     <form method="GET" action="{{ route('admin.events') }}" class="flex w-full flex-col gap-3 sm:flex-row">
-        <input type="text" name="search" value="{{ $search }}"
-               placeholder="Search by name or location..."
-               class="w-full max-w-md bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-teal-500">
+        <div class="relative w-full sm:w-72 lg:w-80">
+            <input type="text" name="search" value="{{ $search }}"
+                   placeholder="Search by name or location..."
+                   class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2.5 pr-9 text-sm focus:outline-none focus:border-teal-500">
+            @if(filled($search))
+                <a href="{{ route('admin.events', array_filter(['type' => $type, 'lifecycle' => $lifecycle], fn ($value) => filled($value))) }}"
+                   aria-label="Clear search"
+                   class="absolute right-2 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 hover:bg-gray-800 hover:text-white">
+                    x
+                </a>
+            @endif
+        </div>
         <select name="type" onchange="this.form.submit()"
-                class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 sm:w-44">
+                class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 sm:w-40">
             <option value="">All Types</option>
             <option value="tournament" {{ $type == 'tournament' ? 'selected' : '' }}>Tournament</option>
             <option value="quick_play" {{ $type == 'quick_play' ? 'selected' : '' }}>Quick Play</option>
+        </select>
+        <select name="lifecycle" onchange="this.form.submit()"
+                class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-teal-500 sm:w-48">
+            <option value="" {{ blank($lifecycle) ? 'selected' : '' }}>Ongoing and Open</option>
+            <option value="ongoing" {{ $lifecycle == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
+            <option value="open" {{ $lifecycle == 'open' ? 'selected' : '' }}>Open</option>
+            <option value="closed" {{ $lifecycle == 'closed' ? 'selected' : '' }}>Closed</option>
         </select>
     </form>
 
@@ -42,12 +58,25 @@
         <tbody class="divide-y divide-gray-800">
             @forelse($events as $event)
                 @php
+                    $isClosed = $event->end_date->lt($today);
+                    $isDeactivated = $event->trashed() || $isClosed;
                     $eventTypeLabel = str_replace('_', ' ', $event->type);
                     $eventDateRange = $event->start_date->format('M d').' - '.$event->end_date->format('M d, Y');
                     $eventHostName = $event->organizer->name ?? '-';
+                    $eventStatusLabel = match (true) {
+                        $event->start_date->lte($today) && $event->end_date->gte($today) => 'Ongoing',
+                        $isClosed => 'Closed',
+                        default => 'Open',
+                    };
+                    $eventStatusClass = match ($eventStatusLabel) {
+                        'Open' => 'bg-green-950 text-green-300',
+                        'Ongoing' => 'bg-yellow-950 text-yellow-300',
+                        'Closed' => 'bg-red-950 text-red-300',
+                        default => 'bg-gray-800 text-gray-300',
+                    };
                 @endphp
 
-                <tr class="text-white hover:bg-gray-800/50">
+                <tr class="text-white hover:bg-gray-800/50 {{ $isDeactivated ? 'opacity-70' : '' }}">
                     <td class="px-6 py-4 overflow-hidden">
                         <div class="flex min-w-0 items-center gap-2">
                             <span class="min-w-0 truncate" title="{{ $event->name }}">{{ $event->name }}</span>
@@ -66,27 +95,28 @@
                         <span class="block truncate" title="{{ $eventDateRange }}">{{ $eventDateRange }}</span>
                     </td>
                     <td class="px-6 py-4">
-                        <form method="POST" action="{{ route('admin.events.status', $event) }}">
-                            @csrf
-                            @method('PUT')
-                            <select name="status" onchange="this.form.submit()"
-                                    class="bg-gray-800 border border-gray-700 text-white rounded-lg px-2 py-1 text-xs">
-                                <option value="open" {{ $event->status == 'open' ? 'selected' : '' }}>Open</option>
-                                <option value="ongoing" {{ $event->status == 'ongoing' ? 'selected' : '' }}>Ongoing</option>
-                                <option value="completed" {{ $event->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                            </select>
-                        </form>
+                        <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold {{ $eventStatusClass }}">
+                            {{ $eventStatusLabel }}
+                        </span>
                     </td>
                     <td class="px-6 py-4 text-gray-400 overflow-hidden">
                         <span class="block truncate" title="{{ $eventHostName }}">{{ $eventHostName }}</span>
                     </td>
                     <td class="px-6 py-4">
-                        <form method="POST" action="{{ route('admin.events.delete', $event) }}"
-                              onsubmit="return confirm('Are you sure you want to delete this event?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-400 hover:text-red-300 text-xs">Delete</button>
-                        </form>
+                        @if($isDeactivated)
+                            <form method="POST" action="{{ route('admin.events.activate', $event) }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="text-green-400 hover:text-green-300 text-xs font-semibold">Activate</button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('admin.events.deactivate', $event) }}"
+                                  onsubmit="return confirm('Deactivate this event?');">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="text-red-400 hover:text-red-300 text-xs font-semibold">Deactivate</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty

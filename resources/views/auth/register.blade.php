@@ -10,7 +10,7 @@
 
     <div>
         <label class="block text-sm text-gray-400 mb-1">Full Name</label>
-        <input type="text" name="name" value="{{ old('name') }}"
+        <input type="text" name="name" value="{{ old('name') }}" required
                class="w-full bg-gray-800 border {{ $errors->has('name') ? 'border-red-500' : 'border-gray-700' }}
                       text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500"
                placeholder="John Doe">
@@ -21,7 +21,7 @@
 
     <div>
         <label class="block text-sm text-gray-400 mb-1">Email</label>
-        <input type="email" name="email" value="{{ old('email') }}"
+        <input type="email" name="email" value="{{ old('email') }}" required
                class="w-full bg-gray-800 border {{ $errors->has('email') ? 'border-red-500' : 'border-gray-700' }}
                       text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500"
                placeholder="you@example.com">
@@ -33,7 +33,7 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label class="block text-sm text-gray-400 mb-1">Password</label>
-            <input type="password" name="password"
+            <input type="password" name="password" required
                    class="w-full bg-gray-800 border {{ $errors->has('password') ? 'border-red-500' : 'border-gray-700' }}
                           text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500"
                    placeholder="••••••••">
@@ -43,7 +43,7 @@
         </div>
         <div>
             <label class="block text-sm text-gray-400 mb-1">Confirm Password</label>
-            <input type="password" name="password_confirmation"
+            <input type="password" name="password_confirmation" required
                    class="w-full bg-gray-800 border border-gray-700
                           text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500"
                    placeholder="••••••••">
@@ -52,10 +52,13 @@
 
     <div>
         <label class="block text-sm text-gray-400 mb-1">Phone Number</label>
-        <input type="text" name="phone" value="{{ old('phone') }}"
-               class="w-full bg-gray-800 border {{ $errors->has('phone') ? 'border-red-500' : 'border-gray-700' }}
-                      text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500"
-               placeholder="+63 912 345 6789">
+        <div class="flex overflow-hidden rounded-lg border {{ $errors->has('phone') ? 'border-red-500' : 'border-gray-700' }} bg-gray-800 focus-within:border-teal-500">
+            <span class="inline-flex items-center border-r border-gray-700 px-4 py-3 text-sm font-semibold text-gray-300">+63</span>
+            <input type="tel" name="phone" value="{{ old('phone') }}" required
+                   inputmode="numeric" autocomplete="tel-national" maxlength="13"
+                   class="min-w-0 flex-1 bg-gray-800 px-4 py-3 text-sm text-white placeholder:text-gray-500 focus:outline-none"
+                   placeholder="912 345 6789">
+        </div>
         @error('phone')
             <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
         @enderror
@@ -64,7 +67,7 @@
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label class="block text-sm text-gray-400 mb-1">Gender</label>
-            <select name="gender"
+            <select name="gender" required
                     class="w-full bg-gray-800 border {{ $errors->has('gender') ? 'border-red-500' : 'border-gray-700' }}
                            text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500">
                 <option value="">Select</option>
@@ -78,7 +81,7 @@
         </div>
         <div>
             <label class="block text-sm text-gray-400 mb-1">Date of Birth</label>
-            <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}"
+            <input type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required
                    class="w-full bg-gray-800 border {{ $errors->has('date_of_birth') ? 'border-red-500' : 'border-gray-700' }}
                           text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-teal-500">
             @error('date_of_birth')

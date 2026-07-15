@@ -31,11 +31,14 @@ Route::middleware(['auth', AdminMiddleware::class])->prefix('admin')->name('admi
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 
     Route::get('/players', [AdminController::class, 'players'])->name('players');
+    Route::patch('/players/{user}/deactivate', [AdminController::class, 'deactivatePlayer'])->name('players.deactivate')->withTrashed();
+    Route::patch('/players/{user}/activate', [AdminController::class, 'activatePlayer'])->name('players.activate')->withTrashed();
     Route::delete('/players/{user}', [AdminController::class, 'deletePlayer'])->name('players.delete');
 
     Route::get('/events', [AdminController::class, 'events'])->name('events');
+    Route::patch('/events/{event}/deactivate', [AdminController::class, 'deactivateEvent'])->name('events.deactivate')->withTrashed();
+    Route::patch('/events/{event}/activate', [AdminController::class, 'activateEvent'])->name('events.activate')->withTrashed();
     Route::delete('/events/{event}', [AdminController::class, 'deleteEvent'])->name('events.delete');
-    Route::put('/events/{event}/status', [AdminController::class, 'updateEventStatus'])->name('events.status');
 
     Route::get('/events/featured/create', [AdminController::class, 'createFeatured'])->name('featured.create');
     Route::post('/events/featured', [AdminController::class, 'storeFeatured'])->name('featured.store');

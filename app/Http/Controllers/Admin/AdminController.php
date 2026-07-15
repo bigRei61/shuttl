@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\File;
 
@@ -16,7 +17,7 @@ class AdminController extends Controller
             'total_players' => User::where('role', 'player')->count(),
             'total_events' => Event::count(),
             'featured_count' => Event::featured()->count(),
-            'active_events' => Event::whereIn('status', ['open', 'ongoing'])->count(),
+            'active_events' => Event::whereDate('end_date', '>=', today())->count(),
         ];
 
         return view('admin.dashboard', compact('stats'));
@@ -28,7 +29,8 @@ class AdminController extends Controller
     {
         $search = $request->input('search');
 
-        $players = User::where('role', 'player')
+        $players = User::withTrashed()
+            ->where('role', 'player')
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -42,11 +44,27 @@ class AdminController extends Controller
         return view('admin.players', compact('players', 'search'));
     }
 
-    public function deletePlayer(User $user)
+    public function deactivatePlayer(User $user): RedirectResponse
     {
-        $user->delete();
+        if (! $user->trashed()) {
+            $user->delete();
+        }
 
-        return back()->with('success', 'Player removed successfully.');
+        return back()->with('success', 'Player deactivated successfully.');
+    }
+
+    public function activatePlayer(User $user): RedirectResponse
+    {
+        if ($user->trashed()) {
+            $user->restore();
+        }
+
+        return back()->with('success', 'Player activated successfully.');
+    }
+
+    public function deletePlayer(User $user): RedirectResponse
+    {
+        return $this->deactivatePlayer($user);
     }
 
     // ----- EVENTS -----
@@ -55,38 +73,69 @@ class AdminController extends Controller
     {
         $search = $request->input('search');
         $type = $request->input('type');
+        $lifecycle = $request->input('lifecycle');
+        $lifecycle = in_array($lifecycle, ['ongoing', 'open', 'closed'], true) ? $lifecycle : null;
+        $today = today();
+        $todayDate = $today->toDateString();
 
-        $events = Event::with('organizer')
+        $events = Event::withTrashed()
+            ->with(['organizer' => fn ($query) => $query->withTrashed()])
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('location', 'like', "%{$search}%");
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('location', 'like', "%{$search}%");
+                });
             })
             ->when($type, function ($query) use ($type) {
                 $query->where('type', $type);
             })
-            ->orderByDesc('start_date')
+            ->where(function ($query) use ($lifecycle, $todayDate) {
+                match ($lifecycle) {
+                    'ongoing' => $query->where('start_date', '<=', $todayDate)
+                        ->where('end_date', '>=', $todayDate),
+                    'open' => $query->where('start_date', '>', $todayDate),
+                    'closed' => $query->where('end_date', '<', $todayDate),
+                    default => $query->where('end_date', '>=', $todayDate),
+                };
+            })
+            ->orderByRaw(
+                'case when start_date <= ? and end_date >= ? then 0 when start_date > ? then 1 else 2 end',
+                [$todayDate, $todayDate, $todayDate],
+            )
+            ->orderByDesc('is_featured')
+            ->orderBy('start_date')
+            ->orderBy('name')
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.events', compact('events', 'search', 'type'));
+        return view('admin.events', compact('events', 'lifecycle', 'search', 'today', 'type'));
     }
 
-    public function deleteEvent(Event $event)
+    public function deactivateEvent(Event $event): RedirectResponse
     {
-        $event->delete();
+        if (! $event->trashed()) {
+            $event->delete();
+        }
 
-        return back()->with('success', 'Event deleted successfully.');
+        return back();
     }
 
-    public function updateEventStatus(Request $request, Event $event)
+    public function activateEvent(Event $event): RedirectResponse
     {
-        $request->validate([
-            'status' => 'required|in:open,ongoing,completed',
-        ]);
+        if ($event->trashed()) {
+            $event->restore();
+        }
 
-        $event->update(['status' => $request->status]);
+        if ($event->end_date->lt(today())) {
+            $event->update(['end_date' => today()->toDateString()]);
+        }
 
-        return back()->with('success', 'Event status updated.');
+        return back();
+    }
+
+    public function deleteEvent(Event $event): RedirectResponse
+    {
+        return $this->deactivateEvent($event);
     }
 
     // ----- FEATURED TOURNAMENTS -----

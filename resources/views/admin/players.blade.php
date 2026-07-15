@@ -22,31 +22,49 @@
                 <th class="px-6 py-3">Phone</th>
                 <th class="px-6 py-3">Rating</th>
                 <th class="px-6 py-3">Matches</th>
+                <th class="px-6 py-3">Status</th>
                 <th class="px-6 py-3">Joined</th>
                 <th class="px-6 py-3"></th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-800">
             @forelse($players as $player)
-                <tr class="text-white hover:bg-gray-800/50">
+                @php
+                    $isDeactivated = $player->trashed();
+                @endphp
+
+                <tr class="text-white hover:bg-gray-800/50 {{ $isDeactivated ? 'opacity-70' : '' }}">
                     <td class="px-6 py-4">{{ $player->name }}</td>
                     <td class="px-6 py-4 text-gray-400">{{ $player->email }}</td>
                     <td class="px-6 py-4 text-gray-400">{{ $player->phone ?? '—' }}</td>
-                    <td class="px-6 py-4 text-teal-400">{{ number_format($player->rating_value, 2) }}</td>
+                    <td class="px-6 py-4 text-teal-400">{{ number_format($player->rating_value, 0) }}</td>
                     <td class="px-6 py-4">{{ $player->matches_played }}</td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex rounded-full px-2 py-0.5 text-xs font-semibold {{ $isDeactivated ? 'bg-red-950 text-red-300' : 'bg-green-950 text-green-300' }}">
+                            {{ $isDeactivated ? 'Deactivated' : 'Active' }}
+                        </span>
+                    </td>
                     <td class="px-6 py-4 text-gray-500">{{ $player->created_at->format('M d, Y') }}</td>
                     <td class="px-6 py-4">
-                        <form method="POST" action="{{ route('admin.players.delete', $player) }}"
-                              onsubmit="return confirm('Are you sure you want to remove this player?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-400 hover:text-red-300 text-xs">Remove</button>
-                        </form>
+                        @if($isDeactivated)
+                            <form method="POST" action="{{ route('admin.players.activate', $player) }}">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="text-green-400 hover:text-green-300 text-xs font-semibold">Activate</button>
+                            </form>
+                        @else
+                            <form method="POST" action="{{ route('admin.players.deactivate', $player) }}"
+                                  onsubmit="return confirm('Deactivate this player?');">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="text-red-400 hover:text-red-300 text-xs font-semibold">Deactivate</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="px-6 py-8 text-center text-gray-500">No results found.</td>
+                    <td colspan="8" class="px-6 py-8 text-center text-gray-500">No results found.</td>
                 </tr>
             @endforelse
         </tbody>
