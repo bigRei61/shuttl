@@ -21,6 +21,8 @@ class User extends Authenticatable
 
     public const RATING_K_FACTOR = 32.00;
 
+    public const DEACTIVATED_MESSAGE = 'Account currently cannot be reached';
+
     protected $fillable = [
         'name', 'email', 'password', 'phone',
         'gender', 'date_of_birth', 'role',
